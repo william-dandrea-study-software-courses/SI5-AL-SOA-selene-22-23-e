@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  resupply-service:
+    image: teame/resupply-service
+    ports:
+      - 8000:8000
+    container_name: resupply-service
+    environment:
+      - PORT=8000
+    entrypoint: "npm run start"
+
+  needs-control-service:
+    image: teame/needs-control-service
+    ports:
+      - 8001:8001
+    container_name: needs-control-service
+    environment:
+      - PORT=8001
+    entrypoint: "npm run start"
+
+  module-life-service:
+    image: teame/module-life-service
+    ports:
+      - 8002:8002
+    container_name: module-life-service
+    environment:
+      - PORT=8002
+    entrypoint: "npm run start"
+
+  life-support-service:
+    image: teame/life-support-service
+    ports:
+      - 8003:8003
+    container_name: life-support-service
+    environment:
+      - PORT=8003
+    entrypoint: "npm run start"
