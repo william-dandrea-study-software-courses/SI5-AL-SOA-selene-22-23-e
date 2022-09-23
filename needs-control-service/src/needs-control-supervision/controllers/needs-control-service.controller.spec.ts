@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NeedsControlServiceController } from './needs-control-service.controller';
 
-describe('ModuleLifeSupervisionController', () => {
+describe('ResupplySupervisionController', () => {
   let controller: NeedsControlServiceController;
 
   beforeEach(async () => {

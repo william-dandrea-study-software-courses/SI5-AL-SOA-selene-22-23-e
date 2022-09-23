@@ -1,9 +1,4 @@
 #!/bin/bash
 
-source ../common-functions.sh
-
-echo "=> Starting life-support-service"
-docker-compose --env-file ./.env.docker \
-               --file docker-compose-life-support.yml up -d
-
-wait_on_health http://localhost:4304 ${PWD##*/}
+echo "=> Starting development life-support-service"
+docker-compose -f docker-compose-life-support-development.yml up --build -V

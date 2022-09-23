@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { StatusLifeModuleDto } from '../dto/status-life-modules.dto';
 
 @Injectable()
-export class ModuleLifeSupervisionService {
+export class ResupplySupervisionService {
   constructor() {
     const i = 0;
   }

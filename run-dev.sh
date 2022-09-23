@@ -1,17 +1,12 @@
 #!/bin/bash
 
-function compile_dir()  # $1 is the dir to get it
-{
-    cd $1
-    ./build.sh
-    cd ..
-}
+echo "Name of the micro-service to run in dev mode:"
 
-echo "=> Compiling everything"
+read path_to_microservice
 
-compile_dir "life-support-service"
-compile_dir "module-life-service"
-compile_dir "needs-control-service"
-compile_dir "resupply-service"
+echo "Run $path_to_microservice"
 
-echo "=> Done all"
+cd $path_to_microservice
+
+./start-dev.sh
+

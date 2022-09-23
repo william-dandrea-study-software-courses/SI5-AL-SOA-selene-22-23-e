@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  life-support-service-development:
+  needs-control-service-development:
     build:
       context: .
       target: docker-development
@@ -14,11 +14,11 @@ services:
       - .env
     command: npm run start:dev
     depends_on:
-      - mongo_db_life_support_development
+      - mongo_db_needs_control_development
     networks:
       - soa-team-e-network-development
 
-  mongo_db_life_support_development:
+  mongo_db_needs_control_development:
     image: "mongo:4.4.15"
     restart: always
     ports:

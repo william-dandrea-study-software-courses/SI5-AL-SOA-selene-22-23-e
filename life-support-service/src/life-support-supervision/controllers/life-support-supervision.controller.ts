@@ -1,13 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ModuleLifeSupervisionService } from '../services/module-life-supervision.service';
+import { LifeSupportSupervisionService } from '../services/life-support-supervision.service';
 import { StatusLifeModuleDto } from '../dto/status-life-modules.dto';
 
-@ApiTags('module-life-supervision')
-@Controller('/module-life-supervision')
-export class ModuleLifeSupervisionController {
+@ApiTags('life-support-supervision')
+@Controller('/life-support-supervision')
+export class LifeSupportSupervisionController {
   constructor(
-    private readonly moduleLifeSupervisionService: ModuleLifeSupervisionService,
+    private readonly moduleLifeSupervisionService: LifeSupportSupervisionService,
   ) {}
 
   @ApiOkResponse({ type: Boolean })

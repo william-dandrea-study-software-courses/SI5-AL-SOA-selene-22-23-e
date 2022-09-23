@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ModuleLifeSupervisionController } from './controllers/module-life-supervision.controller';
-import { ModuleLifeSupervisionService } from './services/module-life-supervision.service';
+import { ResupplySupervisionController } from './controllers/resupply-supervision.controller';
+import { ResupplySupervisionService } from './services/resupply-supervision.service';
 
 @Module({
-  controllers: [ModuleLifeSupervisionController],
-  providers: [ModuleLifeSupervisionService],
+  controllers: [ResupplySupervisionController],
+  providers: [ResupplySupervisionService],
 })
-export class ModuleLifeSupervisionModule {}
+export class ResupplySupervisionModule {}
