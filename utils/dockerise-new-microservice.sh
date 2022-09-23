@@ -27,8 +27,10 @@ read deployment_app_port
 echo "Port MongoDB prod"
 read mongo_db_port
 
-echo "
-# APP
+dollar_string='$'
+APP_string='APP'
+
+echo "# APP
 APP_PORT=$app_port
 APP_NAME=$microservice_name
 
@@ -43,13 +45,11 @@ SWAGGERUI_TITLE=$swagger_ui_title
 SWAGGERUI_DESCRIPTION=$swagger_ui_description
 " > "$path_to_microservice/.env"
 
-echo "
-# FOR DOCKER COMPOSE
+echo "# FOR DOCKER COMPOSE
 COMPOSE_PROJECT_NAME=\"$project_name\"
 " > "$path_to_microservice/.env.docker"
 
-echo "
-# APP
+echo "# APP
 APP_PORT=$deployment_app_port
 APP_NAME=$microservice_name
 
@@ -64,23 +64,19 @@ SWAGGERUI_TITLE=$swagger_ui_title
 SWAGGERUI_DESCRIPTION=$swagger_ui_description
 " > "$path_to_microservice/.env.production"
 
-echo "
-v16.16.0
-" > "$path_to_microservice/.nvmrc"
+echo "v16.16.0" > "$path_to_microservice/.nvmrc"
 
-echo "
-#!/bin/bash
+echo "#!/bin/bash
 
-APP=\"" + "$" + "{PWD##*/}" + "\"
+APP=\"$dollar_string{PWD##*/}\"
 
 # Building docker image
-echo \"Begin: Building docker image $project_name/$" + "APP" + "\"
-docker build -t \"$project_name/$" + "APP" + "\" .
-echo \"Done: Building docker image $project_name/$" + "APP" + "\"
+echo \"Begin: Building docker image $project_name/$dollar_string$APP_string\"
+docker build -t \"$project_name/$dollar_string$APP_string\" .
+echo \"Done: Building docker image $project_name/$dollar_string$APP_string\"
 " > "$path_to_microservice/build.sh"
 
-echo "
-version: \"3\"
+echo "version: \"3\"
 
 services:
   $microservice_name:
@@ -156,8 +152,7 @@ COPY --chown=node:node --from=build /usr/src/app/.env.production ./.env
 CMD [ \"node\", \"dist/main.js\" ]
 " > "$path_to_microservice/Dockerfile"
 
-echo "
-#!/bin/bash
+echo "#!/bin/bash
 
 source ../common-functions.sh
 
@@ -165,12 +160,10 @@ echo \"=> Starting $microservice_name\"
 docker-compose --env-file ./.env.docker \
                --file docker-compose-$microservice_generic_name.yml up -d
 
-wait_on_health http://localhost:4301 " + "$" + "{PWD##*/}" + "
+wait_on_health http://localhost:4301 ${dollar_string}{PWD##*/}
 " > "$path_to_microservice/start.sh"
 
-echo "
-
-#!/bin/bash
+echo "#!/bin/bash
 
 echo \"=> Stopping resupply-service\"
 docker-compose --env-file ./.env.docker \
