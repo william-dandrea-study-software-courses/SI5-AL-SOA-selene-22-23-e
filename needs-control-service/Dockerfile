@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node package*.json ./
 
+RUN npm install
 RUN npm ci
 
 COPY --chown=node:node . .
@@ -28,6 +29,7 @@ COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modul
 
 COPY --chown=node:node . .
 
+RUN npm install
 RUN npm run build
 
 ENV NODE_ENV production
