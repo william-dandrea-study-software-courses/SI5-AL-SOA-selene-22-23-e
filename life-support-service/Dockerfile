@@ -8,7 +8,6 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node package*.json ./
 
-RUN npm install
 RUN npm ci
 
 COPY --chown=node:node . .
@@ -33,7 +32,6 @@ RUN npm run build
 
 ENV NODE_ENV production
 
-RUN npm install
 RUN npm ci --only=production && npm cache clean --force
 
 USER node
@@ -49,3 +47,15 @@ COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 COPY --chown=node:node --from=build /usr/src/app/.env.production ./.env
 
 CMD [ "node", "dist/main.js" ]
+
+FROM node:16.16.0-alpine As docker-development
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install --only=development
+
+COPY . .
+
+RUN npm run build
