@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  gateway:
+    image: "soa-team-e/gateway"
+    restart: always
+    ports:
+      - 9500:3000
+    environment:
+      - LIFE_SUPPORT_SERVICE_URL_WITH_PORT=${LIFE_SUPPORT_SERVICE}:3000
+      - MODULE_LIFE_SERVICE_URL_WITH_PORT=${MODULE_LIFE_SERVICE}:3000
+      - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=${NEEDS_CONTROL_SERVICE}:3000
+      - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=${RESUPPLY_CONTROL_SERVICE}:3000
+    networks:
+      - soa-team-e-network
+networks:
+  soa-team-e-network:
+    driver: bridge

@@ -4,8 +4,9 @@ services:
   module-life-service:
     image: "soa-team-e/module-life-service"
     restart: always
+    entrypoint: npm run start
     ports:
-      - 4303:3000
+      - 4303:4303
     depends_on:
       - mongo_db_module_life
     networks:
