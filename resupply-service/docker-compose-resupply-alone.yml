@@ -6,16 +6,9 @@ services:
     restart: always
     command: npm run start
     ports:
-      - 4301:4201
-    environment:
-      - APP_PORT=4201
-      - APP_NAME=resupply-service
-      - MONGODB_HOST=mongo_db_resupply
-      - MONGODB_PORT=27017
-      - MONGODB_DATABASE=resupply-db
-      - SWAGGERUI_PATH=doc/resupply
-      - SWAGGERUI_TITLE=Resupply Micro-Service
-      - SWAGGERUI_DESCRIPTION=Destiné à la gestion du réapprovisionnement de la base lunaire
+      - 4301:${APP_PORT}
+    env_file:
+      - .env.production
     depends_on:
       - mongo_db_resupply
     networks:
@@ -24,7 +17,7 @@ services:
     image: "mongo:4.4.15"
     restart: always
     ports:
-      - 27017:27017
+      - 27020:27017
     networks:
       - soa-team-e-network
 networks:
