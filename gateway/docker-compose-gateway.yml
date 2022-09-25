@@ -4,20 +4,26 @@ services:
   gateway:
     image: "soa-team-e/gateway"
     restart: always
+    command: npm run start
     ports:
       - 9500:3000
-    depends_on:
-      - ${LIFE_SUPPORT_SERVICE}
-      - ${MODULE_LIFE_SERVICE}
-      - ${NEEDS_CONTROL_SERVICE}
-      - ${RESUPPLY_CONTROL_SERVICE}
     environment:
-      - LIFE_SUPPORT_SERVICE_URL_WITH_PORT=${LIFE_SUPPORT_SERVICE}:3000
-      - MODULE_LIFE_SERVICE_URL_WITH_PORT=${MODULE_LIFE_SERVICE}:3000
-      - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=${NEEDS_CONTROL_SERVICE}:3000
-      - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=${RESUPPLY_CONTROL_SERVICE}:3000
+      - APP_PORT=3000
+      - LIFE_SUPPORT_SERVICE=life-support-service
+      - MODULE_LIFE_SERVICE=module-life-service
+      - NEEDS_CONTROL_SERVICE=needs-control-service
+      - RESUPPLY_CONTROL_SERVICE=resupply-service
+      - LIFE_SUPPORT_SERVICE_URL_WITH_PORT=life-support-service:4204
+      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4203
+      - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4202
+      - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4201
     networks:
       - soa-team-e-network
+    depends_on:
+      - life-support-service
+      - module-life-service
+      - needs-control-service
+      - resupply-service
 networks:
   soa-team-e-network:
     driver: bridge

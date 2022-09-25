@@ -4,8 +4,18 @@ services:
   needs-control-service:
     image: "soa-team-e/needs-control-service"
     restart: always
+    command: npm run start
     ports:
-      - 4302:3000
+      - 4302:4202
+    environment:
+      - APP_PORT=4202
+      - APP_NAME=needs-control-service
+      - MONGODB_HOST=mongo_db_needs_control
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=needs-control-db
+      - SWAGGERUI_PATH=doc/needs-control
+      - SWAGGERUI_TITLE=Needs Control Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à surveiller les besoins des modules en contactant Module Life Service et à envoyer les demandes de ravitaillement au Resupply Service
     depends_on:
       - mongo_db_needs_control
     networks:

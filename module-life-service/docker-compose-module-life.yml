@@ -4,9 +4,18 @@ services:
   module-life-service:
     image: "soa-team-e/module-life-service"
     restart: always
-    entrypoint: npm run start
+    command: npm run start
     ports:
-      - 4303:4303
+      - 4303:4203
+    environment:
+      - APP_PORT=4203
+      - APP_NAME=module-life-service
+      - MONGODB_HOST=mongo_db_module_life
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=module-life-db
+      - SWAGGERUI_PATH=doc/module-life
+      - SWAGGERUI_TITLE=Module Life Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à notifier des besoins vitaux d’un module, il sera (pour le moment) contacté par Life Support Service et Moon Village
     depends_on:
       - mongo_db_module_life
     networks:
