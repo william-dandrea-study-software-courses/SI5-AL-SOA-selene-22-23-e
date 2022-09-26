@@ -19,6 +19,7 @@ services:
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4203
     depends_on:
       - mongo_db_life_support
+      - module-life-service
     networks:
       - soa-team-e-network
   mongo_db_life_support:
