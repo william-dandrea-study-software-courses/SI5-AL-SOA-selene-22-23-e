@@ -15,4 +15,10 @@ export class ModuleLifeSupervisionController {
   async superviseModuleStatus(): Promise<StatusLifeModuleDto[]> {
     return this.moduleLifeSupervisionService.modulesStatus();
   }
+
+  @ApiOkResponse({ type: Boolean })
+  @Get('/test')
+  async testService2Service(): Promise<any> {
+    return {test:true};
+  }
 }
