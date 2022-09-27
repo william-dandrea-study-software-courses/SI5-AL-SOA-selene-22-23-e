@@ -13,7 +13,7 @@ export class StatusLifeModule {
 
   @ApiProperty()
   @Prop({ required: true, min: 0 })
-  id_life_module: number;
+  id_module: number;
 
   @ApiProperty()
   @Prop({ required: true })
@@ -21,4 +21,4 @@ export class StatusLifeModule {
 }
 
 export const StatusLifeModuleSchema =
-  SchemaFactory.createForClass(StatusLifeModule);
+    SchemaFactory.createForClass(StatusLifeModule);

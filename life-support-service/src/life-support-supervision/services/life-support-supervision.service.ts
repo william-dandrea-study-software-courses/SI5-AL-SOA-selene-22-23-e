@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { StatusLifeModuleDto } from '../dto/status-life-modules.dto';
+import {ModuleLifeProxyService} from "./module-life-proxy.service";
+import {StatusLifeModuleDto} from "../dto/status-life-modules.dto";
 
 @Injectable()
 export class LifeSupportSupervisionService {
-  constructor() {
-    const i = 0;
-  }
+  constructor(private moduleLifeProxyService: ModuleLifeProxyService) {}
 
-  async modulesStatus(): Promise<StatusLifeModuleDto[]> {
-    return [{ id_module: 1, status: true }];
+  async globalSuperviseModules(): Promise<boolean> {
+    const moduleStatus: StatusLifeModuleDto[] = await this.moduleLifeProxyService.superviseModules();
+    moduleStatus.forEach(module => {
+        if(!module.status){
+          return false
+        }
+    })
+    return true;
   }
 }

@@ -5,11 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import appConfig from './shared/config/app.config';
 import mongodbConfig from './shared/config/mongodb.config';
 import swaggeruiConfig from './shared/config/swaggerui.config';
-
 import { MongooseConfigService } from './shared/services/mongoose-config.service';
 
 import { HealthModule } from './health/health.module';
-import { ModuleLifeSupervisionModule } from './module-life-supervision/module-life-supervision.module';
+import { ModuleModule } from './module-life-supervision/module.module';
 
 @Module({
   imports: [
@@ -21,7 +20,7 @@ import { ModuleLifeSupervisionModule } from './module-life-supervision/module-li
       useClass: MongooseConfigService,
     }),
     HealthModule,
-    ModuleLifeSupervisionModule,
+    ModuleModule,
   ],
   providers: [],
 })
