@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { NeedsControlServiceService } from '../services/needs-control-service.service';
-import { StatusLifeModuleDto } from '../dto/status-life-modules.dto';
+import {NeedsDto} from '../dto/status-life-modules.dto';
 
 @ApiTags('needs-control-supervision')
 @Controller('/needs-control-supervision')
@@ -11,8 +11,8 @@ export class NeedsControlServiceController {
   ) {}
 
   @ApiOkResponse({ type: Boolean })
-  @Get('/')
-  async superviseModuleStatus(): Promise<StatusLifeModuleDto[]> {
-    return this.moduleLifeSupervisionService.modulesStatus();
+  @Get('/moduleNeeds')
+  async superviseModuleStatus(): Promise<NeedsDto[]> {
+    return this.moduleLifeSupervisionService.needsModules();
   }
 }

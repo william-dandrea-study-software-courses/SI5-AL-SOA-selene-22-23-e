@@ -5,7 +5,7 @@ import {  HttpService } from "@nestjs/axios";
 import { LifeSupportSupervisionService } from '../services/life-support-supervision.service';
 import {ModuleLifeProxyService} from "../services/module-life-proxy.service";
 
-import { StatusLifeModuleDto } from '../dto/status-life-modules.dto';
+import { ModuleDto } from '../dto/modules.dto';
 
 @ApiTags('life-support-supervision')
 @Controller('/supervision')
@@ -25,7 +25,7 @@ export class LifeSupportSupervisionController {
 
   @ApiOkResponse({ type: Boolean })
   @Get('/supervise')
-  async supervise(): Promise<StatusLifeModuleDto[]> {
+  async supervise(): Promise<ModuleDto[]> {
     return this.moduleLifeProxyService.superviseModules();
   }
 }

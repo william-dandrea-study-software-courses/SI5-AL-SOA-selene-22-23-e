@@ -18,6 +18,10 @@ export class StatusLifeModule {
   @ApiProperty()
   @Prop({ required: true })
   status: boolean;
+
+  @ApiProperty()
+  @Prop({ required: true })
+  needs: boolean;
 }
 
 export const StatusLifeModuleSchema =

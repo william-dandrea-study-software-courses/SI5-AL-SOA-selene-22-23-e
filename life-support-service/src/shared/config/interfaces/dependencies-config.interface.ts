@@ -1,4 +1,3 @@
 export interface DependenciesConfig {
-  menu_service_url_with_port: string;
-  kitchen_service_url_with_port: string;
+  module_life_service_url_with_port: string;
 }

@@ -1,11 +1,11 @@
 import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
 
-export class StatusLifeModuleDto {
+export class NeedsDto {
   @IsNotEmpty()
   @IsNumber()
   id_module: number;
 
   @IsNotEmpty()
   @IsBoolean()
-  status: boolean;
+  needs: boolean;
 }
