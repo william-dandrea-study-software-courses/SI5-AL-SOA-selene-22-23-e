@@ -19,13 +19,25 @@ export class ModuleController {
   @Get("/module")
   @ApiOkResponse({ type: Boolean })
   async getModules(): Promise<ModuleDto[]> {
-    return this.moduleService.getModules();
+    return this.moduleService.getModules().then(listDto =>{
+      let response : ModuleDto[]=[];
+      listDto.forEach(x => {
+        response.push(new ModuleDto(x))
+      })
+      return response
+    });
   }
 
   @Get("/needs")
   @ApiOkResponse({ type: Boolean })
   async getNeeds(): Promise<NeedsDto[]> {
-    return this.moduleService.getNeeds();
+    return this.moduleService.getNeeds().then(listDto =>{
+      let response : NeedsDto[]=[];
+      listDto.forEach(x => {
+        response.push(new NeedsDto(x))
+      })
+      return response
+    });;
   }
 
   @Post()
