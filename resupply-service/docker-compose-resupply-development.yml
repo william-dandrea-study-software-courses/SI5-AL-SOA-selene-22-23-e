@@ -22,7 +22,7 @@ services:
     image: "mongo:4.4.15"
     restart: always
     ports:
-      - 27017:27017
+      - ${MONGODB_PORT}:${MONGODB_PORT}
     networks:
       - soa-team-e-network-development
 
