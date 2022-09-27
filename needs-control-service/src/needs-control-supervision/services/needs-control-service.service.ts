@@ -1,28 +1,40 @@
 import {Injectable} from '@nestjs/common';
-import {NeedsDto} from '../dto/status-life-modules.dto';
+import {SupplyOrderDTO} from '../dto/supply-order.dto';
 import {firstValueFrom} from "rxjs";
 import {AxiosResponse} from "@nestjs/terminus/dist/health-indicator/http/axios.interfaces";
 import {ConfigService} from "@nestjs/config";
 import {HttpService} from "@nestjs/axios";
 import {DependenciesConfig} from "../../shared/config/interfaces/dependencies-config.interface";
+import {Model} from "mongoose";
+import {InjectModel} from "@nestjs/mongoose";
+import {Needs, NeedsDocument} from "../schemas/status-life-module.schema";
+import {NeedsDto} from "../dto/needs.dto";
 
 @Injectable()
 export class NeedsControlServiceService {
 
-  private _baseUrl: string;
+  private _baseUrlModule: string;
+  private _baseUrlResupply: string;
 
   private _moduleLifePath = '/module/';
 
-  constructor(private configService: ConfigService, private readonly httpService: HttpService) {
-    // const dependenciesConfig = this.configService.get<DependenciesConfig>('dependencies');
-    // this._baseUrl = `http://${dependenciesConfig.module_life_service_url_with_port}`;
-    this._baseUrl = 'http://'+ process.env.MODULE_LIFE_SERVICE_URL_WITH_PORT;
+  constructor(private configService: ConfigService, private readonly httpService: HttpService, @InjectModel(Needs.name) private needsDocumentModel: Model<NeedsDocument>) {
+    this._baseUrlModule = 'http://'+ process.env.MODULE_LIFE_SERVICE_URL_WITH_PORT;
+    this._baseUrlResupply = 'http://'+ process.env.RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT;
 
   }
 
   async needsModules(): Promise<NeedsDto[]> {
-    const retrieveModuleStatusResponse: AxiosResponse<NeedsDto[]> = await firstValueFrom(this.httpService.get(this._baseUrl+ this._moduleLifePath));
+    const retrieveModuleStatusResponse: AxiosResponse<NeedsDto[]> = await firstValueFrom(this.httpService.get(this._baseUrlModule+ '/needs'));
     return retrieveModuleStatusResponse.data;
   }
 
+
+  async supplyOrderToSent(supplyOrderDTO: SupplyOrderDTO): Promise<string>{
+    const test: AxiosResponse = await firstValueFrom(this.httpService.post(this._baseUrlResupply+ '/resupply-supervision/supply', supplyOrderDTO));
+    if(test.status != 200){
+      return "Commande échoué"
+    }
+    return "Commande passé"
+  }
 }

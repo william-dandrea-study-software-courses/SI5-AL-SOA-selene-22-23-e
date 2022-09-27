@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StatusLifeModuleDto } from '../dto/status-life-modules.dto';
+import {SupplyOrderDTO} from '../dto/supply-order.dto';
 
 @Injectable()
 export class ResupplySupervisionService {
@@ -7,7 +7,8 @@ export class ResupplySupervisionService {
     const i = 0;
   }
 
-  async modulesStatus(): Promise<StatusLifeModuleDto[]> {
-    return [{ id_module: 1, status: true }];
+  async resupply(resupply : SupplyOrderDTO): Promise<any> {
+    console.log(resupply)
+    return Promise.resolve()
   }
 }

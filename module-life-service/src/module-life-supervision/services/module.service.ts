@@ -14,11 +14,11 @@ import {NeedsDto} from "../dto/needs.dto";
 export class ModuleService {
   constructor(@InjectModel(StatusLifeModule.name) private statusLifeModuleModel: Model<StatusLifeModuleDocument>) {}
 
-  async getModules(): Promise<ModuleDto[]> {
+  async getModules(): Promise<StatusLifeModule[]> {
     return this.statusLifeModuleModel.find().lean();
   }
 
-  async getNeeds(): Promise<NeedsDto[]> {
+  async getNeeds(): Promise<StatusLifeModule[]> {
     return this.statusLifeModuleModel.find().lean();
   }
 

@@ -8,6 +8,7 @@ import { ModuleInDto } from "../dto/module-in.dto";
 
 import { ModuleAlreadyExistsException} from "../exceptions/module-already-exists.exception";
 import {NeedsDto} from "../dto/needs.dto";
+import {StatusLifeModule} from "../schemas/status-life-module.schema";
 
 @ApiTags('module-life-supervision')
 @Controller('')
@@ -30,14 +31,11 @@ export class ModuleController {
 
   @Get("/needs")
   @ApiOkResponse({ type: Boolean })
-  async getNeeds(): Promise<NeedsDto[]> {
+  async getNeeds(): Promise<NeedsDto> {
     return this.moduleService.getNeeds().then(listDto =>{
-      let response : NeedsDto[]=[];
-      listDto.forEach(x => {
-        response.push(new NeedsDto(x))
-      })
+      const response = new NeedsDto(listDto)
       return response
-    });;
+    });
   }
 
   @Post()

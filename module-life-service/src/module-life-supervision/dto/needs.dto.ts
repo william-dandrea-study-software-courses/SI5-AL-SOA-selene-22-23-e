@@ -1,17 +1,17 @@
 import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
+import {StatusLifeModule} from "../schemas/status-life-module.schema";
 
 export class NeedsDto {
 
-    constructor(x: NeedsDto) {
-        this.id_module = x.id_module;
-        this.needs = x.needs;
+    constructor(x: StatusLifeModule[]) {
+        x.forEach(module =>{
+            if(module.needs) {
+                this.quantity += 1;
+            }
+        })
     }
 
     @IsNotEmpty()
     @IsNumber()
-    id_module: number;
-
-    @IsNotEmpty()
-    @IsBoolean()
-    needs: boolean;
+    quantity: number = 0;
 }
