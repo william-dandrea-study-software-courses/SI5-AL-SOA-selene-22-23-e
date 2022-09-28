@@ -11,7 +11,7 @@ export class ModuleLifeProxyService {
 
     private _baseUrl: string;
 
-    private _moduleLifePath = '/module/';
+    private _moduleLifePath = '/status/';
 
     constructor(private configService: ConfigService, private readonly httpService: HttpService) {
         // const dependenciesConfig = this.configService.get<DependenciesConfig>('dependencies');

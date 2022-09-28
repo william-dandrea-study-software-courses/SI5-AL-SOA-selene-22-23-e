@@ -20,7 +20,7 @@ export class NeedsControlServiceController {
 
   @ApiOkResponse({type: Boolean})
   @HttpCode(200)
-  @Post('/supplyOrder')
+  @Post('/sendOrder')
   @ApiCreatedResponse({ description: 'The order has been successfully sent.', type: SupplyOrderDTO})
   async supplyOrder(@Body() supplyOrderDTO: SupplyOrderDTO): Promise<any>{
     console.log("supply Order")

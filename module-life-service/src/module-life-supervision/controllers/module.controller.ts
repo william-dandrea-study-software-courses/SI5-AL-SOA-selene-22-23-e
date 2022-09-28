@@ -17,7 +17,7 @@ export class ModuleController {
     private readonly moduleService: ModuleService,
   ) {}
 
-  @Get("/module")
+  @Get("/status")
   @ApiOkResponse({ type: Boolean })
   async getModules(): Promise<ModuleDto[]> {
     console.log("get module")
