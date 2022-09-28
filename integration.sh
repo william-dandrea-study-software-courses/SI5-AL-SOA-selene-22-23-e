@@ -1,4 +1,12 @@
 #Peupler la base de données des modules
+
+
+echo 'POST http://localhost:4303/'
+ echo 'Body : '
+ echo '{"id_module":512,'
+ echo '"status":true,'
+ echo '"needs":true}'
+
 curl -X 'POST' \
   'http://localhost:4303/' \
   -H 'accept: application/json' \
@@ -7,6 +15,10 @@ curl -X 'POST' \
 "status":true,
 "needs":true}'
 
+echo ''
+echo '--------------------------------------------------'
+echo ''
+
 curl -X 'POST' \
   'http://localhost:4303/' \
   -H 'accept: application/json' \
@@ -14,6 +26,7 @@ curl -X 'POST' \
   -d '{"id_module":513,
 "status":true,
 "needs":false}'
+
 
 curl -X 'POST' \
   'http://localhost:4303/' \
