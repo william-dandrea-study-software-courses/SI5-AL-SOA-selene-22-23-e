@@ -3,7 +3,7 @@ import { ResupplySupervisionController } from './controllers/resupply-supervisio
 import { ResupplySupervisionService } from './services/resupply-supervision.service';
 import { HttpModule } from '@nestjs/axios';
 import {MongooseModule} from "@nestjs/mongoose";
-import {SupplyOrder, SupplyOrderSchema} from "./schemas/status-life-module.schema";
+import {SupplyOrder, SupplyOrderSchema} from "./schemas/supply-order.schema";
 @Module({
   controllers: [ResupplySupervisionController],
   providers: [ResupplySupervisionService],

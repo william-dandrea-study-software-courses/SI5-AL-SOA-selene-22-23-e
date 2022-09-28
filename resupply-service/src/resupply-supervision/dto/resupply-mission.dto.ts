@@ -8,7 +8,7 @@ export class ResupplyMissionDto {
 
   @IsNotEmpty()
   @IsNumber()
-  id_commande: number;
+  quantity: number;
 
   @IsNotEmpty()
   @IsEnum(StatusResupplyEnumSchema)

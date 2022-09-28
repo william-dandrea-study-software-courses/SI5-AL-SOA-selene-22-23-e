@@ -13,12 +13,7 @@ export class SupplyOrder {
 
   @ApiProperty()
   @Prop({ required: true, min: 0 })
-  id_life_module: number;
-
-  @ApiProperty()
-  @Prop({ required: true })
-  status: boolean;
+  quantity: number;
 }
 
-export const SupplyOrderSchema =
-  SchemaFactory.createForClass(SupplyOrder);
+export const SupplyOrderSchema = SchemaFactory.createForClass(SupplyOrder);
