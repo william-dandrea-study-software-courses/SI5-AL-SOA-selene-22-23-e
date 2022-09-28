@@ -19,7 +19,11 @@ export class ModuleService {
     return this.moduleModel.find().lean().then(listDto => {
       let response : ModuleDto[]=[];
       listDto.forEach(x => {
-        response.push(new ModuleDto(x))
+        let dto = new ModuleDto();
+        dto.id_module = x.id_module;
+        dto.lifeStatus = x.lifeStatus;
+        dto.needsStatus = x.needsStatus;
+        response.push(dto);
       })
       return response;
     });
