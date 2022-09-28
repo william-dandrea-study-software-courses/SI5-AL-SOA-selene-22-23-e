@@ -20,6 +20,7 @@ export class ModuleController {
   @Get("/module")
   @ApiOkResponse({ type: Boolean })
   async getModules(): Promise<ModuleDto[]> {
+    console.log("get module")
     return this.moduleService.getModules().then(listDto =>{
       let response : ModuleDto[]=[];
       listDto.forEach(x => {
@@ -32,6 +33,7 @@ export class ModuleController {
   @Get("/needs")
   @ApiOkResponse({ type: Boolean })
   async getNeeds(): Promise<NeedsDto> {
+    console.log("get needs")
     return this.moduleService.getNeeds().then(listDto =>{
       const response = new NeedsDto(listDto)
       return response
@@ -42,6 +44,7 @@ export class ModuleController {
   @ApiCreatedResponse({ description: 'The module has been successfully added.', type: ModuleDto })
   @ApiConflictResponse({ type: ModuleAlreadyExistsException, description: 'Id module already exists' })
   async postModule(@Body() statusLifeModuleInDto: ModuleInDto) {
+    console.log("post module")
     return this.moduleService.postModule(statusLifeModuleInDto);
   }
 }

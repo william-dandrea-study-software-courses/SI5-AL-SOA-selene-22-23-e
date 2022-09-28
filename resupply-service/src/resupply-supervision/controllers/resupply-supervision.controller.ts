@@ -31,7 +31,7 @@ export class ResupplySupervisionController {
   }
 
   @ApiOkResponse({ type: Boolean })
-  @Get('/getOrders')
+  @Get('/supplyOrders')
   async getResupplyOrder(): Promise<any> {
     console.log(
         'Récupération des commandes',
