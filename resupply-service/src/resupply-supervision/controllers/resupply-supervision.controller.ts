@@ -16,4 +16,10 @@ export class ResupplySupervisionController {
   async supply(@Body() supplyOrderDTO: SupplyOrderDTO): Promise<any> {
     return this.moduleLifeSupervisionService.resupply(supplyOrderDTO);
   }
+
+  @ApiOkResponse({ type: Boolean })
+  @Get('/')
+  async getResupplyOrder(@Body() supplyOrderDTO: SupplyOrderDTO): Promise<any> {
+    return this.moduleLifeSupervisionService.getResupplyOrder();
+  }
 }
