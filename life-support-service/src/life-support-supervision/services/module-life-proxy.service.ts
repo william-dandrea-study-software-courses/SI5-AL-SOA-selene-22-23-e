@@ -1,12 +1,10 @@
-import { firstValueFrom } from 'rxjs';
-import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { ConfigService } from '@nestjs/config';
+import {firstValueFrom} from 'rxjs';
+import {Injectable} from '@nestjs/common';
+import {HttpService} from '@nestjs/axios';
+import {ConfigService} from '@nestjs/config';
 
-import { DependenciesConfig } from '../../shared/config/interfaces/dependencies-config.interface';
-
-import {ModuleDto} from "../dto/modules.dto";
-import {AxiosResponse} from "@nestjs/terminus/dist/health-indicator/http/axios.interfaces";
+import { ModuleDto } from '../dto/modules.dto';
+import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 
 @Injectable()
 export class ModuleLifeProxyService {
@@ -23,16 +21,6 @@ export class ModuleLifeProxyService {
 
     async superviseModules(): Promise<ModuleDto[]> {
         const retrieveModuleStatusResponse: AxiosResponse<ModuleDto[]> = await firstValueFrom(this.httpService.get(this._baseUrl+ this._moduleLifePath));
-        const modulesStatus= retrieveModuleStatusResponse.data;
-        console.log(modulesStatus);
-        return modulesStatus;
+        return retrieveModuleStatusResponse.data;
     }
-
 }
-
-
-
-
-
-
-

@@ -17,8 +17,11 @@ services:
       - SWAGGERUI_TITLE=Needs Control Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à surveiller les besoins des modules en contactant Module Life Service et à envoyer les demandes de ravitaillement au Resupply Service
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4203
+      - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4201
     depends_on:
       - mongo_db_needs_control
+      - module-life-service
+      - resupply-service
     networks:
       - soa-team-e-network
   mongo_db_needs_control:
