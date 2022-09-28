@@ -19,12 +19,18 @@ export class LifeSupportSupervisionController {
   @ApiOkResponse({ type: Boolean })
   @Get('/global-supervise')
   async superviseModuleStatus(): Promise<boolean> {
+    console.log(
+      'Récupération du statut général des modules',
+    );
     return this.moduleLifeSupervisionService.globalSuperviseModules();
   }
 
   @ApiOkResponse({ type: Boolean })
   @Get('/supervise')
   async supervise(): Promise<ModuleDto[]> {
+    console.log(
+        'Récupération du statut de chacun des modules',
+    );
     return this.moduleLifeProxyService.superviseModules();
   }
 }
