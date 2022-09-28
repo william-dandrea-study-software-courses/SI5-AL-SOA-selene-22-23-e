@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import {MongooseModule} from "@nestjs/mongoose";
 
-import { StatusLifeModule, StatusLifeModuleSchema } from './schemas/status-life-module.schema';
+import { LifeModule, LifeModuleSchema } from './schemas/module.schema';
 
 import { ModuleController } from './controllers/module.controller';
 import { ModuleService } from './services/module.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: StatusLifeModule.name, schema: StatusLifeModuleSchema }])],
+  imports: [MongooseModule.forFeature([{ name: LifeModule.name, schema: LifeModuleSchema }])],
   controllers: [ModuleController],
   providers: [ModuleService],
 })

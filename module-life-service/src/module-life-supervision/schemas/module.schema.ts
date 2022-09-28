@@ -2,12 +2,12 @@ import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
-export type StatusLifeModuleDocument = StatusLifeModule & Document;
+export type LifeModuleDocument = LifeModule & Document;
 
 @Schema({
   versionKey: false,
 })
-export class StatusLifeModule {
+export class LifeModule {
   @ApiProperty()
   _id: string;
 
@@ -17,12 +17,12 @@ export class StatusLifeModule {
 
   @ApiProperty()
   @Prop({ required: true })
-  status: boolean;
+  lifeStatus: boolean;
 
   @ApiProperty()
   @Prop({ required: true })
-  needs: boolean;
+  needsStatus: boolean;
 }
 
-export const StatusLifeModuleSchema =
-    SchemaFactory.createForClass(StatusLifeModule);
+export const LifeModuleSchema =
+    SchemaFactory.createForClass(LifeModule);

@@ -1,50 +1,56 @@
-import {Body, Controller, Get, Post} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, Post} from '@nestjs/common';
 import {ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiTags} from '@nestjs/swagger';
 
 import { ModuleService } from '../services/module.service';
 
-import { ModuleDto } from '../dto/module.dto';
-import { ModuleInDto } from "../dto/module-in.dto";
-
 import { ModuleAlreadyExistsException} from "../exceptions/module-already-exists.exception";
-import {NeedsDto} from "../dto/needs.dto";
-import {StatusLifeModule} from "../schemas/status-life-module.schema";
 
-@ApiTags('module-life-supervision')
+import { NeedsDto } from "../dto/needs.dto";
+import { SupplyDto } from "../dto/supply.dto";
+import { ModuleLifeStatusDto} from '../dto/module-life-status.dto';
+import { ModuleDto } from "../dto/module.dto";
+
+@ApiTags('module-supervision')
 @Controller('')
 export class ModuleController {
   constructor(
     private readonly moduleService: ModuleService,
   ) {}
 
-  @Get("/status")
-  @ApiOkResponse({ type: Boolean })
+  @Get("/module")
+  @ApiOkResponse()
   async getModules(): Promise<ModuleDto[]> {
-    console.log("get module")
-    return this.moduleService.getModules().then(listDto =>{
-      let response : ModuleDto[]=[];
-      listDto.forEach(x => {
-        response.push(new ModuleDto(x))
-      })
-      return response
-    });
+    console.log("get modules");
+    return this.moduleService.getModules();
+  }
+
+  @Get("/life-status")
+  @ApiOkResponse({ type: Boolean })
+  async getModuleLifeStatus(): Promise<ModuleLifeStatusDto[]> {
+    console.log("get module life status")
+    return this.moduleService.getModulesLifeStatus();
   }
 
   @Get("/needs")
   @ApiOkResponse({ type: Boolean })
   async getNeeds(): Promise<NeedsDto> {
     console.log("get needs")
-    return this.moduleService.getNeeds().then(listDto =>{
-      const response = new NeedsDto(listDto)
-      return response
-    });
+    return this.moduleService.getNeeds();
   }
 
-  @Post()
+  @Post("/module")
   @ApiCreatedResponse({ description: 'The module has been successfully added.', type: ModuleDto })
   @ApiConflictResponse({ type: ModuleAlreadyExistsException, description: 'Id module already exists' })
-  async postModule(@Body() statusLifeModuleInDto: ModuleInDto) {
+  async postModule(@Body() moduleDto: ModuleDto) {
     console.log("post module")
-    return this.moduleService.postModule(statusLifeModuleInDto);
+    return this.moduleService.postModule(moduleDto);
+  }
+
+  @Post("/supply-needs")
+  @HttpCode(200)
+  @ApiOkResponse({})
+  async supplyNeeds(@Body() supply : SupplyDto) {
+    console.log("supply");
+    await this.moduleService.supplyModule(supply);
   }
 }

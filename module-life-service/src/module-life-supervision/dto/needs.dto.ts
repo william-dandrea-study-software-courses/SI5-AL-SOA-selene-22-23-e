@@ -1,11 +1,11 @@
-import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
-import {StatusLifeModule} from "../schemas/status-life-module.schema";
+import { IsNotEmpty, IsNumber } from 'class-validator';
+import { LifeModule } from "../schemas/module.schema";
 
 export class NeedsDto {
 
-    constructor(x: StatusLifeModule[]) {
+    constructor(x: LifeModule[]) {
         x.forEach(module =>{
-            if(module.needs) {
+            if(module.needsStatus) {
                 this.quantity += 1;
             }
         })

@@ -1,17 +1,22 @@
 import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
-import {StatusLifeModule} from "../schemas/status-life-module.schema";
+import {LifeModule} from "../schemas/module.schema";
 
 export class ModuleDto {
-  constructor(x: StatusLifeModule) {
-    this.id_module = x.id_module;
-    this.status = x.status;
-  }
+    constructor(x: LifeModule) {
+        this.id_module = x.id_module;
+        this.lifeStatus = x.lifeStatus;
+        this.needsStatus = x.needsStatus;
+    }
 
-  @IsNotEmpty()
-  @IsNumber()
-  id_module: number;
+    @IsNotEmpty()
+    @IsNumber()
+    id_module: number;
 
-  @IsNotEmpty()
-  @IsBoolean()
-  status: boolean;
+    @IsNotEmpty()
+    @IsBoolean()
+    lifeStatus: boolean;
+
+    @IsNotEmpty()
+    @IsBoolean()
+    needsStatus: boolean;
 }

@@ -1,6 +1,6 @@
 import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
 
-export class SupplyOrderDTO {
+export class SupplyOrderDto {
 
   @IsNotEmpty()
   @IsNumber()

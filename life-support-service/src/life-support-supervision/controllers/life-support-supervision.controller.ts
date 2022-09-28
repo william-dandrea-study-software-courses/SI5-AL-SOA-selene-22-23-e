@@ -17,7 +17,7 @@ export class LifeSupportSupervisionController {
   ) {}
 
   @ApiOkResponse({ type: Boolean })
-  @Get('/global-supervise')
+  @Get('/global')
   async superviseModuleStatus(): Promise<boolean> {
     console.log(
       'Récupération du statut général des modules',
@@ -26,7 +26,7 @@ export class LifeSupportSupervisionController {
   }
 
   @ApiOkResponse({ type: Boolean })
-  @Get('/supervise')
+  @Get('/')
   async supervise(): Promise<ModuleDto[]> {
     console.log(
         'Récupération du statut de chacun des modules',
