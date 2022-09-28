@@ -19,7 +19,7 @@ export class ResupplySupervisionController {
   }
 
   @ApiOkResponse({ type: Boolean })
-  @Get('/')
+  @Get('/rocketStatus')
   async retrieveResupplyMissionsStatus(): Promise<ResupplyMissionDto[]> {
     return this.resupplySupervisionService.retrieveResupplyMissionsStatus();
   }

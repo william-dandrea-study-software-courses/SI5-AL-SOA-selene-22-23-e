@@ -3,8 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 
-import { DependenciesConfig } from '../../shared/config/interfaces/dependencies-config.interface';
-
 import { ResupplyMissionDto } from '../dto/resupply-mission.dto';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 
@@ -18,8 +16,6 @@ export class NeedsControlProxyService {
     private configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
-    // const dependenciesConfig = this.configService.get<DependenciesConfig>('dependencies');
-    // this._baseUrl = `http://${dependenciesConfig.module_life_service_url_with_port}`;
     this._baseUrl =
       'http://' + process.env.RESUPPLY_SUPERVISION_SERVICE_URL_WITH_PORT;
   }
