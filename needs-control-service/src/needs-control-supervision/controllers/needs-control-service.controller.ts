@@ -14,6 +14,7 @@ export class NeedsControlServiceController {
   @ApiOkResponse({ type: Boolean })
   @Get('/moduleNeeds')
   async superviseModuleStatus(): Promise<NeedsDto[]> {
+    console.log("supervise module status")
     return this.moduleLifeSupervisionService.needsModules();
   }
 
@@ -22,7 +23,7 @@ export class NeedsControlServiceController {
   @Post('/supplyOrder')
   @ApiCreatedResponse({ description: 'The order has been successfully sent.', type: SupplyOrderDTO})
   async supplyOrder(@Body() supplyOrderDTO: SupplyOrderDTO): Promise<any>{
-    console.log(supplyOrderDTO)
+    console.log("supply Order")
     return this.moduleLifeSupervisionService.supplyOrderToSent(supplyOrderDTO)
   }
 }
