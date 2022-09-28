@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import {Controller, Get, Logger} from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { HttpService } from '@nestjs/axios';
 
@@ -10,6 +10,8 @@ import { ModuleDto } from '../dto/modules.dto';
 @ApiTags('life-support-supervision')
 @Controller('/supervision')
 export class LifeSupportSupervisionController {
+  private readonly logger = new Logger(LifeSupportSupervisionController.name);
+
   constructor(
     private readonly moduleLifeSupervisionService: LifeSupportSupervisionService,
     private readonly moduleLifeProxyService: ModuleLifeProxyService,
@@ -19,18 +21,14 @@ export class LifeSupportSupervisionController {
   @ApiOkResponse({ type: Boolean })
   @Get('/global-supervise')
   async superviseModuleStatus(): Promise<boolean> {
-    console.log(
-      'Récupération du statut général des modules',
-    );
+    this.logger.log('Récupération du statut général des modules');
     return this.moduleLifeSupervisionService.globalSuperviseModules();
   }
 
   @ApiOkResponse({ type: Boolean })
   @Get('/supervise')
   async supervise(): Promise<ModuleDto[]> {
-    console.log(
-        'Récupération du statut de chacun des modules',
-    );
+    this.logger.log('Récupération du statut de chacun des modules',);
     return this.moduleLifeProxyService.superviseModules();
   }
 }
