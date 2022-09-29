@@ -15,5 +15,5 @@ export class ModuleDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsBoolean()
-  needsStatus: boolean;
+  supplies: boolean;
 }

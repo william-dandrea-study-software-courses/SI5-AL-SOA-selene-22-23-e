@@ -6,37 +6,37 @@ echo ''
 #Peupler la base de données des modules
 
 curl -X 'POST' \
-  'http://localhost:4303/' \
+  'http://localhost:4303/module' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"id_module":512,
-"status":true,
-"needs":true}'
+"lifeStatus":true,
+"supplies":true}'
 
 curl -X 'POST' \
-  'http://localhost:4303/' \
+  'http://localhost:4303/module' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"id_module":513,
-"status":true,
-"needs":false}'
+"lifeStatus":true,
+"supplies":false}'
 
 curl -X 'POST' \
-  'http://localhost:4303/' \
+  'http://localhost:4303/module' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"id_module":514,
-"status":true,
-"needs":true}'
+"lifeStatus":true,
+"supplies":true}'
 
 
 curl -X 'POST' \
-  'http://localhost:4303/' \
+  'http://localhost:4303/module' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"id_module":515,
-"status":true,
-"needs":true}'
+"lifeStatus":true,
+"supplies":true}'
 
 echo ''
 echo ''
@@ -47,13 +47,13 @@ echo "=> Récupérer l'état individuel des modules via life support service"
 echo 'En tans que Deke je veux récupérer tout les modules avec leur états'
 echo ''
 
-echo 'GET http://localhost:4304/supervision/supervise'
+echo 'GET http://localhost:4304/supervision/'
 echo ''
 echo 'Response:'
 
 #Récupérer l'état individuel des modules par Deke via life support
 curl -X 'GET' \
-  'http://localhost:4304/supervision/supervise' \
+  'http://localhost:4304/supervision/' \
   -H 'accept: application/json'
 
 echo ''
@@ -61,14 +61,14 @@ echo ''
 echo "=> Récupérer l'état général des modules via life support service"
 echo "En tans que Deke je savoir si tout mes modules sont dans l'etat true rapidement"
 echo ''
-echo 'GET http://localhost:4304/supervision/global-supervise'
+echo 'GET http://localhost:4304/supervision/global'
 echo ''
 
 echo 'Response:'
 #Récupérer l'état général des modules par Deke via life support
 
 curl -X 'GET' \
-  'http://localhost:4304/supervision/global-supervise' \
+  'http://localhost:4304/supervision/global' \
   -H 'accept: application/json'
 
 echo ''

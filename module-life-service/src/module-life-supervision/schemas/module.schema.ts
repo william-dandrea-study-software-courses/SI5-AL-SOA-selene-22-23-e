@@ -21,7 +21,7 @@ export class LifeModule {
 
   @ApiProperty()
   @Prop({ required: true })
-  needsStatus: boolean;
+  supplies: boolean;
 }
 
 export const LifeModuleSchema =

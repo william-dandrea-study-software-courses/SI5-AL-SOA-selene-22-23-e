@@ -5,7 +5,7 @@ import { ApiProperty } from "@nestjs/swagger";
 export class NeedsDto {
   constructor(x: LifeModule[]) {
     x.forEach((module) => {
-      if (module.needsStatus) {
+      if (module.supplies) {
         this.quantity += 1;
       }
     });

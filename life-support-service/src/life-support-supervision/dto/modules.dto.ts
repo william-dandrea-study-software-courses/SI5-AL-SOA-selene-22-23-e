@@ -10,5 +10,5 @@ export class ModuleDto {
   @ApiProperty({ description: "Status of the Moon Module (true if status is UP, false if status is DOWN"})
   @IsNotEmpty()
   @IsBoolean()
-  status: boolean;
+  lifeStatus: boolean;
 }

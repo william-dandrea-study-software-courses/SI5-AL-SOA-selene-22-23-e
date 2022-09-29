@@ -22,7 +22,7 @@ export class ModuleService {
         let dto = new ModuleDto();
         dto.id_module = x.id_module;
         dto.lifeStatus = x.lifeStatus;
-        dto.needsStatus = x.needsStatus;
+        dto.supplies = x.supplies;
         response.push(dto);
       })
       return response;
@@ -58,8 +58,8 @@ export class ModuleService {
     let supplyQuantity : number = supply.quantity;
     this.moduleModel.find().lean().then(async modules => {
       for (const module of modules) {
-        if (supplyQuantity > 0 && module.needsStatus) {
-          module.needsStatus = false;
+        if (supplyQuantity > 0 && module.supplies) {
+          module.supplies = false;
           await this.moduleModel.findByIdAndUpdate( module._id, module).exec();
           supplyQuantity -= 1;
         }

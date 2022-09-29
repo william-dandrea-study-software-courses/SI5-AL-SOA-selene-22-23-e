@@ -10,8 +10,8 @@ export class LifeSupportSupervisionService {
     const moduleStatus: ModuleDto[] = await this.moduleLifeProxyService.superviseModules();
     let states = true;
     moduleStatus.forEach(module => {
-        console.log(module.status)
-        if(!module.status){
+        console.log(module.lifeStatus)
+        if(!module.lifeStatus){
           states = false
         }
     })
