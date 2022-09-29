@@ -1,14 +1,15 @@
-import { IsNotEmpty, IsNumber, IsEnum } from 'class-validator';
+import {IsNotEmpty, IsEnum, IsString, IsArray} from 'class-validator';
 import { StatusResupplyEnumSchema } from '../schemas/status-resupply-enum.schema';
+import {SupplyOrderDTO} from "./supply-order.dto";
 
 export class ResupplyMissionDto {
   @IsNotEmpty()
-  @IsNumber()
-  id_fusee: number;
+  @IsString()
+  _id: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  quantity: number;
+  @IsArray()
+  orders: SupplyOrderDTO[];
 
   @IsNotEmpty()
   @IsEnum(StatusResupplyEnumSchema)
