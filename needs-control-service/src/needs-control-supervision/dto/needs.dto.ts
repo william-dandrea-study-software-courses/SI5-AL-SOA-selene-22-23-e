@@ -1,8 +1,9 @@
-import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber } from "class-validator";
+import {ApiProperty} from "@nestjs/swagger";
 
 export class NeedsDto {
-
-    @IsNotEmpty()
-    @IsNumber()
-    quantity: number = 0;
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  quantity = 0;
 }

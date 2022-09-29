@@ -1,23 +1,26 @@
-import {Body, Controller, Get, HttpCode, Logger, Post} from '@nestjs/common';
-import {ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiTags} from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, Logger, Post } from "@nestjs/common";
+import {
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiOkResponse, ApiParam,
+  ApiTags,
+} from "@nestjs/swagger";
 
-import { ModuleService } from '../services/module.service';
+import { ModuleService } from "../services/module.service";
 
-import { ModuleAlreadyExistsException} from "../exceptions/module-already-exists.exception";
-import {NeedsDto} from "../dto/needs.dto";
+import { ModuleAlreadyExistsException } from "../exceptions/module-already-exists.exception";
+import { NeedsDto } from "../dto/needs.dto";
 
 import { SupplyDto } from "../dto/supply.dto";
-import { ModuleLifeStatusDto} from '../dto/module-life-status.dto';
+import { ModuleLifeStatusDto } from "../dto/module-life-status.dto";
 import { ModuleDto } from "../dto/module.dto";
 
-@ApiTags('module-supervision')
-@Controller('')
+@ApiTags("module-supervision")
+@Controller("")
 export class ModuleController {
   private readonly logger = new Logger(ModuleController.name);
 
-  constructor(
-    private readonly moduleService: ModuleService,
-  ) {}
+  constructor(private readonly moduleService: ModuleService) {}
 
   @Get("/module")
   @ApiOkResponse()
@@ -41,8 +44,14 @@ export class ModuleController {
   }
 
   @Post("/module")
-  @ApiCreatedResponse({ description: 'The module has been successfully added.', type: ModuleDto })
-  @ApiConflictResponse({ type: ModuleAlreadyExistsException, description: 'Id module already exists' })
+  @ApiCreatedResponse({
+    description: "The module has been successfully added.",
+    type: ModuleDto,
+  })
+  @ApiConflictResponse({
+    type: ModuleAlreadyExistsException,
+    description: "Id module already exists",
+  })
   async postModule(@Body() moduleDto: ModuleDto) {
     this.logger.log("Création d'un nouveau module");
     return this.moduleService.postModule(moduleDto);
@@ -51,7 +60,7 @@ export class ModuleController {
   @Post("/supply-needs")
   @HttpCode(200)
   @ApiOkResponse({})
-  async supplyNeeds(@Body() supply : SupplyDto) {
+  async supplyNeeds(@Body() supply: SupplyDto) {
     this.logger.log("Réapprovisionnement des modules");
     await this.moduleService.supplyModule(supply);
   }
