@@ -17,7 +17,7 @@ export class StatusLifeModule {
 
   @ApiProperty()
   @Prop({ required: true })
-  status: boolean;
+  lifeStatus: boolean;
 }
 
 export const StatusLifeModuleSchema =

@@ -23,7 +23,7 @@ async function bootstrap() {
       .setDescription(swaggeruiConfig.description)
       .setVersion(configService.get('npm_package_version'))
       .addServer('/', 'Without gateway')
-      .addServer('/menu', 'Through gateway')
+      .addServer('/module-life', 'Through gateway')
       .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(swaggeruiConfig.path, app, document);
@@ -35,7 +35,7 @@ async function bootstrap() {
   // Run the app
   const appPort = configService.get('app.port');
   await app.listen(appPort, () => {
-    console.log('Listening on port' + appPort);
+    console.log('Listening on port ' + appPort);
   });
 }
 

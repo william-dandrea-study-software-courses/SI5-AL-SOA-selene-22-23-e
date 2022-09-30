@@ -13,5 +13,6 @@ compile_dir "life-support-service"
 compile_dir "module-life-service"
 compile_dir "needs-control-service"
 compile_dir "resupply-service"
+compile_dir "gateway"
 
 echo "=> Done all"
