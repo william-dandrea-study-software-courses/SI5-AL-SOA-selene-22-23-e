@@ -20,8 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: npm install --prefix build-life-support-service/
-      - run: npm run build --prefix build-life-support-service/
+      - run: npm install --prefix life-support-service/
+      - run: npm run build --prefix life-support-service/
 
   build-module-life-service:
     runs-on: ubuntu-latest
