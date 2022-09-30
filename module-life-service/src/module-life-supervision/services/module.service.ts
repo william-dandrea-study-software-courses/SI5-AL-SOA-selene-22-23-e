@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import {Expression, Model} from "mongoose";
-import {InjectModel} from "@nestjs/mongoose";
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import { Model} from "mongoose";
+import { InjectModel } from "@nestjs/mongoose";
 
 import { LifeModule, LifeModuleDocument } from '../schemas/module.schema';
 
@@ -10,19 +10,26 @@ import { ModuleAlreadyExistsException} from "../exceptions/module-already-exists
 import { NeedsDto } from "../dto/needs.dto";
 import { SupplyDto } from "../dto/supply.dto";
 import { ModuleLifeStatusDto } from "../dto/module-life-status.dto";
+import { ModuleAlreadyIsolatedException } from "../exceptions/module-already-isolated.exception";
+import {InventoryDto} from "../dto/inventory.dto";
+import {ErrorDto} from "../../shared/dto/error.dto";
 
 @Injectable()
 export class ModuleService {
+  private suppliesQuantityMax : number = 10;
+  private suppliesQuantityMin : number = 5;
+
   constructor(@InjectModel(LifeModule.name) private moduleModel: Model<LifeModuleDocument>) {}
 
   async getModules(): Promise<ModuleDto[]> {
-    return this.moduleModel.find().lean().then(listDto => {
+    return this.moduleModel.find().then(modules => {
       let response : ModuleDto[]=[];
-      listDto.forEach(x => {
+      modules.forEach(module => {
         let dto = new ModuleDto();
-        dto.id_module = x.id_module;
-        dto.lifeStatus = x.lifeStatus;
-        dto.supplies = x.supplies;
+        dto.id_module = module.id_module;
+        dto.lifeStatus = module.lifeStatus;
+        dto.supplies = module.supplies;
+        dto.isolated = module.isolated;
         response.push(dto);
       })
       return response;
@@ -30,7 +37,7 @@ export class ModuleService {
   }
 
   async getModulesLifeStatus(): Promise<ModuleLifeStatusDto[]> {
-    return this.moduleModel.find().lean().then(listDto => {
+    return this.moduleModel.find().then(listDto => {
       let response : ModuleLifeStatusDto[]=[];
       listDto.forEach(x => {
         response.push(new ModuleLifeStatusDto(x))
@@ -40,30 +47,71 @@ export class ModuleService {
   }
 
   async getNeeds(): Promise<NeedsDto> {
-    return this.moduleModel.find().lean().then(listDto =>{
-      return new NeedsDto(listDto);
+    let needs = 0;
+    await this.moduleModel.find().then(modules =>{
+      modules.forEach(module => {
+        if (module.supplies<this.suppliesQuantityMax) {
+          needs += this.suppliesQuantityMax - module.supplies;
+        }
+      })
     });
+    return new NeedsDto(needs);
   }
 
-  async postModule(statusLifeModuleInDto: ModuleDto): Promise<ModuleDto> {
-    console.log(statusLifeModuleInDto)
-    const alreadyExists = await this.moduleModel.find({ id_module: statusLifeModuleInDto.id_module });
+  async postModule(moduleDto: ModuleDto): Promise<ModuleDto> {
+    const alreadyExists = await this.moduleModel.find({ id_module: moduleDto.id_module });
     if (alreadyExists.length > 0) {
-      throw new ModuleAlreadyExistsException(statusLifeModuleInDto.id_module);
+      throw new ModuleAlreadyExistsException(moduleDto.id_module);
     }
-    return await this.moduleModel.create(statusLifeModuleInDto);
+    return await this.moduleModel.create(moduleDto);
+  }
+
+  async putModule(moduleId: number, moduleDto: ModuleDto): Promise<ModuleDto> {
+    const module = await this.moduleModel.findOne({ id_module: moduleId });
+    if(module === null) {
+      throw new HttpException("module not found",HttpStatus.NOT_FOUND,);
+    }
+    module.lifeStatus = moduleDto.lifeStatus;
+    module.supplies = moduleDto.supplies;
+    module.isolated = moduleDto.isolated;
+    module.save();
+    return module;
   }
 
   async supplyModule(supply: SupplyDto) {
     let supplyQuantity : number = supply.quantity;
-    this.moduleModel.find().lean().then(async modules => {
-      for (const module of modules) {
-        if (supplyQuantity > 0 && module.supplies) {
-          module.supplies = false;
-          await this.moduleModel.findByIdAndUpdate( module._id, module).exec();
-          supplyQuantity -= 1;
+    this.moduleModel.find().then(async modules => {
+      modules.forEach(module => {
+        if (supplyQuantity > 0 && module.supplies<this.suppliesQuantityMax) {
+          const needs = Math.min(this.suppliesQuantityMax - module.supplies, supplyQuantity);
+          module.supplies += needs;
+          module.save();
+          supplyQuantity -= needs;
         }
-      }
+      })
     });
+  }
+
+  async isolate(moduleId : number) {
+    const module = await this.moduleModel.findOne({ id_module: moduleId });
+    if(module === null) {
+      throw new HttpException("module not found",HttpStatus.NOT_FOUND,);
+    }
+    if (module.isolated) {
+      throw new ModuleAlreadyIsolatedException(moduleId);
+    }
+    module.isolated = true;
+    module.save();
+    return module;
+  }
+
+  async getInventory() :Promise<InventoryDto> {
+    let quantity = 0;
+    await this.moduleModel.find().lean().then(modules =>{
+      modules.forEach(module => {
+        quantity += module.supplies
+      })
+    });
+    return new InventoryDto(quantity);
   }
 }

@@ -9,9 +9,6 @@ export type LifeModuleDocument = LifeModule & Document;
 })
 export class LifeModule {
   @ApiProperty()
-  _id: string;
-
-  @ApiProperty()
   @Prop({ required: true, min: 0 })
   id_module: number;
 
@@ -21,7 +18,11 @@ export class LifeModule {
 
   @ApiProperty()
   @Prop({ required: true })
-  supplies: boolean;
+  supplies: number;
+
+  @ApiProperty()
+  @Prop({ required: true })
+  isolated: boolean;
 }
 
 export const LifeModuleSchema =

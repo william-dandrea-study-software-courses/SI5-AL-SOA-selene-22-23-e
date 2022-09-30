@@ -5,6 +5,7 @@ import {ConfigService} from '@nestjs/config';
 
 import { ModuleDto } from '../dto/modules.dto';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
+import {InventoryDto} from "../dto/inventory.dto";
 
 @Injectable()
 export class ModuleLifeProxyService {
@@ -22,5 +23,15 @@ export class ModuleLifeProxyService {
     async superviseModules(): Promise<ModuleDto[]> {
         const retrieveModuleStatusResponse: AxiosResponse<ModuleDto[]> = await firstValueFrom(this.httpService.get(this._baseUrl+ this._moduleLifePath));
         return retrieveModuleStatusResponse.data;
+    }
+
+    async isolateModule(moduleId:number): Promise<string> {
+        const test: AxiosResponse = await firstValueFrom(
+            this.httpService.put(this._baseUrl + "/module/" + moduleId + "/isolate")
+        );
+        if (test.status != 200) {
+            return "Isolement échoué";
+        }
+        return "Module isolé";
     }
 }

@@ -41,7 +41,7 @@ export class ResupplySupervisionService {
       resupplyMission.orders.push(test2)
       resupplyMission.save()
     }
-    return "Commande validé"
+    return "Commande validée"
   }
 
   async send(resupplyMissionId: string): Promise<ResupplyMissionDto>{
