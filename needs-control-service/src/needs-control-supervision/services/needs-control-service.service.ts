@@ -44,8 +44,8 @@ export class NeedsControlServiceService {
       )
     );
     if (test.status != 200) {
-      return "Commande échoué";
+      return "Commande échouée";
     }
-    return "Commande passé";
+    return "Commande passée";
   }
 }

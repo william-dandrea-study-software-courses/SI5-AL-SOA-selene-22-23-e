@@ -27,7 +27,6 @@ export class NeedsControlProxyService {
       this.httpService.get(this._baseUrl + this._needsControlPath),
     );
     const resupplyStatus = retrieveResupplyStatusResponse.data;
-    console.log(resupplyStatus);
     return resupplyStatus;
   }
 }

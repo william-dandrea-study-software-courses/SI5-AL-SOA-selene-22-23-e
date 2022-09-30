@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Logger, Post } from "@nestjs/common";
+import {Body, Controller, Get, HttpCode, Logger, Param, Post, Put} from "@nestjs/common";
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -14,6 +14,8 @@ import { NeedsDto } from "../dto/needs.dto";
 import { SupplyDto } from "../dto/supply.dto";
 import { ModuleLifeStatusDto } from "../dto/module-life-status.dto";
 import { ModuleDto } from "../dto/module.dto";
+import {ModuleAlreadyIsolatedException} from "../exceptions/module-already-isolated.exception";
+import {InventoryDto} from "../dto/inventory.dto";
 
 @ApiTags("module-supervision")
 @Controller("")
@@ -29,20 +31,6 @@ export class ModuleController {
     return this.moduleService.getModules();
   }
 
-  @Get("/life-status")
-  @ApiOkResponse({ type: Boolean })
-  async getModuleLifeStatus(): Promise<ModuleLifeStatusDto[]> {
-    this.logger.log("Récuperation du status des modules");
-    return this.moduleService.getModulesLifeStatus();
-  }
-
-  @Get("/needs")
-  @ApiOkResponse({ type: Boolean })
-  async getNeeds(): Promise<NeedsDto> {
-    this.logger.log("Récupération des besoins des modules");
-    return this.moduleService.getNeeds();
-  }
-
   @Post("/module")
   @ApiCreatedResponse({
     description: "The module has been successfully added.",
@@ -55,6 +43,46 @@ export class ModuleController {
   async postModule(@Body() moduleDto: ModuleDto) {
     this.logger.log("Création d'un nouveau module");
     return this.moduleService.postModule(moduleDto);
+  }
+
+  @Put("/module/:moduleId")
+  @ApiOkResponse({
+    description: "The module has been successfully updated.",
+    type: ModuleDto,
+  })
+  async putModule(@Param("moduleId") moduleId: number, @Body() moduleDto: ModuleDto) {
+    this.logger.log("Modification d'un nouveau module");
+    return this.moduleService.putModule(moduleId, moduleDto);
+  }
+
+  @Put("/module/:moduleId/isolate")
+  @HttpCode(200)
+  @ApiOkResponse({})
+  @ApiConflictResponse({type: ModuleAlreadyIsolatedException, description: "Module already isolated"})
+  async isolate(@Param("moduleId") moduleId: number) {
+    this.logger.log("Isolement d'un module");
+    await this.moduleService.isolate(moduleId);
+  }
+
+  @Get("/life-status")
+  @ApiOkResponse({ type: Boolean })
+  async getModuleLifeStatus(): Promise<ModuleLifeStatusDto[]> {
+    this.logger.log("Récuperation du status des modules");
+    return this.moduleService.getModulesLifeStatus();
+  }
+
+  @Get("/inventory")
+  @ApiOkResponse({type : InventoryDto})
+  async getInventory(): Promise<InventoryDto> {
+    this.logger.log("Récuperation de l'inventaire de la base");
+    return this.moduleService.getInventory();
+  }
+
+  @Get("/needs")
+  @ApiOkResponse({ type: Boolean })
+  async getNeeds(): Promise<NeedsDto> {
+    this.logger.log("Récupération des besoins des modules");
+    return this.moduleService.getNeeds();
   }
 
   @Post("/supply-needs")

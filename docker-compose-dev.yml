@@ -46,7 +46,7 @@ services:
       - SWAGGERUI_PATH=doc/life-support
       - SWAGGERUI_TITLE=Life Support Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à la surveillance des conditions des systèmes de support des modules habités
-      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
+      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service-dev:4303
     volumes:
       - ./life-support-service:/usr/src/app
       - /usr/src/app/node_modules
@@ -71,8 +71,8 @@ services:
       - SWAGGERUI_PATH=doc/needs-control
       - SWAGGERUI_TITLE=Needs Control Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à surveiller les besoins des modules en contactant Module Life Service et à envoyer les demandes de ravitaillement au Resupply Service
-      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
-      - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
+      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service-dev:4303
+      - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service-dev:4301
     volumes:
       - ./needs-control-service:/usr/src/app
       - /usr/src/app/node_modules

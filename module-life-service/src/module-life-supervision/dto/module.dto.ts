@@ -14,6 +14,11 @@ export class ModuleDto {
 
   @ApiProperty()
   @IsNotEmpty()
+  @IsNumber()
+  supplies: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
   @IsBoolean()
-  supplies: boolean;
+  isolated: boolean;
 }
