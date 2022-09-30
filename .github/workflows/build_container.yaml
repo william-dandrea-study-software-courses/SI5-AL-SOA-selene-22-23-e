@@ -1,0 +1,44 @@
+name: "Build Docker containers"
+
+on: [push, pull_request]
+
+jobs:
+  build-gateway-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production Gateway Container
+        run: ./gateway/prod-build.sh
+
+  build-life-support-service-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production life-support-service Container
+        run: ./life-support-service/prod-build.sh
+
+  build-module-life-service-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production module-life-service Container
+        run: ./module-life-service/prod-build.sh
+
+  build-needs-control-service-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production needs-control-service Container
+        run: ./needs-control-service/prod-build.sh
+
+  build-resupply-service-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production resupply-service Container
+        run: ./resupply-service/prod-build.sh
