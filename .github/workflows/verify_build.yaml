@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: npm ci --prefix gateway/
+      - run: npm install --prefix gateway/
       - run: npm run build --prefix gateway/
 
   build-life-support-service:
@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: npm ci --prefix build-life-support-service/
+      - run: npm install --prefix build-life-support-service/
       - run: npm run build --prefix build-life-support-service/
 
   build-module-life-service:
@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: npm ci --prefix module-life-service/
+      - run: npm install --prefix module-life-service/
       - run: npm run build --prefix module-life-service/
 
   build-needs-control-service:
@@ -40,7 +40,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: npm ci --prefix needs-control-service/
+      - run: npm install --prefix needs-control-service/
       - run: npm run build --prefix needs-control-service/
 
   build-resupply-service:
@@ -50,5 +50,5 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: npm ci --prefix resupply-service/
+      - run: npm install --prefix resupply-service/
       - run: npm run build --prefix resupply-service/
