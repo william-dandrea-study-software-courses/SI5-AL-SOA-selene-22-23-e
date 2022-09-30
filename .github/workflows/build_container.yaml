@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the Production Gateway Container
-        run: ./gateway/prod-build.sh
+        run: docker build --target production -f gateway/Dockerfile -t "gateway" .
 
   build-life-support-service-container:
     runs-on: ubuntu-latest
@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the Production life-support-service Container
-        run: ./life-support-service/prod-build.sh
+        run: docker build --target production -f life-support-service/Dockerfile -t "life-support-service" .
 
   build-module-life-service-container:
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the Production module-life-service Container
-        run: ./module-life-service/prod-build.sh
+        run: docker build --target production -f module-life-service/Dockerfile -t "life-support-service" .
 
   build-needs-control-service-container:
     runs-on: ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the Production needs-control-service Container
-        run: ./needs-control-service/prod-build.sh
+        run: docker build --target production -f needs-control-service/Dockerfile -t "life-support-service" .
 
   build-resupply-service-container:
     runs-on: ubuntu-latest
@@ -41,4 +41,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build the Production resupply-service Container
-        run: ./resupply-service/prod-build.sh
+        run: docker build --target production -f resupply-service/Dockerfile -t "life-support-service" .
