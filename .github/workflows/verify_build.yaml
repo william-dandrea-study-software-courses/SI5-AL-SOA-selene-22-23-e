@@ -1,0 +1,44 @@
+name: "Verify Build"
+
+on: [push, pull_request]
+
+jobs:
+  build-gateway:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - npm ci --prefix gateway/
+      - npm run build --prefix gateway/
+
+  build-life-support-service:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - npm ci --prefix build-life-support-service/
+      - npm run build --prefix build-life-support-service/
+
+  build-module-life-service:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - npm ci --prefix module-life-service/
+      - npm run build --prefix module-life-service/
+
+  build-needs-control-service:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - npm ci --prefix needs-control-service/
+      - npm run build --prefix needs-control-service/
+
+  build-resupply-service:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - npm ci --prefix resupply-service/
+      - npm run build --prefix resupply-service/
