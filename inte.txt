@@ -1,0 +1,109 @@
+===> Awaiting all services ready
+gateway service is up and running at http://localhost:9500
+===> Launch docker container running python integration script
+------------------------------------------------------------------------------------------
+=> Peuplement de la base de données
+
+Ajout de 4 modules pour un quota de provisions max à 10:
+  - Inventaire de 32 provisions
+  - Modules isolés : 1 (514) 
+  - Modules en mauvaise situation : 1
+  - Besoins de 8 provisions
+POST http://localhost:4303/module
+{"id_module":512,"lifeStatus":false,"supplies":10,"isolated":false,"_id":"63386515136f6293e11bfb18"}
+{"id_module":513,"lifeStatus":true,"supplies":7,"isolated":false,"_id":"63386515136f6293e11bfb1b"}
+{"id_module":514,"lifeStatus":false,"supplies":9,"isolated":true,"_id":"63386515136f6293e11bfb1e"}
+{"id_module":515,"lifeStatus":true,"supplies":6,"isolated":false,"_id":"63386515136f6293e11bfb21"}
+--------------------------------- Start Integration Tests --------------------------------
+
+---------------------- Scenario 1 ----------------------
+
+=> Récupérer l'état individuel des modules via Life Support Service
+   En tant que Deke, je veux controler l'état des conditions de vie de chaque module
+GET http://localhost:4304/supervision/
+Response : 
+[{"id_module":512,"lifeStatus":false},{"id_module":513,"lifeStatus":true},{"id_module":514,"lifeStatus":false},{"id_module":515,"lifeStatus":true}]
+
+=> Récupérer l'état général des modules via Life Support Service
+   En tant que Deke, je veux savoir si tous les modules sont dans un bon état rapidement
+GET http://localhost:4304/supervision/global
+Response : 
+false
+
+---------------------- Scenario 2 ----------------------
+
+=> Récupérer la liste des besoins des modules via Needs Control Service
+   En tant que Buzz, je veux récupérer tous les besoins des modules
+GET http://localhost:4302/needs-control-supervision/moduleNeeds
+Response : 
+{"quantity":8}
+
+=> Envoyer une commande à la terre via needs control service
+   En tant que Buzz, je veux envoyer 2 commandes au Resupply Service, une de 13 objets et une autre de 26
+POST http://localhost:4302/needs-control-supervision/sendOrder
+Body :
+{'quantity': 13}
+Response : 
+Commande passée
+
+POST http://localhost:4302/needs-control-supervision/sendOrder
+Body :
+{'quantity': 26}
+Response : 
+Commande passée
+
+---------------------- Scenario 3 ----------------------
+
+=> Récupération des commandes de la base lunaire via Resupply Service
+   En tant que Dorothy, je veux voir toutes les commandes passées
+GET http://localhost:4301/resupply-supervision/supplyOrders
+Response : 
+[{"_id":"63386515334920468d8bbd48","quantity":13,"status":"En cours de traitement"},{"_id":"63386515334920468d8bbd4a","quantity":26,"status":"En cours de traitement"}]
+
+=> Validation d'une commande via Resupply Service
+   En tant que Dorothy, je veux valider une commande passée par la base lunaire
+PUT http://localhost:4301/resupply-supervision/:idCommande/validate
+Response : 
+Commande validée
+
+=> Récupération de la commande via Resupply Service
+   En tant que Dorothy, je veux m'assurer que la commande a été bien été validée
+GET http://localhost:4301/resupply-supervision/supplyOrders
+Response : 
+[{"_id":"63386515334920468d8bbd48","quantity":13,"status":"Validé"},{"_id":"63386515334920468d8bbd4a","quantity":26,"status":"En cours de traitement"}]
+
+=> Récupération des missions de ravitaillement via Resupply Service
+   En tant que Dorothy, je veux controler les missions de ravitaillement
+GET http://localhost:4301/resupply-supervision/rocketStatus
+Response : 
+[{"_id":"63386515334920468d8bbd50","orders":[{"quantity":13,"status":"Validé","_id":"63386515334920468d8bbd48"}],"state":"En cours de traitement"}]
+
+=> Envoi d'une mission de ravitaillement via Resupply Service
+   En tant que Dorothy, je veux envoyer une mission de ravitaillement vers la base lunaire
+PUT http://localhost:4301/resupply-supervision/:missionId/send
+Response : 
+{"_id":"63386515334920468d8bbd50","orders":[{"quantity":13,"status":"Validé","_id":"63386515334920468d8bbd48"}],"resupply_status":"En cours d'acheminement"}
+
+=> Récupération des missions de ravitaillement via Resupply Service
+   En tant que Dorothy, je veux controler les missions de ravitaillement
+GET http://localhost:4301/resupply-supervision/rocketStatus
+Response : 
+[{"_id":"63386515334920468d8bbd50","orders":[{"quantity":13,"status":"Validé","_id":"63386515334920468d8bbd48"}],"state":"En cours d'acheminement"}]
+
+---------------------- Scenario 4 ----------------------
+
+=> Isolement d'un module lunaire via Life Support Service
+   En tant que Deke, je veux isoler un module à distance
+PUT http://localhost:4304/supervision/:idModule/isolate
+Response : 
+Module isolé
+
+---------------------- Scenario 5 ----------------------
+
+=> Récupération de l'inventaire de la base lunaire via Module Life Service
+   En tant que Jim, je veux contrôler l'inventaire de la base lunaire
+GET http://localhost:4303/inventory
+Response : 
+{"statusCode":404,"message":"Cannot GET //inventory","error":"Not Found"}
+
+---------------------------------- End Integration Tests ---------------------------------

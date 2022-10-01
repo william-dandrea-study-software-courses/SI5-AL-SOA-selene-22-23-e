@@ -13,29 +13,19 @@ function wait_on_health()  # $1 is URL of the NestJS service with health endpoin
    echo "$2 service is up and running at $1"
 }
 
+echo -e "===> Awaiting all services ready"
 wait_on_health http://localhost:9500 gateway
 
-echo -e "\033[0;32m ===> Launch integration.sh \033[0m"
-# ./integration.sh
-
-echo -e "\033[0;32m ===> Launch python script \033[0m"
-#docker run -it --rm --name demonstration-python demonstration-python
-
+echo -e "===> Launch docker container running python integration script"
 docker-compose --project-name soa --file ./docker-compose-test.yml up -d
 
-sleep 2
-echo "test"
-test=docker ps | grep 'integration'
-until [ $($test| wc -l) -ge 0 ]
+integrationContainer=$(docker ps | grep 'integration' | wc -l)
+until [ $integrationContainer = 0 ]
 do
   sleep 2
-  echo "waiting integration scripts to finish"
-  echo $test
-  test=docker ps | grep 'integration'
+  integrationContainer=$(docker ps | grep 'integration' | wc -l)
 done
 
-
-echo "ts"
 logs=$(docker logs soa_integration_1)
 #echo $logs
 echo "${logs//\*/\n}"
