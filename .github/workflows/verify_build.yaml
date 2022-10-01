@@ -1,0 +1,54 @@
+name: "Verify Build"
+
+on: [push, pull_request]
+
+jobs:
+  build-gateway:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: npm install --prefix gateway/
+      - run: npm run build --prefix gateway/
+
+  build-life-support-service:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: npm install --prefix life-support-service/
+      - run: npm run build --prefix life-support-service/
+
+  build-module-life-service:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: npm install --prefix module-life-service/
+      - run: npm run build --prefix module-life-service/
+
+  build-needs-control-service:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: npm install --prefix needs-control-service/
+      - run: npm run build --prefix needs-control-service/
+
+  build-resupply-service:
+    runs-on: ubuntu-latest
+    container:
+      image: "node:16.16.0-alpine"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: npm install --prefix resupply-service/
+      - run: npm run build --prefix resupply-service/

@@ -1,0 +1,49 @@
+name: "Build Docker containers"
+
+on: [push, pull_request]
+
+jobs:
+  build-gateway-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production Gateway Container
+        working-directory: ./gateway
+        run: docker build --target production -f Dockerfile -t "gateway" .
+
+  build-life-support-service-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production life-support-service Container
+        working-directory: ./life-support-service
+        run: docker build --target production -f Dockerfile -t "life-support-service" .
+
+  build-module-life-service-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production module-life-service Container
+        working-directory: ./module-life-service
+        run: docker build --target production -f Dockerfile -t "life-support-service" .
+
+  build-needs-control-service-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production needs-control-service Container
+        working-directory: ./needs-control-service
+        run: docker build --target production -f Dockerfile -t "life-support-service" .
+
+  build-resupply-service-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the Production resupply-service Container
+        working-directory: ./resupply-service
+        run: docker build --target production -f Dockerfile -t "life-support-service" .

@@ -57,7 +57,7 @@
 							"\r",
 							"pm.test(\"modules are correctly received\",function() {\r",
 							"    const response = pm.response.text();   \r",
-							"    pm.expect(response).to.eql(\"Commande passé\");\r",
+							"    pm.expect(response).to.eql(\"Commande passée\");\r",
 							"})"
 						],
 						"type": "text/javascript"
