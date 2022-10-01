@@ -1,4 +1,4 @@
-version: "3.8"
+wslversion: "3.8"
 services:
   database-dev:
     image: "mongo:4.4.15"
