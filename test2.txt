@@ -1,4 +1,0 @@
-gateway service is up and running at http://localhost:9500
-[0;32m ===> Launch integration.sh [0m
-[0;32m ===> Launch python script [0m
-test
