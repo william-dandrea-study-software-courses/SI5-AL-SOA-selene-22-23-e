@@ -6,7 +6,7 @@
 - Laurie Fernandez
 - William D'Andrea
 
-##Documentation
+## Documentation
 You can find our first delivery report in the documentation directory.
 
 ## How to create a new module in a microservice
