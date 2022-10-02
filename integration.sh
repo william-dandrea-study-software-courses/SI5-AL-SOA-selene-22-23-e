@@ -126,7 +126,7 @@ echo ''
 echo '--------------------------------------------------'
 echo ''
 echo "=> Récupération de la commande via resupply supervision service"
-echo 'En tant que Dorothy je veux récupérer toutes les commandes passé'
+echo 'En tant que Dorothy je veux récupérer toutes les commandes passées'
 echo ''
 
 echo 'GET http://localhost:4301/resupply-supervision/supplyOrders'

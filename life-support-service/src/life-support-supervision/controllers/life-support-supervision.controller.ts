@@ -1,11 +1,12 @@
-import { Controller, Get, Logger } from "@nestjs/common";
+import {Controller, Get, Logger, Param, Put} from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { HttpService } from "@nestjs/axios";
 
 import { LifeSupportSupervisionService } from "../services/life-support-supervision.service";
 import { ModuleLifeProxyService } from "../services/module-life-proxy.service";
 
-import { ModuleDto } from "../dto/modules.dto";
+import { ModuleDto } from '../dto/modules.dto';
+import {InventoryDto} from "../dto/inventory.dto";
 
 @ApiTags("life-support-supervision")
 @Controller("/supervision")
@@ -30,5 +31,13 @@ export class LifeSupportSupervisionController {
   async supervise(): Promise<ModuleDto[]> {
     this.logger.log("Récupération du statut de chacun des modules");
     return this.moduleLifeProxyService.superviseModules();
+  }
+
+  @ApiOkResponse({ type: Boolean })
+  @Put('/:moduleId/isolate')
+  async isolateModule(@Param("moduleId") moduleId: number): Promise<string> {
+    this.logger.log('Isolement d\'un module');
+    return this.moduleLifeProxyService.isolateModule(moduleId);
+
   }
 }
