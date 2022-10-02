@@ -19,13 +19,13 @@ wait_on_health http://localhost:9500 gateway
 echo -e "===> Launch docker container running python integration script"
 docker-compose --project-name soa --file ./docker-compose-test.yml up -d
 
-integrationContainer=$(docker ps | grep 'integration' | wc -l)
+integrationContainer=$(docker ps | grep 'soa-integration-team-e' | wc -l)
 until [ $integrationContainer = 0 ]
 do
   sleep 2
-  integrationContainer=$(docker ps | grep 'integration' | wc -l)
+  integrationContainer=$(docker ps | grep 'soa-integration-team-e' | wc -l)
 done
 
-logs=$(docker logs soa_integration_1)
+logs=$(docker logs soa-integration-team-e)
 #echo $logs
 echo "${logs//\*/\n}"
