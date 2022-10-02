@@ -46,7 +46,7 @@ When you finished the development, you can remove the containers with the comman
 At the beginning of the project, we used a docker-compose in each micro-services. Each docker-compose contained the 
 micro-services image, and a database. After resolving some troubles with the volumes, and by the recommendation of teachers,
 we move to a centralized docker-compose, containing only one MongoDB database. So, all the microservices are connected
-to only one database. 
+to only one database, and each micro-services ahve an instance of this MongoDB database. 
 
 The problem with our implementation, is that we have to build every time all the images (when we do a `dev-start-all.sh`), in the future, we want to 
 create a script that rebuild only the needed images. 
@@ -56,7 +56,7 @@ create a script that rebuild only the needed images.
 ### Production mode for deployment
 
 We created a production mode, and in this one, we ermoved the docker volumes and built the micro-services in a production
-mode. FOr launching the project in development mode, you have to :
+mode. For launching the project in production mode, you have to :
 1. Launch `build-all.sh` for build the production images
 2. Launch `prod-start-all.sh` for launching the docker containers
 3. Run `prod-stop-all.sh` for stoping the docker containers
