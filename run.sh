@@ -1,5 +1,4 @@
 #!/bin/bash
-
 ## common functions
 
 set -e
@@ -12,6 +11,7 @@ function wait_on_health()  # $1 is URL of the NestJS service with health endpoin
    done
    echo "$2 service is up and running at $1"
 }
+
 
 echo -e "===> Awaiting all services ready"
 wait_on_health http://localhost:9500 gateway
