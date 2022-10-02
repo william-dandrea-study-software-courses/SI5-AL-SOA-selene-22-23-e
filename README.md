@@ -79,4 +79,10 @@ are working and we have no troubles with coding errors
 The second workflow build all images with docker, with this workflow, we want to be sure that
 the production docker images are working, and we can push them into production
 
+## Integration tests
 
+Our integration tests are launched with the demontrate.py script. All the needed dependencies 
+are specified in the requirements.txt. To avoid issues with missing dependencies, we build a 
+docker image containing these dependencies. The run.sh script runs a container on the same 
+network. Finally, the script retrieves the logs of the container and prints them on standard 
+output. 
