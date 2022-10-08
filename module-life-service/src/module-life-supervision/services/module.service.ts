@@ -2,7 +2,7 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { Model} from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { LifeModule, LifeModuleDocument } from '../schemas/module.schema';
+import { LifeModule, LifeModuleDocument } from '../schemas/life-module.schema';
 
 import { ModuleDto } from "../dto/module.dto";
 

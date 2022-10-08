@@ -64,7 +64,7 @@ export class ModuleController {
     await this.moduleService.isolate(moduleId);
   }
 
-  @Get("/life-status")
+  @Get("/vitals")
   @ApiOkResponse({ type: Boolean })
   async getModuleLifeStatus(): Promise<ModuleLifeStatusDto[]> {
     this.logger.log("Récuperation du status des modules");

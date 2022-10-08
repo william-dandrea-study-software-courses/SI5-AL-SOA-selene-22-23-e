@@ -1,6 +1,7 @@
 import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import {VitalsModule, VitalsModuleSchema} from "./vitals-module.schema";
 
 export type LifeModuleDocument = LifeModule & Document;
 
@@ -13,8 +14,8 @@ export class LifeModule {
   id_module: number;
 
   @ApiProperty()
-  @Prop({ required: true })
-  lifeStatus: boolean;
+  @Prop({ type: [VitalsModuleSchema] })
+  vitals: VitalsModule;
 
   @ApiProperty()
   @Prop({ required: true })

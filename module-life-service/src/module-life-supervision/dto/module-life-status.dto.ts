@@ -1,11 +1,12 @@
 import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
-import { LifeModule } from "../schemas/module.schema";
+import { LifeModule } from "../schemas/life-module.schema";
 import {ApiProperty} from "@nestjs/swagger";
+import {VitalsModuleDto} from "./vitals-module.dto";
 
 export class ModuleLifeStatusDto {
   constructor(x: LifeModule) {
     this.id_module = x.id_module;
-    this.lifeStatus = x.lifeStatus;
+    this.vitals = new VitalsModuleDto(x.vitals);
   }
 
   @ApiProperty()
@@ -15,6 +16,5 @@ export class ModuleLifeStatusDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsBoolean()
-  lifeStatus: boolean;
+  vitals: VitalsModuleDto;
 }
