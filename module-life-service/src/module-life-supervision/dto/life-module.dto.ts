@@ -1,7 +1,8 @@
 import { IsBoolean, IsNotEmpty, IsNumber } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import {VitalsModuleDto} from "./vitals-module.dto";
 
-export class ModuleDto {
+export class LifeModuleDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
@@ -9,8 +10,7 @@ export class ModuleDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsBoolean()
-  lifeStatus: boolean;
+  vitals: VitalsModuleDto;
 
   @ApiProperty()
   @IsNotEmpty()
