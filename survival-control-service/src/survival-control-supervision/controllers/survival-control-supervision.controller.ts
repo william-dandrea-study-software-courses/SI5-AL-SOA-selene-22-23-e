@@ -18,13 +18,6 @@ export class SurvivalControlSupervisionController {
   ) {}
 
   @ApiOkResponse({ type: Boolean })
-  @Get("/global")
-  async superviseModuleStatus(): Promise<boolean> {
-    this.logger.log("Récupération du statut général des modules");
-    return this.survivalControlSupervisionService.globalSuperviseModules();
-  }
-
-  @ApiOkResponse({ type: Boolean })
   @Get("/")
   async supervise(): Promise<ModuleDto[]> {
     this.logger.log("Récupération du statut de chacun des modules");

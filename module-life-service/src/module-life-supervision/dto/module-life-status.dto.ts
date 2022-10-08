@@ -6,7 +6,7 @@ import {VitalsModuleDto} from "./vitals-module.dto";
 export class ModuleLifeStatusDto {
   constructor(x: LifeModule) {
     this.id_module = x.id_module;
-    this.vitals = new VitalsModuleDto(x.vitals);
+    this.vitals = x.vitals;
   }
 
   @ApiProperty()

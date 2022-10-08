@@ -8,9 +8,6 @@ export type VitalsModuleDocument = VitalsModule & Document;
     versionKey: false,
 })
 export class VitalsModule {
-    @ApiProperty()
-    @Prop({ required: true, min: 0 })
-    id_module: number;
 
     @ApiProperty()
     @Prop({ required: true })

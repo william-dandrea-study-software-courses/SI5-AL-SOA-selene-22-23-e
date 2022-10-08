@@ -14,13 +14,14 @@ import { ModuleAlreadyIsolatedException } from "../exceptions/module-already-iso
 import {InventoryDto} from "../dto/inventory.dto";
 import {ErrorDto} from "../../shared/dto/error.dto";
 import {VitalsModuleDto} from "../dto/vitals-module.dto";
+import {VitalsModule, VitalsModuleDocument} from "../schemas/vitals-module.schema";
 
 @Injectable()
 export class ModuleService {
   private suppliesQuantityMax : number = 10;
   private suppliesQuantityMin : number = 5;
 
-  constructor(@InjectModel(LifeModule.name) private moduleModel: Model<LifeModuleDocument>) {}
+  constructor(@InjectModel(LifeModule.name) private moduleModel: Model<LifeModuleDocument>,@InjectModel(VitalsModule.name) private vitalsModel: Model<VitalsModuleDocument>) {}
 
   async getModules(): Promise<LifeModuleDto[]> {
     return this.moduleModel.find().then(modules => {
@@ -28,7 +29,7 @@ export class ModuleService {
       modules.forEach(module => {
         let dto = new LifeModuleDto();
         dto.id_module = module.id_module;
-        dto.vitals = new VitalsModuleDto(module.vitals);
+        dto.vitals = module.vitals;
         dto.supplies = module.supplies;
         dto.isolated = module.isolated;
         response.push(dto);

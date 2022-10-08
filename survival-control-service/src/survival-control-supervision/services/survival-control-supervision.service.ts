@@ -6,14 +6,4 @@ import {ModuleDto} from "../dto/modules.dto";
 export class SurvivalControlSupervisionService {
   constructor(private moduleLifeProxyService: ModuleLifeProxyService) {}
 
-  async globalSuperviseModules(): Promise<boolean> {
-    const moduleStatus: ModuleDto[] = await this.moduleLifeProxyService.superviseModules();
-    let states = true;
-    moduleStatus.forEach(module => {
-        if(!module.lifeStatus){
-          states = false
-        }
-    })
-    return states;
-  }
 }
