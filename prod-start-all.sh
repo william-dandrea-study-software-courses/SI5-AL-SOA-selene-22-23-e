@@ -13,7 +13,7 @@ echo -e "\033[0;32m ===> LAUNCH BUILD \033[0m"
 compile_dir "module-life-service"
 compile_dir "needs-control-service"
 compile_dir "gateway"
-compile_dir "life-support-service"
+compile_dir "survival-control-service"
 compile_dir "resupply-service"
 
 echo -e "\033[0;32m ===> END BUILD \033[0m"

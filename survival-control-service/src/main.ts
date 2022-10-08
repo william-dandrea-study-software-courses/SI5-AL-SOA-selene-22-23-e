@@ -23,7 +23,7 @@ async function bootstrap() {
     .setDescription(swaggeruiConfig.description)
     .setVersion(configService.get('npm_package_version'))
     .addServer('/', 'Without gateway')
-    .addServer('/life-support', 'Through gateway')
+    .addServer('/survival-control', 'Through gateway')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(swaggeruiConfig.path, app, document);

@@ -22,14 +22,14 @@ async function bootstrap() {
   // Proxy endpoints
   const dependenciesConfig =
     configService.get<DependenciesConfig>("dependencies");
-  console.log(dependenciesConfig.life_support_service_url_with_port);
+  console.log(dependenciesConfig.survival_control_service_url_with_port);
   app.use(
-    "/life-support",
+    "/survival_control",
     createProxyMiddleware({
-      target: `http://${dependenciesConfig.life_support_service_url_with_port}`,
+      target: `http://${dependenciesConfig.survival_control_service_url_with_port}`,
       changeOrigin: true,
       pathRewrite: {
-        [`^/life-support`]: "",
+        [`^/survival-control`]: "",
       },
     })
   );

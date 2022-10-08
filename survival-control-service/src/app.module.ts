@@ -9,7 +9,7 @@ import swaggeruiConfig from './shared/config/swaggerui.config';
 import { MongooseConfigService } from './shared/services/mongoose-config.service';
 
 import { HealthModule } from './health/health.module';
-import { LifeSupportSupervisionModule } from './life-support-supervision/life-support-supervision.module';
+import { SurvivalControlSupervisionModule } from './survival-control-supervision/survival-control-supervision.module';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { LifeSupportSupervisionModule } from './life-support-supervision/life-su
       useClass: MongooseConfigService,
     }),
     HealthModule,
-    LifeSupportSupervisionModule,
+    SurvivalControlSupervisionModule,
   ],
   providers: [],
 })

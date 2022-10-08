@@ -5,7 +5,6 @@ import {ConfigService} from '@nestjs/config';
 
 import { ModuleDto } from '../dto/modules.dto';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
-import {InventoryDto} from "../dto/inventory.dto";
 
 @Injectable()
 export class ModuleLifeProxyService {
