@@ -34,7 +34,6 @@ async function bootstrap() {
     })
   );
 
-  console.log(dependenciesConfig.module_life_service_url_with_port);
   app.use(
     "/module-life",
     createProxyMiddleware({
@@ -65,6 +64,38 @@ async function bootstrap() {
       },
     })
   );
+
+  app.use(
+      "/space-craft",
+      createProxyMiddleware({
+          target: `http://${dependenciesConfig.space_craft_service_url_with_port}`,
+          changeOrigin: true,
+          pathRewrite: {
+              [`^/space-craft`]: "",
+          },
+      })
+  );
+
+    app.use(
+        "/spacesuit",
+        createProxyMiddleware({
+            target: `http://${dependenciesConfig.spacesuit_service_url_with_port}`,
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/spacesuit`]: "",
+            },
+        })
+    );
+    app.use(
+        "/eva-mission",
+        createProxyMiddleware({
+            target: `http://${dependenciesConfig.eva_mission_service_url_with_port}`,
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/eva-mission`]: "",
+            },
+        })
+    );
   // Run the app
   const appPort = configService.get("app.port");
   await app.listen(appPort, () => {

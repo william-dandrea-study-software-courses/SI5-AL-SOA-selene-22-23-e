@@ -88,6 +88,63 @@ services:
     networks:
       - soa-team-e-network
 
+  space-craft-service:
+      image: space-craft-service
+      restart: always
+      ports:
+        - 4305:4305
+      environment:
+        - APP_PORT=4305
+        - APP_NAME=space-craft-service
+        - MONGODB_HOST=database
+        - MONGODB_PORT=27017
+        - MONGODB_DATABASE=space-craft-db
+        - SWAGGERUI_PATH=doc/space-craft
+        - SWAGGERUI_TITLE=Space Craft Micro-Service
+        - SWAGGERUI_DESCRIPTION=Destiné au controle des Space Craft
+      depends_on:
+        - database
+      networks:
+        - soa-team-e-network
+
+  spacesuit-service:
+    image: spacesuit-service
+    restart: always
+    ports:
+      - 4306:4306
+    environment:
+      - APP_PORT=4306
+      - APP_NAME=spacesuit-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacesuit-db
+      - SWAGGERUI_PATH=doc/spacesuit
+      - SWAGGERUI_TITLE=Spacesuit Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à controler les vitals des combinaison
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  eva-mission-service:
+    image: eva-mission-service
+    restart: always
+    ports:
+      - 4307:4307
+    environment:
+      - APP_PORT=4307
+      - APP_NAME=eva-mission-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=eva-mission-db
+      - SWAGGERUI_PATH=doc/eva-mission
+      - SWAGGERUI_TITLE=Eva Mission Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à controler les missions Extra Vehiculaire
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
   gateway:
     image: gateway
     restart: always
@@ -99,10 +156,18 @@ services:
       - MODULE_LIFE_SERVICE=module-life-service
       - NEEDS_CONTROL_SERVICE=needs-control-service
       - RESUPPLY_CONTROL_SERVICE=resupply-service
+      - SPACE_CRAFT_SERVICE=space-craft-service
+      - SPACESUIT_SERVICE=spacesuit-service
+      - EVA_MISSION_SERVICE=eva-mission-service
       - LIFE_SUPPORT_SERVICE_URL_WITH_PORT=survival-control-service:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
+      - SPACE_CRAFT_SERVICE_URL_WITH_PORT=space-craft-service:4305
+      - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service:4306
+      - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
+
+
     networks:
       - soa-team-e-network
 
