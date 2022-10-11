@@ -9,6 +9,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Needs, NeedsDocument } from "../schemas/status-life-module.schema";
 import { NeedsDto } from "../dto/needs.dto";
 import { SupplyOrderDto } from "../dto/supply-order.dto";
+import {MainStockEmptyException} from "../exceptions/main-stock-empty.exception";
 
 @Injectable()
 export class NeedsControlServiceService {
@@ -49,53 +50,7 @@ export class NeedsControlServiceService {
     return "Commande passée";
   }
 
-  async initializeStock(): Promise<void> {
-    await this.needsDocumentModel.remove({});
-    await this.needsDocumentModel.insertMany([
-      {
-        stock: 0,
-      },
-    ]);
-  }
 
-  async stockBase(): Promise<Needs> {
-    const response = await this.needsDocumentModel.findOne();
-    return response;
-  }
 
-  async fillStockBase(quantity: NeedsDto): Promise<Needs> {
-    const stockBase = await this.stockBase();
-    const currentStock = stockBase.stock;
-    const currentStockId = stockBase._id;
 
-    await this.needsDocumentModel.updateOne(
-      { _id: currentStockId },
-      {
-        $set: {
-          stock: currentStock + quantity.quantity,
-        },
-      },
-      { upsert: true }
-    );
-
-    return await this.stockBase();
-  }
-
-  async pickFromStockBase(quantity: NeedsDto): Promise<Needs> {
-    const stockBase = await this.stockBase();
-    const currentStock = stockBase.stock;
-    const currentStockId = stockBase._id;
-
-    await this.needsDocumentModel.updateOne(
-        { _id: currentStockId },
-        {
-          $set: {
-            stock: currentStock - quantity.quantity,
-          },
-        },
-        { upsert: true }
-    );
-
-    return await this.stockBase();
-  }
 }

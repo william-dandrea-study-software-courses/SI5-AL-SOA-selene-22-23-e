@@ -26,6 +26,7 @@ import { ModuleLifeStatusDto } from "../dto/module-life-status.dto";
 import { LifeModuleDto } from "../dto/life-module.dto";
 import { ModuleAlreadyIsolatedException } from "../exceptions/module-already-isolated.exception";
 import { InventoryDto } from "../dto/inventory.dto";
+import {NewMoonBaseDto} from "../dto/new-moon-base.dto";
 
 @ApiTags("module-supervision")
 @Controller("")
@@ -101,11 +102,44 @@ export class ModuleController {
     return this.moduleService.getNeeds();
   }
 
+  @ApiOkResponse({ type: Boolean })
+  @Post("/:moduleId/:baseId/supply")
+  async supplyOneModule(@Body() supply: SupplyDto, @Param("moduleId") moduleId: number, @Param("baseId") baseId: number): Promise<any> {
+    this.logger.log(`Reapprovisionnement du module ${moduleId} avec une quantité de ${supply.quantity}`)
+    return await this.moduleService.supplyOneModule(supply, moduleId, baseId)
+  }
+
+
   @Post("/supply-needs")
   @HttpCode(200)
   @ApiOkResponse({})
   async supplyNeeds(@Body() supply: SupplyDto) {
     this.logger.log("Réapprovisionnement des modules");
-    await this.moduleService.supplyModule(supply);
+    return await this.moduleService.supplyModule(supply);
   }
+
+
+  @ApiOkResponse({ type: Boolean })
+  @Post("/createMoonBase")
+  async createMoonBase(@Body() newMoonBaseDto: NewMoonBaseDto): Promise<any> {
+    this.logger.log("Creation de la moonbase");
+    return this.moduleService.createMoonBase(newMoonBaseDto);
+  }
+
+
+  @ApiOkResponse({ type: Boolean })
+  @Get("moonBase/:idBase")
+  async superviseStockBase(@Param('idBase') idBase: number): Promise<any> {
+    this.logger.log("Récupère le stock de la base lunaire");
+    return this.moduleService.getBase(idBase);
+  }
+
+  @ApiOkResponse({ type: Boolean })
+  @Post(":idBase/fillStockBase")
+  async fillStockBase(@Body() quantity: NeedsDto, @Param('idBase') idBase: number): Promise<any> {
+    this.logger.log("Rempli le stock de la base lunaire");
+    return this.moduleService.fillStockBase(quantity, idBase);
+  }
+
+
 }
