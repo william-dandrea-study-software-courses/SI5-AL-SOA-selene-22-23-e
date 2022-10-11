@@ -1,8 +1,18 @@
-import {Body, Controller, Get, HttpCode, Logger, Param, Post, Put} from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Logger,
+  Param,
+  Post,
+  Put,
+} from "@nestjs/common";
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
-  ApiOkResponse, ApiParam,
+  ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from "@nestjs/swagger";
 
@@ -14,8 +24,8 @@ import { NeedsDto } from "../dto/needs.dto";
 import { SupplyDto } from "../dto/supply.dto";
 import { ModuleLifeStatusDto } from "../dto/module-life-status.dto";
 import { LifeModuleDto } from "../dto/life-module.dto";
-import {ModuleAlreadyIsolatedException} from "../exceptions/module-already-isolated.exception";
-import {InventoryDto} from "../dto/inventory.dto";
+import { ModuleAlreadyIsolatedException } from "../exceptions/module-already-isolated.exception";
+import { InventoryDto } from "../dto/inventory.dto";
 
 @ApiTags("module-supervision")
 @Controller("")
@@ -50,7 +60,10 @@ export class ModuleController {
     description: "The module has been successfully updated.",
     type: LifeModuleDto,
   })
-  async putModule(@Param("moduleId") moduleId: number, @Body() moduleDto: LifeModuleDto) {
+  async putModule(
+    @Param("moduleId") moduleId: number,
+    @Body() moduleDto: LifeModuleDto
+  ) {
     this.logger.log("Modification d'un nouveau module");
     return this.moduleService.putModule(moduleId, moduleDto);
   }
@@ -58,7 +71,10 @@ export class ModuleController {
   @Put("/module/:moduleId/isolate")
   @HttpCode(200)
   @ApiOkResponse({})
-  @ApiConflictResponse({type: ModuleAlreadyIsolatedException, description: "Module already isolated"})
+  @ApiConflictResponse({
+    type: ModuleAlreadyIsolatedException,
+    description: "Module already isolated",
+  })
   async isolate(@Param("moduleId") moduleId: number) {
     this.logger.log("Isolement d'un module");
     await this.moduleService.isolate(moduleId);
@@ -72,7 +88,7 @@ export class ModuleController {
   }
 
   @Get("/inventory")
-  @ApiOkResponse({type : InventoryDto})
+  @ApiOkResponse({ type: InventoryDto })
   async getInventory(): Promise<InventoryDto> {
     this.logger.log("Récuperation de l'inventaire de la base");
     return this.moduleService.getInventory();

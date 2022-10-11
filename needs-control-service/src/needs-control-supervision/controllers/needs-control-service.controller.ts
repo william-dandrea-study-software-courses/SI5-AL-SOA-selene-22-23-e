@@ -7,7 +7,7 @@ import {
 } from "@nestjs/swagger";
 import { NeedsControlServiceService } from "../services/needs-control-service.service";
 import { NeedsDto } from "../dto/needs.dto";
-import {SupplyOrderDto} from "../dto/supply-order.dto";
+import { SupplyOrderDto } from "../dto/supply-order.dto";
 
 @ApiTags("needs-control-supervision")
 @Controller("/needs-control-supervision")
@@ -16,7 +16,32 @@ export class NeedsControlServiceController {
 
   constructor(
     private readonly moduleLifeSupervisionService: NeedsControlServiceService
-  ) {}
+  ) {
+    // Initialize the stock
+    this.moduleLifeSupervisionService.initializeStock();
+  }
+
+  @ApiOkResponse({ type: Boolean })
+  @Get("/stockBase")
+  async superviseStockBase(): Promise<any> {
+    this.logger.log("Récupère le stock de la base lunaire");
+    return this.moduleLifeSupervisionService.stockBase();
+  }
+
+  @ApiOkResponse({ type: Boolean })
+  @Post("/fillStockBase")
+  async fillStockBase(@Body() quantity: NeedsDto): Promise<any> {
+    this.logger.log("Rempli le stock de la base lunaire");
+    return this.moduleLifeSupervisionService.fillStockBase(quantity);
+  }
+
+  @ApiOkResponse({ type: Boolean })
+  @Post("/pickFromStockBase")
+  async pickFromStockBase(@Body() quantity: NeedsDto): Promise<any> {
+    this.logger.log("Prendre des ressources venant le stock de la base lunaire");
+    return this.moduleLifeSupervisionService.pickFromStockBase(quantity);
+  }
+
 
   @ApiOkResponse({ type: Boolean })
   @Get("/moduleNeeds")

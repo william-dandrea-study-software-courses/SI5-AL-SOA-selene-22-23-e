@@ -13,7 +13,7 @@ export class Needs {
 
   @ApiProperty()
   @Prop({ required: true, min: 0 })
-  quantity: number;
+  stock: number;
 
 }
 

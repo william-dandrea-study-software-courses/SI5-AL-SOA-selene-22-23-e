@@ -1,9 +1,18 @@
-import {Body, Controller, Get, HttpCode, Logger, Param, Post, Put} from "@nestjs/common";
-import {ApiConflictResponse, ApiOkResponse, ApiTags} from "@nestjs/swagger";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Logger,
+  Param,
+  Post,
+  Put,
+} from "@nestjs/common";
+import { ApiConflictResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { ResupplySupervisionService } from "../services/resupply-supervision.service";
 import { ResupplyMissionDto } from "../dto/resupply-mission.dto";
 import { SupplyOrderDTO } from "../dto/supply-order.dto";
-import {ResupplyMissionNotExist} from "../exceptions/resupply-mission-not-exist.exception";
+import { ResupplyMissionNotExist } from "../exceptions/resupply-mission-not-exist.exception";
 
 @ApiTags("resupply-supervision")
 @Controller("/resupply-supervision")
@@ -53,7 +62,9 @@ export class ResupplySupervisionController {
     description: "Resupply mission does not exist",
   })
   @HttpCode(200)
-  async send(@Param("resupplyMissionId") resupplyMissionId: string): Promise<any> {
+  async send(
+    @Param("resupplyMissionId") resupplyMissionId: string
+  ): Promise<any> {
     this.logger.log("Envoie d'une fusée");
     return this.resupplySupervisionService.send(resupplyMissionId);
   }
