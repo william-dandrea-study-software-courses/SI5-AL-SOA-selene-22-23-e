@@ -2,9 +2,9 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { Model} from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { LifeModule, LifeModuleDocument } from '../schemas/module.schema';
+import { LifeModule, LifeModuleDocument } from '../schemas/life-module.schema';
 
-import { ModuleDto } from "../dto/module.dto";
+import { LifeModuleDto } from "../dto/life-module.dto";
 
 import { ModuleAlreadyExistsException} from "../exceptions/module-already-exists.exception";
 import { NeedsDto } from "../dto/needs.dto";
@@ -13,21 +13,23 @@ import { ModuleLifeStatusDto } from "../dto/module-life-status.dto";
 import { ModuleAlreadyIsolatedException } from "../exceptions/module-already-isolated.exception";
 import {InventoryDto} from "../dto/inventory.dto";
 import {ErrorDto} from "../../shared/dto/error.dto";
+import {VitalsModuleDto} from "../dto/vitals-module.dto";
+import {VitalsModule, VitalsModuleDocument} from "../schemas/vitals-module.schema";
 
 @Injectable()
 export class ModuleService {
   private suppliesQuantityMax : number = 10;
   private suppliesQuantityMin : number = 5;
 
-  constructor(@InjectModel(LifeModule.name) private moduleModel: Model<LifeModuleDocument>) {}
+  constructor(@InjectModel(LifeModule.name) private moduleModel: Model<LifeModuleDocument>,@InjectModel(VitalsModule.name) private vitalsModel: Model<VitalsModuleDocument>) {}
 
-  async getModules(): Promise<ModuleDto[]> {
+  async getModules(): Promise<LifeModuleDto[]> {
     return this.moduleModel.find().then(modules => {
-      let response : ModuleDto[]=[];
+      let response : LifeModuleDto[]=[];
       modules.forEach(module => {
-        let dto = new ModuleDto();
+        let dto = new LifeModuleDto();
         dto.id_module = module.id_module;
-        dto.lifeStatus = module.lifeStatus;
+        dto.vitals = module.vitals;
         dto.supplies = module.supplies;
         dto.isolated = module.isolated;
         response.push(dto);
@@ -58,7 +60,7 @@ export class ModuleService {
     return new NeedsDto(needs);
   }
 
-  async postModule(moduleDto: ModuleDto): Promise<ModuleDto> {
+  async postModule(moduleDto: LifeModuleDto): Promise<LifeModuleDto> {
     const alreadyExists = await this.moduleModel.find({ id_module: moduleDto.id_module });
     if (alreadyExists.length > 0) {
       throw new ModuleAlreadyExistsException(moduleDto.id_module);
@@ -66,12 +68,12 @@ export class ModuleService {
     return await this.moduleModel.create(moduleDto);
   }
 
-  async putModule(moduleId: number, moduleDto: ModuleDto): Promise<ModuleDto> {
+  async putModule(moduleId: number, moduleDto: LifeModuleDto): Promise<LifeModuleDto> {
     const module = await this.moduleModel.findOne({ id_module: moduleId });
     if(module === null) {
       throw new HttpException("module not found",HttpStatus.NOT_FOUND,);
     }
-    module.lifeStatus = moduleDto.lifeStatus;
+    module.vitals = moduleDto.vitals;
     module.supplies = moduleDto.supplies;
     module.isolated = moduleDto.isolated;
     module.save();

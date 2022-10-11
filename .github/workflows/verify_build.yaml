@@ -13,15 +13,15 @@ jobs:
       - run: npm install --prefix gateway/
       - run: npm run build --prefix gateway/
 
-  build-life-support-service:
+  build-survival-control-service:
     runs-on: ubuntu-latest
     container:
       image: "node:16.16.0-alpine"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: npm install --prefix life-support-service/
-      - run: npm run build --prefix life-support-service/
+      - run: npm install --prefix survival-control-service/
+      - run: npm run build --prefix survival-control-service/
 
   build-module-life-service:
     runs-on: ubuntu-latest

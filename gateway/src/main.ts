@@ -22,19 +22,18 @@ async function bootstrap() {
   // Proxy endpoints
   const dependenciesConfig =
     configService.get<DependenciesConfig>("dependencies");
-  console.log(dependenciesConfig.life_support_service_url_with_port);
+  console.log(dependenciesConfig.survival_control_service_url_with_port);
   app.use(
-    "/life-support",
+    "/survival_control",
     createProxyMiddleware({
-      target: `http://${dependenciesConfig.life_support_service_url_with_port}`,
+      target: `http://${dependenciesConfig.survival_control_service_url_with_port}`,
       changeOrigin: true,
       pathRewrite: {
-        [`^/life-support`]: "",
+        [`^/survival-control`]: "",
       },
     })
   );
 
-  console.log(dependenciesConfig.module_life_service_url_with_port);
   app.use(
     "/module-life",
     createProxyMiddleware({
@@ -65,6 +64,38 @@ async function bootstrap() {
       },
     })
   );
+
+  app.use(
+      "/space-craft",
+      createProxyMiddleware({
+          target: `http://${dependenciesConfig.space_craft_service_url_with_port}`,
+          changeOrigin: true,
+          pathRewrite: {
+              [`^/space-craft`]: "",
+          },
+      })
+  );
+
+    app.use(
+        "/spacesuit",
+        createProxyMiddleware({
+            target: `http://${dependenciesConfig.spacesuit_service_url_with_port}`,
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/spacesuit`]: "",
+            },
+        })
+    );
+    app.use(
+        "/eva-mission",
+        createProxyMiddleware({
+            target: `http://${dependenciesConfig.eva_mission_service_url_with_port}`,
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/eva-mission`]: "",
+            },
+        })
+    );
   // Run the app
   const appPort = configService.get("app.port");
   await app.listen(appPort, () => {

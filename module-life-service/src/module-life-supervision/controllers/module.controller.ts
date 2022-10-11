@@ -13,7 +13,7 @@ import { NeedsDto } from "../dto/needs.dto";
 
 import { SupplyDto } from "../dto/supply.dto";
 import { ModuleLifeStatusDto } from "../dto/module-life-status.dto";
-import { ModuleDto } from "../dto/module.dto";
+import { LifeModuleDto } from "../dto/life-module.dto";
 import {ModuleAlreadyIsolatedException} from "../exceptions/module-already-isolated.exception";
 import {InventoryDto} from "../dto/inventory.dto";
 
@@ -26,7 +26,7 @@ export class ModuleController {
 
   @Get("/module")
   @ApiOkResponse()
-  async getModules(): Promise<ModuleDto[]> {
+  async getModules(): Promise<LifeModuleDto[]> {
     this.logger.log("Récuperation des modules");
     return this.moduleService.getModules();
   }
@@ -34,13 +34,13 @@ export class ModuleController {
   @Post("/module")
   @ApiCreatedResponse({
     description: "The module has been successfully added.",
-    type: ModuleDto,
+    type: LifeModuleDto,
   })
   @ApiConflictResponse({
     type: ModuleAlreadyExistsException,
     description: "Id module already exists",
   })
-  async postModule(@Body() moduleDto: ModuleDto) {
+  async postModule(@Body() moduleDto: LifeModuleDto) {
     this.logger.log("Création d'un nouveau module");
     return this.moduleService.postModule(moduleDto);
   }
@@ -48,9 +48,9 @@ export class ModuleController {
   @Put("/module/:moduleId")
   @ApiOkResponse({
     description: "The module has been successfully updated.",
-    type: ModuleDto,
+    type: LifeModuleDto,
   })
-  async putModule(@Param("moduleId") moduleId: number, @Body() moduleDto: ModuleDto) {
+  async putModule(@Param("moduleId") moduleId: number, @Body() moduleDto: LifeModuleDto) {
     this.logger.log("Modification d'un nouveau module");
     return this.moduleService.putModule(moduleId, moduleDto);
   }
@@ -64,7 +64,7 @@ export class ModuleController {
     await this.moduleService.isolate(moduleId);
   }
 
-  @Get("/life-status")
+  @Get("/vitals")
   @ApiOkResponse({ type: Boolean })
   async getModuleLifeStatus(): Promise<ModuleLifeStatusDto[]> {
     this.logger.log("Récuperation du status des modules");

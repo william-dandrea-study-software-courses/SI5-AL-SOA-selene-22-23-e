@@ -10,7 +10,7 @@ import { DependenciesConfig } from "../shared/config/interfaces/dependencies-con
 
 @Controller("health")
 export class HealthController {
-  private _lifeSupportServiceHealthCheckUrl: string;
+  private _survivalControlServiceHealthCheckUrl: string;
   private _moduleLifeServiceHealthCheckUrl: string;
   private _needsControlServiceHealthCheckUrl: string;
   private _resupplyServiceHealthCheckUrl: string;
@@ -22,7 +22,7 @@ export class HealthController {
   ) {
     const dependenciesConfig =
       this.configService.get<DependenciesConfig>("dependencies");
-    this._lifeSupportServiceHealthCheckUrl = `http://${dependenciesConfig.life_support_service_url_with_port}/health`;
+    this._survivalControlServiceHealthCheckUrl = `http://${dependenciesConfig.survival_control_service_url_with_port}/health`;
     this._moduleLifeServiceHealthCheckUrl = `http://${dependenciesConfig.module_life_service_url_with_port}/health`;
     this._needsControlServiceHealthCheckUrl = `http://${dependenciesConfig.needs_control_service_service_url_with_port}/health`;
     this._resupplyServiceHealthCheckUrl = `http://${dependenciesConfig.resupply_service_service_url_with_port}/health`;
@@ -47,7 +47,7 @@ export class HealthController {
       async () =>
         this.checkIsHealthy(
           "life-support-service",
-          this._lifeSupportServiceHealthCheckUrl
+          this._survivalControlServiceHealthCheckUrl
         ),
       async () =>
         this.checkIsHealthy(

@@ -31,24 +31,24 @@ services:
     networks:
       - soa-team-e-network-dev
 
-  life-support-service-dev:
-    image:   life-support-service-dev
+  survival-control-service-dev:
+    image:   survival-control-service-dev
     restart: always
     command: npm run start:dev
     ports:
       - 4304:4304
     environment:
       - APP_PORT=4304
-      - APP_NAME=life-support-service-dev
+      - APP_NAME=survival-control-service-dev
       - MONGODB_HOST=database-dev
       - MONGODB_PORT=27017
-      - MONGODB_DATABASE=life-support-dev-db
-      - SWAGGERUI_PATH=doc/life-support
-      - SWAGGERUI_TITLE=Life Support Micro-Service
+      - MONGODB_DATABASE=survival-control-dev-db
+      - SWAGGERUI_PATH=doc/survival-control
+      - SWAGGERUI_TITLE=Survival Control Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à la surveillance des conditions des systèmes de support des modules habités
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service-dev:4303
     volumes:
-      - ./life-support-service:/usr/src/app
+      - ./survival-control-service:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
       - database-dev
@@ -114,11 +114,11 @@ services:
       - 9500:3000
     environment:
       - APP_PORT=3000
-      - LIFE_SUPPORT_SERVICE=life-support-service-dev
+      - SURVIVAL_CONTROL_SERVICE=survival-control-service-dev
       - MODULE_LIFE_SERVICE=module-life-service-dev
       - NEEDS_CONTROL_SERVICE=needs-control-service-dev
       - RESUPPLY_CONTROL_SERVICE=resupply-service-dev
-      - LIFE_SUPPORT_SERVICE_URL_WITH_PORT=life-support-service-dev:4304
+      - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service-dev:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service-dev:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service-dev:4302
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service-dev:4301
@@ -128,7 +128,7 @@ services:
     networks:
       - soa-team-e-network-dev
     depends_on:
-      - life-support-service-dev
+      - survival-control-service-dev
       - module-life-service-dev
       - needs-control-service-dev
       - resupply-service-dev

@@ -10,7 +10,7 @@
 You can find our first delivery report in the documentation directory.
 
 ## How to create a new module in a microservice
-*You need to execute this commands in the source root of the microservice (exemple : in the repository life-support-service*
+*You need to execute this commands in the source root of the microservice (exemple : in the repository survival-control-service*
 
 
 - For creating the new module (file automatically generated)
