@@ -20,7 +20,7 @@ services:
       - MONGODB_HOST=database-dev
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=module-life-dev-db
-      - SWAGGERUI_PATH=doc/module-life
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Module Life Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à notifier des besoins vitaux d’un module, il sera (pour le moment) contacté par Life Support Service et Moon Village
     volumes:
@@ -43,7 +43,7 @@ services:
       - MONGODB_HOST=database-dev
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=survival-control-dev-db
-      - SWAGGERUI_PATH=doc/survival-control
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Survival Control Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à la surveillance des conditions des systèmes de support des modules habités
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service-dev:4303
@@ -68,7 +68,7 @@ services:
       - MONGODB_HOST=database-dev
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=needs-control-dev-db
-      - SWAGGERUI_PATH=doc/needs-control
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Needs Control Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à surveiller les besoins des modules en contactant Module Life Service et à envoyer les demandes de ravitaillement au Resupply Service
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service-dev:4303
@@ -95,7 +95,7 @@ services:
       - MONGODB_HOST=database-dev
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=resupply-dev-db
-      - SWAGGERUI_PATH=doc/resupply
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Resupply Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à la gestion du réapprovisionnement de la base lunaire
     volumes:

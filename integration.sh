@@ -78,13 +78,13 @@ echo "=> Récupérer la liste des besoins des modules via needs control service"
 echo 'En tans que Buzz je veux récupérer tout les besoins des modules'
 echo ''
 
-echo 'GET http://localhost:4302/needs-control-supervision/moduleNeeds'
+echo 'GET http://localhost:4302/needs-control/moduleNeeds'
 echo ''
 echo 'Response:'
 #Récupérer la liste des besoins des modules par Buzz via needs control
 
 curl -X 'GET' \
-  'http://localhost:4302/needs-control-supervision/moduleNeeds' \
+  'http://localhost:4302/needs-control/moduleNeeds' \
   -H 'accept: application/json'
 
 echo ''
@@ -93,7 +93,7 @@ echo "=> Envoyer une commande à la terre via needs control service"
 echo 'En tant que Buzz je veux envoyer 2 commande au service resupply une de 13 objet et une autre de 26'
 echo ''
 
-echo 'POST http://localhost:4302/needs-control-supervision/sendOrder'
+echo 'POST http://localhost:4302/needs-control/sendOrder'
 echo ''
 
 echo 'Body : '
@@ -102,21 +102,21 @@ echo ''
 echo 'Response:'
 #Envoyer une commande à la terre par Buzz via needs control
 curl -X 'POST' \
-  'http://localhost:4302/needs-control-supervision/sendOrder' \
+  'http://localhost:4302/needs-control/sendOrder' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"quantity":13}'
 
 echo ''
 echo ''
-echo 'POST http://localhost:4302/needs-control-supervision/sendOrder'
+echo 'POST http://localhost:4302/needs-control/sendOrder'
 echo ''
 echo 'Body : '
 echo '{"quantity":26}'
 echo ''
 echo 'Response:'
 curl -X 'POST' \
-  'http://localhost:4302/needs-control-supervision/sendOrder' \
+  'http://localhost:4302/needs-control/sendOrder' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"quantity":26}'
@@ -129,13 +129,13 @@ echo "=> Récupération de la commande via resupply supervision service"
 echo 'En tant que Dorothy je veux récupérer toutes les commandes passées'
 echo ''
 
-echo 'GET http://localhost:4301/resupply-supervision/supplyOrders'
+echo 'GET http://localhost:4301/resupply/supplyOrders'
 echo ''
 
 echo 'Response:'
 #Récupération de la commande par Dorothy via resupply supervision
 curl -X 'GET' \
-  'http://localhost:4301/resupply-supervision/supplyOrders' \
+  'http://localhost:4301/resupply/supplyOrders' \
   -H 'accept: application/json'
 
 echo ''

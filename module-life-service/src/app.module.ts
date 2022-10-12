@@ -8,7 +8,7 @@ import swaggeruiConfig from './shared/config/swaggerui.config';
 import { MongooseConfigService } from './shared/services/mongoose-config.service';
 
 import { HealthModule } from './health/health.module';
-import { ModuleModule } from './module-life-supervision/module.module';
+import { ModuleModule } from './module-life/module.module';
 
 @Module({
   imports: [

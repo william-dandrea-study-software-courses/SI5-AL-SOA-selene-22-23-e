@@ -8,7 +8,7 @@ import swaggeruiConfig from "./shared/config/swaggerui.config";
 import {MongooseModule} from "@nestjs/mongoose";
 import {MongooseConfigService} from "./shared/services/mongoose-config.service";
 import {HealthModule} from "./health/health.module";
-import {NeedsControleServiceModule} from "./needs-control-supervision/needs-controle-service.module";
+import {NeedsControleServiceModule} from "./needs-control/needs-controle-service.module";
 
 
 @Module({

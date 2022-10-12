@@ -8,7 +8,7 @@ import swaggeruiConfig from './shared/config/swaggerui.config';
 import { MongooseConfigService } from './shared/services/mongoose-config.service';
 
 import { HealthModule } from './health/health.module';
-import { EvaMissionModule } from './space-craft-supervision/eva-mission.module';
+import { EvaMissionModule } from './eva-mission/eva-mission.module';
 
 @Module({
   imports: [

@@ -20,7 +20,7 @@ services:
       - MONGODB_HOST=database
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=module-life-db
-      - SWAGGERUI_PATH=doc/module-life
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Module Life Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à notifier des besoins vitaux d’un module, il sera (pour le moment) contacté par Life Support Service et Moon Village
     depends_on:
@@ -39,7 +39,7 @@ services:
       - MONGODB_HOST=database
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=survival-control-db
-      - SWAGGERUI_PATH=doc/survival-control
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Survival Control Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à la surveillance des conditions des systèmes de support des modules habités
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
@@ -59,7 +59,7 @@ services:
       - MONGODB_HOST=database
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=needs-control-db
-      - SWAGGERUI_PATH=doc/needs-control
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Needs Control Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à surveiller les besoins des modules en contactant Module Life Service et à envoyer les demandes de ravitaillement au Resupply Service
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
@@ -80,7 +80,7 @@ services:
       - MONGODB_HOST=database
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=resupply-db
-      - SWAGGERUI_PATH=doc/resupply
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Resupply Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à la gestion du réapprovisionnement de la base lunaire
     depends_on:
@@ -88,18 +88,18 @@ services:
     networks:
       - soa-team-e-network
 
-  space-craft-service:
-      image: space-craft-service
+  spacecraft-service:
+      image: spacecraft-service
       restart: always
       ports:
         - 4305:4305
       environment:
         - APP_PORT=4305
-        - APP_NAME=space-craft-service
+        - APP_NAME=spacecraft-service
         - MONGODB_HOST=database
         - MONGODB_PORT=27017
-        - MONGODB_DATABASE=space-craft-db
-        - SWAGGERUI_PATH=doc/space-craft
+        - MONGODB_DATABASE=spacecraft-db
+        - SWAGGERUI_PATH=doc
         - SWAGGERUI_TITLE=Space Craft Micro-Service
         - SWAGGERUI_DESCRIPTION=Destiné au controle des Space Craft
       depends_on:
@@ -118,7 +118,7 @@ services:
       - MONGODB_HOST=database
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=spacesuit-db
-      - SWAGGERUI_PATH=doc/spacesuit
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Spacesuit Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à controler les vitals des combinaison
     depends_on:
@@ -137,7 +137,7 @@ services:
       - MONGODB_HOST=database
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=eva-mission-db
-      - SWAGGERUI_PATH=doc/eva-mission
+      - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Eva Mission Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à controler les missions Extra Vehiculaire
     depends_on:
@@ -156,14 +156,14 @@ services:
       - MODULE_LIFE_SERVICE=module-life-service
       - NEEDS_CONTROL_SERVICE=needs-control-service
       - RESUPPLY_CONTROL_SERVICE=resupply-service
-      - SPACE_CRAFT_SERVICE=space-craft-service
+      - SPACE_CRAFT_SERVICE=spacecraft-service
       - SPACESUIT_SERVICE=spacesuit-service
       - EVA_MISSION_SERVICE=eva-mission-service
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
-      - SPACE_CRAFT_SERVICE_URL_WITH_PORT=space-craft-service:4305
+      - SPACE_CRAFT_SERVICE_URL_WITH_PORT=spacecraft-service:4305
       - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service:4306
       - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
 

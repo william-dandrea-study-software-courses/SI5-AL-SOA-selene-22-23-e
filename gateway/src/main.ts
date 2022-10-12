@@ -65,12 +65,12 @@ async function bootstrap() {
   );
 
   app.use(
-      "/space-craft",
+      "/spacesuit",
       createProxyMiddleware({
-          target: `http://${dependenciesConfig.space_craft_service_url_with_port}`,
+          target: `http://${dependenciesConfig.spacecraft_service_url_with_port}`,
           changeOrigin: true,
           pathRewrite: {
-              [`^/space-craft`]: "",
+              [`^/spacecraft`]: "",
           },
       })
   );

@@ -11,10 +11,10 @@ Ajout de 4 modules pour un quota de provisions max à 10:
   - Besoins de 8 provisions
 
 POST http://localhost:4303/module
-{"error":"Id module already exists","details":"\"512\" is already used"}
-{"error":"Id module already exists","details":"\"513\" is already used"}
-{"error":"Id module already exists","details":"\"514\" is already used"}
-{"error":"Id module already exists","details":"\"515\" is already used"}
+{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea1"}],"supplies":10,"isolated":false,"_id":"6346a50ed33e0d5afdd08ea0"}
+{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea5"}],"supplies":7,"isolated":false,"_id":"6346a50ed33e0d5afdd08ea4"}
+{"id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6346a50ed33e0d5afdd08ea9"}],"supplies":9,"isolated":true,"_id":"6346a50ed33e0d5afdd08ea8"}
+{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ead"}],"supplies":6,"isolated":false,"_id":"6346a50ed33e0d5afdd08eac"}
 
 => Peuplement de la base de données Spacesuit
 
@@ -25,7 +25,7 @@ Ajout d'une combinaison numéro 1 avec:
   - 60 de rythme cardiaque
 
 POST http://localhost:4306/module
-{"Spacesuit already exist":"Spacesuit already exist for id : \"1\""}
+{"id_spacesuit":1,"cardiac_rythm":60,"o2_rate":80,"temperature":20,"pressure":3,"power":100,"_id":"6346a50e8035c386e51d277a"}
 
 => Peuplement de la base de données Spacecraft
 
@@ -35,11 +35,88 @@ Ajout d'un vaisseau numéro 1 avec:
   - aucune mission de ravitaillement lié
 
 POST http://localhost:4305/spacecraft
-{"SpaceCraft already exist":"Space craft already exist for id : \"1\""}
-http://module-life-service:4303/
-zerdtfhytreza http://eva-mission-service:4307/
-------------------------------------------------------------------------------------------
+{"id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"None","_id":"6346a50e16864391d22f37e4"}
 
---------------------------------- Start Integration Tests --------------------------------
+---------------------- Scenario 1 ----------------------
 
----------------------------------- End Integration Tests ---------------------------------
+=> Récupérer l'état individuel des modules via Survival Control Service
+   En tant que Deke, je veux controler l'état des conditions de vie de chaque module
+   On s'attend à recevoir les 4 modules avec leur vitals
+GET http://localhost:4304/supervision/
+Response : 
+{"statusCode":404,"message":"Cannot GET /supervision","error":"Not Found"}
+
+=> Récupération des données d'un module lunaire via Survival Control Service
+   On veut s'assurer qu'un seul module est isolé
+   On s'attend à ce que le champ isolated du module 512 soit à false 
+GET http://localhost:4303/module
+Response : 
+[{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea1"}],"supplies":10,"isolated":false},{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea5"}],"supplies":7,"isolated":false},{"id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6346a50ed33e0d5afdd08ea9"}],"supplies":9,"isolated":true},{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ead"}],"supplies":6,"isolated":false}]
+
+=> Isolement d'un module lunaire via Survival Control Service
+   En tant que Deke, je veux isoler le module 512 aprés avoir controlé les vitals
+PUT http://localhost:4304/supervision/:idModule/isolate
+Response : 
+{"statusCode":404,"message":"Cannot PUT /supervision/512/isolate","error":"Not Found"}
+
+=> Récupération des données d'un module lunaire via Survival Control Service
+   On veut s'assurer que le module 512 a bien été isolé
+   On s'attend à ce que le champ isolated du module 512 soit à true 
+GET http://localhost:4303/module
+Response : 
+[{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea1"}],"supplies":10,"isolated":false},{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea5"}],"supplies":7,"isolated":false},{"id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6346a50ed33e0d5afdd08ea9"}],"supplies":9,"isolated":true},{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ead"}],"supplies":6,"isolated":false}]
+
+---------------------- Scenario 3 ----------------------
+
+=> Récupérer les EVA Missions
+   En tant que Buzz, je veux verifier les EVA Missions des prochains jours
+   On s'attend à recevoir 0 eva mission
+GET http://localhost:4307/eva-mission/
+http://eva-mission-service:4307/eva-mission
+Response : 
+[]
+
+=> Création d'une EVA Mission
+   On constate qu'aucune EVA Mission existe et Buzz veut en programmer une pour le 20 janvier
+POST http://localhost:4307/eva-mission
+Response : 
+Response : 
+{"id_mission":1,"date_begin":"20 janvier","date_end":"undefined","status":true,"supervisor":"Buzz","notes":"Aucune","_id":"6346a50eafb45c4c4c80a065"}
+
+=> Récupérer les EVA Missions
+   En tant que Buzz, je veux reverifier les EVA Missions des prochains jours
+   On s'attend à recevoir 1 eva mission avec une date de début au 20 janvier
+GET http://localhost:4307/eva-mission/
+Response : 
+[{"id_mission":1,"date_begin":"20 janvier","date_end":"undefined","status":true,"supervisor":"Buzz","notes":"Aucune"}]
+
+=> Récupération des données d'une combinaison lunaire via SpaceSuit Service
+   Jim veut s'assurer de l'état de sa combinaison (la combinaison 1) pour sortir préparer le départ du rover pour l'EVA, il demande donc à spacesuit service
+   On s'attend à ce que la combinaison ait une pression de 3 et 80 d'oxygne
+GET http://localhost:4307/spacesuit/1
+Response : 
+{"id_spacesuit":1,"cardiac_rythm":60,"o2_rate":80,"power":100,"pressure":3,"temperature":20}
+
+
+---------------------- Scenario 4 ----------------------
+
+=> Récupération des données d'un module lunaire via Vitals Module
+   En tant que Jim, je veux que les épurateurs de CO2 s'activent et se désactivent en fonction des niveaux de CO2 dans les modules de la base, afin de garantir un air respirable sans risque pour l'équipage. Par exemple le 514
+GET http://localhost:4303/module
+   On s'attend à ce que le champ co2_rate du module 514 soit à 20 
+   On s'attend à ce que le champ co2_scrubbers_activated du module 514 soit à false
+Response : 
+[{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea1"}],"supplies":10,"isolated":false},{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea5"}],"supplies":7,"isolated":false},{"id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6346a50ed33e0d5afdd08ea9"}],"supplies":9,"isolated":true},{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ead"}],"supplies":6,"isolated":false}]
+
+=> Isolement d'un module lunaire via Survival Control Service
+   En tant que Deke, je veux isoler un module à distance. Par exemple le 512
+PUT http://localhost:4304/supervision/:idModule/isolate
+Response : 
+{"_id":"6346a50ed33e0d5afdd08ea8","id_module":514,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ec0"}],"supplies":9,"isolated":true}
+
+=> Récupération des données d'un module lunaire via Survival Control Service
+   On veut s'assurer que l'épurateur d'air du module 514 s'est bien mis en marche
+   On s'attend à ce que le champ co2_scrubbers_activated du module 514 soit à true
+GET http://localhost:4303/module
+Response : 
+[{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea1"}],"supplies":10,"isolated":false},{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ea5"}],"supplies":7,"isolated":false},{"id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6346a50ed33e0d5afdd08ea9"}],"supplies":9,"isolated":true},{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6346a50ed33e0d5afdd08ead"}],"supplies":6,"isolated":false}]

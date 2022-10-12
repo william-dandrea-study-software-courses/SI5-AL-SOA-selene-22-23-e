@@ -9,7 +9,7 @@ import swaggeruiConfig from './shared/config/swaggerui.config';
 import { MongooseConfigService } from './shared/services/mongoose-config.service';
 
 import { HealthModule } from './health/health.module';
-import { ResupplySupervisionModule } from './resupply-supervision/resupply-supervision.module';
+import { ResupplyModule } from './resupply/resupply.module';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { ResupplySupervisionModule } from './resupply-supervision/resupply-super
       useClass: MongooseConfigService,
     }),
     HealthModule,
-    ResupplySupervisionModule,
+    ResupplyModule,
   ],
   providers: [],
 })
