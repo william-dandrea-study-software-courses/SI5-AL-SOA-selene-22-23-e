@@ -6,9 +6,9 @@ import subprocess
 
 #Fichiers scénarios
 import fillDatabase
-# import scenario1
+import scenario1
 # import scenario2
-# import scenario3
+import scenario3
 
 #Urls des différents micro-services et de la gateway
 URL_life_support = "http://" + os.environ.get("LIFE_SUPPORT_SERVICE_URL_WITH_PORT", 'localhost:4304')+'/'

@@ -61,9 +61,3 @@ fillModuleServiceDatabase()
 fillSpacesuitDatabase()
 
 fillSpacecratDatabase()
-
-def printhealth() :
-    print(URL_module_life)
-    print("zerdtfhytreza "+URL_eva_mission)
-
-printhealth()

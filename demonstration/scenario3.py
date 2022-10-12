@@ -1,8 +1,8 @@
 import requests
 import os
 
-URL_spacesuit = "http://" + os.environ.get("SPACESUIT_SERVCE_URL_WITH_PORT", 'localhost:4306')+'/'
-URL_eva_mission = "http://" + os.environ.get("EVA_MISSION_SERVCE_URL_WITH_PORT", 'localhost:4307')+'/'
+URL_spacesuit = 'http://'+ os.environ.get("SPACESUIT_SERVICE_URL_WITH_PORT", 'localhost:4306')+'/'
+URL_eva_mission = 'http://'+ os.environ.get("EVA_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4307')+'/'
 
 def scenario3():
     print("---------------------- Scenario 3 ----------------------\n")
