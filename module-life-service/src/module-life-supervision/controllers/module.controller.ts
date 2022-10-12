@@ -1,8 +1,18 @@
-import {Body, Controller, Get, HttpCode, Logger, Param, Post, Put} from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Logger,
+  Param,
+  Post,
+  Put,
+} from "@nestjs/common";
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
-  ApiOkResponse, ApiParam,
+  ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from "@nestjs/swagger";
 
@@ -14,8 +24,9 @@ import { NeedsDto } from "../dto/needs.dto";
 import { SupplyDto } from "../dto/supply.dto";
 import { ModuleLifeStatusDto } from "../dto/module-life-status.dto";
 import { LifeModuleDto } from "../dto/life-module.dto";
-import {ModuleAlreadyIsolatedException} from "../exceptions/module-already-isolated.exception";
-import {InventoryDto} from "../dto/inventory.dto";
+import { ModuleAlreadyIsolatedException } from "../exceptions/module-already-isolated.exception";
+import { InventoryDto } from "../dto/inventory.dto";
+import {NewMoonBaseDto} from "../dto/new-moon-base.dto";
 
 @ApiTags("module-supervision")
 @Controller("")
@@ -55,7 +66,10 @@ export class ModuleController {
     description: "The module has been successfully updated.",
     type: LifeModuleDto,
   })
-  async putModule(@Param("moduleId") moduleId: number, @Body() moduleDto: LifeModuleDto) {
+  async putModule(
+    @Param("moduleId") moduleId: number,
+    @Body() moduleDto: LifeModuleDto
+  ) {
     this.logger.log("Modification d'un nouveau module");
     if (moduleDto.vitals.co2_rate >= 75) {
       moduleDto.vitals.co2_scrubbers_activated;
@@ -68,7 +82,10 @@ export class ModuleController {
   @Put("/module/:moduleId/isolate")
   @HttpCode(200)
   @ApiOkResponse({})
-  @ApiConflictResponse({type: ModuleAlreadyIsolatedException, description: "Module already isolated"})
+  @ApiConflictResponse({
+    type: ModuleAlreadyIsolatedException,
+    description: "Module already isolated",
+  })
   async isolate(@Param("moduleId") moduleId: number) {
     this.logger.log("Isolement d'un module");
     await this.moduleService.isolate(moduleId);
@@ -82,7 +99,7 @@ export class ModuleController {
   }
 
   @Get("/inventory")
-  @ApiOkResponse({type : InventoryDto})
+  @ApiOkResponse({ type: InventoryDto })
   async getInventory(): Promise<InventoryDto> {
     this.logger.log("Récuperation de l'inventaire de la base");
     return this.moduleService.getInventory();
@@ -95,11 +112,44 @@ export class ModuleController {
     return this.moduleService.getNeeds();
   }
 
+  @ApiOkResponse({ type: Boolean })
+  @Post("/:moduleId/:baseId/supply")
+  async supplyOneModule(@Body() supply: SupplyDto, @Param("moduleId") moduleId: number, @Param("baseId") baseId: number): Promise<any> {
+    this.logger.log(`Reapprovisionnement du module ${moduleId} avec une quantité de ${supply.quantity}`)
+    return await this.moduleService.supplyOneModule(supply, moduleId, baseId)
+  }
+
+
   @Post("/supply-needs")
   @HttpCode(200)
   @ApiOkResponse({})
   async supplyNeeds(@Body() supply: SupplyDto) {
     this.logger.log("Réapprovisionnement des modules");
-    await this.moduleService.supplyModule(supply);
+    return await this.moduleService.supplyModule(supply);
   }
+
+
+  @ApiOkResponse({ type: Boolean })
+  @Post("/createMoonBase")
+  async createMoonBase(@Body() newMoonBaseDto: NewMoonBaseDto): Promise<any> {
+    this.logger.log("Creation de la moonbase");
+    return this.moduleService.createMoonBase(newMoonBaseDto);
+  }
+
+
+  @ApiOkResponse({ type: Boolean })
+  @Get("moonBase/:idBase")
+  async superviseStockBase(@Param('idBase') idBase: number): Promise<any> {
+    this.logger.log("Récupère le stock de la base lunaire");
+    return this.moduleService.getBase(idBase);
+  }
+
+  @ApiOkResponse({ type: Boolean })
+  @Post(":idBase/fillStockBase")
+  async fillStockBase(@Body() quantity: NeedsDto, @Param('idBase') idBase: number): Promise<any> {
+    this.logger.log("Rempli le stock de la base lunaire");
+    return this.moduleService.fillStockBase(quantity, idBase);
+  }
+
+
 }

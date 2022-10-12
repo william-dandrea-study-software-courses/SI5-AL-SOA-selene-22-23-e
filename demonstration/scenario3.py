@@ -1,8 +1,8 @@
 import requests
 import os
 
-URL_spacesuit = "http://" + os.environ.get("SPACESUIT_SERVCE_URL_WITH_PORT", 'localhost:4306')+'/'
-URL_eva_mission = "http://" + os.environ.get("EVA_MISSION_SERVCE_URL_WITH_PORT", 'localhost:4307')+'/'
+URL_spacesuit = 'http://'+ os.environ.get("SPACESUIT_SERVICE_URL_WITH_PORT", 'localhost:4306')+'/'
+URL_eva_mission = 'http://'+ os.environ.get("EVA_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4307')+'/'
 
 def scenario3():
     print("---------------------- Scenario 3 ----------------------\n")
@@ -10,6 +10,7 @@ def scenario3():
     print("   En tant que Buzz, je veux verifier les EVA Missions des prochains jours")
     print("   On s'attend à recevoir 0 eva mission")
     print("GET http://localhost:4307/eva-mission/")
+    print(URL_eva_mission+'eva-mission')
     print("Response : ")
     response = requests.get(URL_eva_mission+'eva-mission')
     print(response.text + "\n")

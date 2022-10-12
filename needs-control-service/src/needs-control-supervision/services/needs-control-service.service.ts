@@ -9,6 +9,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Needs, NeedsDocument } from "../schemas/status-life-module.schema";
 import { NeedsDto } from "../dto/needs.dto";
 import { SupplyOrderDto } from "../dto/supply-order.dto";
+import {MainStockEmptyException} from "../exceptions/main-stock-empty.exception";
 
 @Injectable()
 export class NeedsControlServiceService {
@@ -48,4 +49,8 @@ export class NeedsControlServiceService {
     }
     return "Commande passée";
   }
+
+
+
+
 }

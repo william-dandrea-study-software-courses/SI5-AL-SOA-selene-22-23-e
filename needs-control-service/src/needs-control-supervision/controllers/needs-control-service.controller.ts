@@ -7,7 +7,7 @@ import {
 } from "@nestjs/swagger";
 import { NeedsControlServiceService } from "../services/needs-control-service.service";
 import { NeedsDto } from "../dto/needs.dto";
-import {SupplyOrderDto} from "../dto/supply-order.dto";
+import { SupplyOrderDto } from "../dto/supply-order.dto";
 
 @ApiTags("needs-control-supervision")
 @Controller("/needs-control-supervision")
@@ -16,7 +16,11 @@ export class NeedsControlServiceController {
 
   constructor(
     private readonly moduleLifeSupervisionService: NeedsControlServiceService
-  ) {}
+  ) {
+  }
+
+
+
 
   @ApiOkResponse({ type: Boolean })
   @Get("/moduleNeeds")
