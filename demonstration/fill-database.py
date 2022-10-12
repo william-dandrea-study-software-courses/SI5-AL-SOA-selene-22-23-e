@@ -26,7 +26,7 @@ def fillModuleServiceDatabase() :
     print(requests.post(URL_module_life+'module',json=payload).text)
     payload = {"id_module": 513, "vitals": {"co2_rate": 80,"co2_scrubbers_activated":True}, "supplies":7, "isolated": False}
     print(requests.post(URL_module_life+'module',json=payload).text)
-    payload = {"id_module": 514, "vitals": {"co2_rate": 100,"co2_scrubbers_activated":False}, "supplies":9, "isolated": True}
+    payload = {"id_module": 514, "vitals": {"co2_rate": 20,"co2_scrubbers_activated":False}, "supplies":9, "isolated": True}
     print(requests.post(URL_module_life+'module',json=payload).text)
     payload = {"id_module": 515, "vitals": {"co2_rate": 75,"co2_scrubbers_activated":True}, "supplies":6, "isolated": False}
     print(requests.post(URL_module_life+'module',json=payload).text)

@@ -11,7 +11,7 @@ import { NeedsDto } from "../dto/needs.dto";
 import { SupplyDto } from "../dto/supply.dto";
 import { ModuleLifeStatusDto } from "../dto/module-life-status.dto";
 import { ModuleAlreadyIsolatedException } from "../exceptions/module-already-isolated.exception";
-import {InventoryDto} from "../dto/inventory.dto";
+import { InventoryDto } from "../dto/inventory.dto";
 import {ErrorDto} from "../../shared/dto/error.dto";
 import {VitalsModuleDto} from "../dto/vitals-module.dto";
 import {VitalsModule, VitalsModuleDocument} from "../schemas/vitals-module.schema";

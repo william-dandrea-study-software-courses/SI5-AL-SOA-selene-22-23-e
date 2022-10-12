@@ -1,7 +1,6 @@
 import requests
 import os
 
-
 print("---------------------- Scenario 4 ----------------------\n")
 
 print("=> Récupération des données d'un module lunaire via Vitals Module")

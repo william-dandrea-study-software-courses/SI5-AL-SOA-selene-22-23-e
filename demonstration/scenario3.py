@@ -32,7 +32,7 @@ def scenario3():
     print(response.text + "\n")
 
     print("=> Récupération des données d'une combinaison lunaire via SpaceSuit Service")
-    print("   Jim veut s'assurer de l'état de sa combinaison (la combinaison 1), il demande donc à spacesuit service")
+    print("   Jim veut s'assurer de l'état de sa combinaison (la combinaison 1) pour sortir préparer le départ du rover pour l'EVA, il demande donc à spacesuit service")
     print("   On s'attend à ce que la combinaison ait une pression de 3 et 80 d'oxygne")
     print("GET http://localhost:4307/spacesuit/1")
     print("Response : ")
