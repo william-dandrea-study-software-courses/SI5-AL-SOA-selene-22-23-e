@@ -54,9 +54,9 @@ export class ModuleController {
   async postModule(@Body() moduleDto: LifeModuleDto) {
     this.logger.log("Création d'un nouveau module");
     if (moduleDto.vitals.co2_rate >= 75) {
-      moduleDto.vitals.co2_scrubbers_activated;
+      moduleDto.vitals.co2_scrubbers_activated = true;
     } else {
-      !moduleDto.vitals.co2_scrubbers_activated;
+      moduleDto.vitals.co2_scrubbers_activated = false;
     }
     return this.moduleService.postModule(moduleDto);
   }
@@ -72,9 +72,9 @@ export class ModuleController {
   ) {
     this.logger.log("Modification d'un nouveau module");
     if (moduleDto.vitals.co2_rate >= 75) {
-      moduleDto.vitals.co2_scrubbers_activated;
+      moduleDto.vitals.co2_scrubbers_activated = true;
     } else {
-      !moduleDto.vitals.co2_scrubbers_activated;
+      moduleDto.vitals.co2_scrubbers_activated = false;
     }
     return this.moduleService.putModule(moduleId, moduleDto);
   }

@@ -9,6 +9,7 @@ import fillDatabase
 import scenario1
 # import scenario2
 import scenario3
+import scenario4
 
 #Urls des différents micro-services et de la gateway
 URL_life_support = "http://" + os.environ.get("LIFE_SUPPORT_SERVICE_URL_WITH_PORT", 'localhost:4304')+'/'
@@ -20,10 +21,10 @@ URL_gateway = "http://" + os.environ.get("GATEWAY_URL_WITH_PORT",'localhost:9500
 
 
 
-print("------------------------------------------------------------------------------------------")
-
-print("\n--------------------------------- Start Integration Tests --------------------------------\n")
-
-print("---------------------------------- End Integration Tests ---------------------------------")
+# print("------------------------------------------------------------------------------------------")
+#
+# print("\n--------------------------------- Start Integration Tests --------------------------------\n")
+#
+# print("---------------------------------- End Integration Tests ---------------------------------")
 
 
