@@ -10,6 +10,7 @@ def scenario3():
     print("   En tant que Buzz, je veux verifier les EVA Missions des prochains jours")
     print("   On s'attend à recevoir 0 eva mission")
     print("GET http://localhost:4307/eva-mission/")
+    print(URL_eva_mission+'eva-mission')
     print("Response : ")
     response = requests.get(URL_eva_mission+'eva-mission')
     print(response.text + "\n")

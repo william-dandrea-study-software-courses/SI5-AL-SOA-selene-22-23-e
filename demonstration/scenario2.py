@@ -2,95 +2,129 @@ import requests
 import os
 import json
 
-URL_life_support = 'http://' + os.environ.get('LIFE_SUPPORT_SERVICE_URL_WITH_PORT', 'localhost:4304')+'/'
-URL_module_life =  'http://' + os.environ.get('MODULE_LIFE_SERVICE_URL_WITH_PORT', 'localhost:4303')+'/'
-URL_needs_control =  'http://' + os.environ.get('NEEDS_CONTROL_SERVICE_URL_WITH_PORT', 'localhost:4302')+'/'
-URL_resupply =  'http://' + os.environ.get('RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT', 'localhost:4301')+'/'
-URL_gateway = 'http://' + os.environ.get('GATEWAY_URL_WITH_PORT','localhost:9500')
+URL_resupply =  "http://" + os.environ.get("RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT", 'localhost:4301')+'/'
+URL_needs_control =  "http://" + os.environ.get("NEEDS_CONTROL_SERVICE_URL_WITH_PORT", 'localhost:4302')+'/'
+URL_module_life =  "http://" + os.environ.get("MODULE_LIFE_SERVICE_URL_WITH_PORT", 'localhost:4303')+'/'
+URL_life_support = "http://" + os.environ.get("LIFE_SUPPORT_SERVICE_URL_WITH_PORT", 'localhost:4304')+'/'
+URL_spacecraft = "http://" + os.environ.get("SPACE_CRAFT_SERVICE_URL_WITH_PORT", 'localhost:4305')+'/'
+URL_spacesuit = 'http://'+ os.environ.get("SPACESUIT_SERVICE_URL_WITH_PORT", 'localhost:4306')+'/'
+URL_eva_mission = 'http://'+ os.environ.get("EVA_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4307')+'/'
 
-def peuplageDB():
-    # PeuplageDB
-    # result = requests.get('http://localhost:4303/module')
-    payload = {'id_module': 0, 'vitals': {'co2_rate': 100,'co2_scrubbers_activated':True}, 'supplies': 10, 'isolated': False}
-    result = requests.post('http://localhost:4303/module', payload)
-    print(result.text)
-
+URL_gateway = "http://" + os.environ.get("GATEWAY_URL_WITH_PORT",'localhost:9500')
 
 def scenario2():
-    print('- Requête de Jim à Module Life Service pour vérifier l’inventaire de la base qui lui renvoie l’inventaire.')
-    print('    - L’astronaute responsable des provisions et de la logistique demande au Module Life Service à voir l’inventaire de la base')
-    print('    - Le Module Life Service reçoit une requête demandant à voir l’inventaire')
-    print('    - Le Module Life Service traite cette demande et renvoie l’inventaire de la base')
+    print("---------------------- Scenario 2 ----------------------\n")
+    print("=> Récupération de l'inventaire de la base lunaire via Module Life Service")
+    print("   En tant que Jim, je veux contrôler l'inventaire de la base lunaire")
+    print("   On s'attend à récupérer un objet avec le champ quantity à 32 car les modules possèdent respectivement 10, 7, 9 et 6 provisions")
+    print("GET http://localhost:4303/inventory")
+    print("Response : ")
+    response = requests.get(URL_module_life+'inventory')
+    print(response.text + "\n")
 
+    print("=> Récupérer la liste des besoins des modules via Needs Control Service")
+    print("   En tant que Buzz, je veux récupérer tous les besoins des modules ainsi que les besoins de la base lunaire")
+    print("   On s'attend à recevoir un objet avec le champ quantity à 8 car il manque respectivement 0, 3, 1 et 4 provisions à chaque module pour atteindre le stock maximal")
+    print("GET http://localhost:4302/needs-control-supervision/moduleNeeds")
+    print("Response : ")
+    response = requests.get(URL_needs_control+'needs-control-supervision/moduleNeeds')
+    print(response.text + "\n")
 
+    print("=> Envoyer une commande à la terre via needs control service")
+    print("   En tant que Buzz, je veux envoyer 2 commandes au Resupply Service, une de 13 objets et une autre de 26")
+    print("POST http://localhost:4302/needs-control-supervision/sendOrder")
+    print("Body :")
+    body = {"quantity":13}
+    print(body)
+    print("Response : ")
+    response = requests.post(URL_needs_control+'needs-control-supervision/sendOrder',json=body)
+    print(response.text + "\n")
 
+    print("POST http://localhost:4302/needs-control-supervision/sendOrder")
+    print("Body :")
+    body = {"quantity":26}
+    print(body)
+    print("Response : ")
+    response = requests.post(URL_needs_control+'needs-control-supervision/sendOrder',json=body)
+    print(response.text + "\n")
 
+    print("=> Récupération des commandes de la base lunaire via Resupply Service")
+    print("   En tant que Dorothy, je veux voir toutes les commandes passées")
+    print("   On s'attend à voir les deux commandes de 13 et 26 provisions passées par Buzz précédemment. Elles seront toutes les deux en En cours de traitement ")
+    print("GET http://localhost:4301/resupply-supervision/supplyOrders")
+    print("Response : ")
+    response = requests.get(URL_resupply+'resupply-supervision/supplyOrders')
+    id = response.json()[0].get("_id")
+    print(response.text + "\n")
 
+    print("=> Récupération des missions de ravitaillement via Resupply Service")
+    print("   En tant que Dorothy, je veux controler les missions de ravitaillement")
+    print("   On s'attend à n'avoir aucune mission de ravitaillement car aucune mission n'a été lancée et aucune commande n'a été validée")
+    print("GET http://localhost:4301/resupply-supervision/rocketStatus")
+    print("Response : ")
+    response = requests.get(URL_resupply+'resupply-supervision/rocketStatus')
+    print(response.text + "\n")
 
+    print("=> Validation d'une commande via Resupply Service")
+    print("   En tant que Dorothy, je veux valider une commande passée par la base lunaire")
+    print("   On valide la première commande de Buzz, celle avec 13 provisions demandées et on s'attend à récupérer un Commande validée")
+    print("PUT http://localhost:4301/resupply-supervision/:idCommande/validate")
+    print("Response : ")
+    response = requests.put(URL_resupply+'resupply-supervision/'+id+'/validate')
+    print(response.text + "\n")
 
-    print('- Requête de Buzz à Needs Control Service pour vérifier les besoins des modules, le service contacte Module Life Service qui lui renvoie la liste des besoins.')
-    print('    - Le commandant du village lunaire demande au Needs Control Service à voir les besoins essentiels à la vie dans les modules')
-    print('    - Le Module Life Service reçoit une requête du Needs Control Service demandant à voir les besoins essentiels à la vie dans le module')
-    print('    - Le Module Life Service traite cette demande et renvoie la liste des besoins relatifs aux éléments essentiels à la vie dans le module au Needs Control Service (quantité)')
-    print('    - Le Needs Control Service renvoie cette liste au commandant du village lunaire')
+    print("=> Récupération de la commande via Resupply Service")
+    print("   En tant que Dorothy, je veux m'assurer que la commande a été bien été validée")
+    print("   Cette fois, on s'attend toujours à récupérer les deux commandes de Buzz mais la première sera passée en Validé")
+    print("GET http://localhost:4301/resupply-supervision/supplyOrders")
+    print("Response : ")
+    response = requests.get(URL_resupply+'resupply-supervision/supplyOrders')
+    print(response.text + "\n")
 
+    print("=> Récupération des missions de ravitaillement via Resupply Service")
+    print("   En tant que Dorothy, je veux controler les missions de ravitaillement")
+    print("   On s'attend cette fois à retrouver une seule mission de ravitaillement qui contient la commande de 13 provisions. Cette commande sera En cours de traitement")
+    print("GET http://localhost:4301/resupply-supervision/rocketStatus")
+    print("Response : ")
+    response = requests.get(URL_resupply+'resupply-supervision/rocketStatus')
+    id_resupplyMission = response.json()[0].get("_id")
+    print(response.text + "\n")
 
+    print("=> Récupération des vaisseaux disponibles pour une mission de ravitaillement via Spacecraft Service")
+    print("   En tant que Gene, je veux regarder tous les vaisseaux disponibles")
+    print("   On s'attend à trouver un seul vaisseau qui n'a aucune mission de ravitaillement et qui est au sol")
+    print("GET http://localhost:4305/space-craft")
+    print("Response : ")
+    response = requests.get(URL_spacecraft+'spacecraft')
+    id_spacecraft = response.json()[0].get("_id")
+    print(response.text + "\n")
 
+    print("=> Attribution d'une mission de ravitaillement à un vaisseau via Spacecraft Service")
+    print("   En tant que Gene, je veux attribuer un vaisseau à une mission de ravitaillement")
+    print("   On s'attend à trouver l'id de la mission")
+    print("PUT http://localhost:4305/space-craft/:idSpacecraf")
+    print("Response : ")
+    payload = { "id_spacecraft": 1, "vitals": True, "status": "PREPARING", "id_resupplyMission": id_resupplyMission}
+    response = requests.put(URL_spacecraft+'spacecraft/'+id_spacecraft,json=payload)
+    print(response.text + "\n")
 
-    print('- Requête de Buzz à Needs Control Service pour passer une commande (demande de réapprovisionnement)')
-    print('    - Le commandant du village lunaire fait une demande de réapprovisionnement au Needs Control Service')
-    print('    - Le Resupply Service reçoit une requête de réapprovisionnement de la part du Needs Control Service')
-    print('    - Le Resupply Service traite cette demande et créer une commande en attente de validation et renvoie la commande créée.')
+    print("=> Envoi d'un vaisseau via Spacecraft Service")
+    print("   En tant que Gene, je veux controler le lancement des vaisseaux")
+    print("   On s'attend à trouver le status du vaisseau à envoyé et le statut de la mission à en cours d'acheminement")
+    print("PUT http://localhost:4305/space-craft/:idSpacecraf")
+    print("Response : ")
+    response = requests.put(URL_spacecraft+'spacecraft/'+id_spacecraft+"/launch")
+    print(response.text + "\n")
+    response = requests.get(URL_resupply+'resupply-supervision/rocketStatus')
+    print(response.text + "\n")
 
+    print("=> Ravitaillement de la base via Module Life")
+    print("   En tant que Buzz, je veux ravitailler les modules et la base lunaire")
+    print("   On s'attend à trouver le stock rehaussé")
+    print("PUT http://localhost:4305/space-craft/:idSpacecraf")
+    print("Response : ")
+#     response = requests.put(URL_spacecraft+'spacecraft/'+id_spacecraft+"/launch")
+#     print(response.text + "\n")
 
-
-    print('- Requête de Dorothy à Resupply Service demandant à voir les commandes')
-    print('    - La responsable de la logistique demande au Resupply Service à voir les commandes')
-    print('    - Le Resupply Service reçoit une requête demande à voir les commandes')
-    print('    - Le Resupply Service traite la demande et renvoie la liste de toutes les commandes')
-
-
-
-    print('- Requête de Dorothy à Resupply Service pour valider une commande')
-    print('    - La responsable de la logistique demande au Resupply Service pour valider une commande')
-    print('    - Le Resupply Service reçoit une requête demande valider une commande')
-    print('    - Le Resupply Service traite la demande, il valide la commande et l’ajoute à la liste des commandes de la prochaine fusée')
-
-
-
-    print('- Requête de Gene à Spacecraft Service pour regarder la liste des vaisseaux spatiaux disponibles')
-    print('    - Le directeur de vol demande au Spacecraft Service à voir la liste des vaisseaux disponibles')
-    print('    - Le Spacecraft Service reçoit une requête demande à voir la liste des vaisseaux disponibles')
-    print('    - Le Spacecraft Service traite la demande et renvoie la liste des vaisseaux disponibles')
-
-
-
-    print('- Requête de Gene à Spacecraft Service pour attribuer un vaisseau spatial à une mission de ravitaillement')
-    print('    - Le directeur de vol demande demande au Spacecraft Service à attribuer un vaisseau à une mission de ravitaillement')
-    print('    - Le Spacecraft Service reçoit une requête demandant à attribuer un vaisseau à une mission de ravitaillement')
-    print('    - Le Spacecraft Service envoie une demande d’assignation de vaisseau au Resupply Service qui lui renvoie ok')
-    print('    - Le Spacecraft Service reçoit le résultat et renvoie également ok.')
-
-
-
-    print('- Requête de Gene à Spacecraft Service pour indiquer que le vaisseau spatial a décollé')
-    print('    - Le commandant du village lunaire fait une demande à Spacecraft Service pour faire décoller le vaisseau spatial')
-    print('    - Le Spacecraft Service reçoit une requête de décollage d’un vaisseau spatial')
-    print('    - Le Spacecraft Service traite cette demande, change le statut du vaisseau spatial et ok')
-
-
-
-    print('- Requête de Buzz à Module Life Service pour réapprovisionner les modules')
-    print('    - Le commandant du village lunaire fait une demande à Module Life Service pour réapprovisionner les modules')
-    print('    - Le Module Life Service reçoit une requête de réapprovisionnement')
-    print('    - Le Module Life Service traite cette demande et réapprovisionne autant de modules en manque que de provisions fournies')
-
-
-
-    response = requests.get(URL_needs_control + 'stock')
-    print(response.text)
-
-
-peuplageDB()
-# scenario2()
+scenario2()
 

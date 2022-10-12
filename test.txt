@@ -1,0 +1,45 @@
+===> Awaiting all services ready
+gateway service is up and running at http://localhost:9500
+===> Launch docker container running python integration script
+
+=> Peuplement de la base de données Module Life
+
+Ajout de 4 modules pour un quota de provisions max à 10:
+  - Inventaire de 32 provisions
+  - Modules isolés : 1 (514) 
+  - Modules en mauvaise situation : 2
+  - Besoins de 8 provisions
+
+POST http://localhost:4303/module
+{"error":"Id module already exists","details":"\"512\" is already used"}
+{"error":"Id module already exists","details":"\"513\" is already used"}
+{"error":"Id module already exists","details":"\"514\" is already used"}
+{"error":"Id module already exists","details":"\"515\" is already used"}
+
+=> Peuplement de la base de données Spacesuit
+
+Ajout d'une combinaison numéro 1 avec:
+  - 20 de temperature
+  - 3 de pression 
+  - 80 de taux d'oxygene
+  - 60 de rythme cardiaque
+
+POST http://localhost:4306/module
+{"Spacesuit already exist":"Spacesuit already exist for id : \"1\""}
+
+=> Peuplement de la base de données Spacecraft
+
+Ajout d'un vaisseau numéro 1 avec:
+  - des bonnes conditions matérielles 
+  - status à PREPARING
+  - aucune mission de ravitaillement lié
+
+POST http://localhost:4305/spacecraft
+{"SpaceCraft already exist":"Space craft already exist for id : \"1\""}
+http://module-life-service:4303/
+zerdtfhytreza http://eva-mission-service:4307/
+------------------------------------------------------------------------------------------
+
+--------------------------------- Start Integration Tests --------------------------------
+
+---------------------------------- End Integration Tests ---------------------------------

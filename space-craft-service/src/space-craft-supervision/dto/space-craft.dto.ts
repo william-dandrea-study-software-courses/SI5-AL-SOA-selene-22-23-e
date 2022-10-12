@@ -16,7 +16,7 @@ export class SpaceCraftDTO {
   @IsNotEmpty()
   status: StatusSpacecraftEnumSchema;
 
-  @ApiProperty()
+  @ApiProperty({required:false})
   @IsNotEmpty()
   id_resupplyMission: string;
 }

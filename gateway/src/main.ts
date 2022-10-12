@@ -22,7 +22,6 @@ async function bootstrap() {
   // Proxy endpoints
   const dependenciesConfig =
     configService.get<DependenciesConfig>("dependencies");
-  console.log(dependenciesConfig.survival_control_service_url_with_port);
   app.use(
     "/survival_control",
     createProxyMiddleware({
