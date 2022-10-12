@@ -106,6 +106,75 @@ services:
     networks:
       - soa-team-e-network-dev
 
+  spacecraft-service-dev:
+    image: spacecraft-service-dev
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4305:4305
+    environment:
+      - APP_PORT=4305
+      - APP_NAME=spacecraft-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacecraft-dev-db
+      - SWAGGERUI_PATH=doc/spacecraft
+      - SWAGGERUI_TITLE=spacecraft Micro-Service
+      - SWAGGERUI_DESCRIPTION=spacecraft-dev
+    volumes:
+      - ./spacecraft-service:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - soa-team-e-network-dev
+    depends_on:
+      - database-dev
+
+  eva-mission-service-dev:
+    image: eva-mission-service-dev
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4307:4307
+    environment:
+      - APP_PORT=4307
+      - APP_NAME=eva-mission-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=eva-mission-service-dev-db
+      - SWAGGERUI_PATH=doc/eva-mission-service
+      - SWAGGERUI_TITLE=eva-mission-service-dev
+      - SWAGGERUI_DESCRIPTION=eva-mission-service-dev
+    volumes:
+      - ./eva-mission-service:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - soa-team-e-network-dev
+    depends_on:
+      - database-dev
+
+  spacesuit-service-dev:
+    image: spacesuit-service-dev
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4306:4306
+    environment:
+      - APP_PORT=4306
+      - APP_NAME=spacesuit-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacesuit-service-dev-db
+      - SWAGGERUI_PATH=doc/spacesuit
+      - SWAGGERUI_TITLE=spacesuit-dev
+      - SWAGGERUI_DESCRIPTION=spacesuit-dev
+    volumes:
+      - ./spacesuit-service:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - soa-team-e-network-dev
+    depends_on:
+      - database-dev
+
   gateway-dev:
     image: gateway-dev
     restart: always
@@ -122,6 +191,9 @@ services:
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service-dev:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service-dev:4302
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service-dev:4301
+      - SPACE_CRAFT_SERVICE_URL_WITH_PORT=space-craft-service-dev:4305
+      - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service-dev:4306
+      - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service-dev:4307
     volumes:
       - ./gateway:/usr/src/app
       - /usr/src/app/node_modules
@@ -132,6 +204,7 @@ services:
       - module-life-service-dev
       - needs-control-service-dev
       - resupply-service-dev
+
 
 networks:
   soa-team-e-network-dev:
