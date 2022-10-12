@@ -10,7 +10,6 @@ import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios
 export class ModuleLifeProxyService {
 
     private _baseUrl: string;
-
     private _moduleLifePath = '/vitals/';
 
     constructor(private configService: ConfigService, private readonly httpService: HttpService) {

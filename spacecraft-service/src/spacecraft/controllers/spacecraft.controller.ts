@@ -58,4 +58,10 @@ export class SpacecraftController {
     return this.spaceCraftService.launch(spaceCraftId);
   }
 
+
+  @Get('/test')
+  async test() {
+    return "Ok"
+  }
+
 }
