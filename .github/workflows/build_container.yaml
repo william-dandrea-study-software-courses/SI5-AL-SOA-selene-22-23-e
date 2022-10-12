@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the Production Gateway Container
         working-directory: ./gateway
-        run: docker build --target production -f Dockerfile -t "gateway" .
+        run: docker build --target production -f docker-compose.yml -t "gateway" .
 
   build-survival-control-service-container:
     runs-on: ubuntu-latest
@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the Production survival-control-service Container
         working-directory: ./survival-control-service
-        run: docker build --target production -f Dockerfile -t "survival-control-service" .
+        run: docker build --target production -f docker-compose.yml -t "survival-control-service" .
 
   build-module-life-service-container:
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the Production module-life-service Container
         working-directory: ./module-life-service
-        run: docker build --target production -f Dockerfile -t "survival-control-service" .
+        run: docker build --target production -f docker-compose.yml -t "survival-control-service" .
 
   build-needs-control-service-container:
     runs-on: ubuntu-latest
@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the Production needs-control-service Container
         working-directory: ./needs-control-service
-        run: docker build --target production -f Dockerfile -t "survival-control-service" .
+        run: docker build --target production -f docker-compose.yml -t "survival-control-service" .
 
   build-resupply-service-container:
     runs-on: ubuntu-latest
@@ -46,4 +46,4 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the Production resupply-service Container
         working-directory: ./resupply-service
-        run: docker build --target production -f Dockerfile -t "survival-control-service" .
+        run: docker build --target production -f docker-compose.yml -t "survival-control-service" .
