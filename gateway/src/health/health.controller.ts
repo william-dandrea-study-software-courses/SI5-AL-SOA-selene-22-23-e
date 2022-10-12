@@ -17,6 +17,8 @@ export class HealthController {
   private _spacesuitServiceHealthCheckUrl: string;
   private _spacecraftServiceHealthCheckUrl: string;
   private _evaMissionServiceHealthCheckUrl: string;
+  private _meteoriteMonitoringHealthCheckUrl: string;
+  private _alertNotificationHealthCheckUrl: string;
 
   constructor(
     private configService: ConfigService,
@@ -31,6 +33,9 @@ export class HealthController {
     this._spacesuitServiceHealthCheckUrl = `http://${dependenciesConfig.spacesuit_service_url_with_port}/health`;
     this._spacecraftServiceHealthCheckUrl = `http://${dependenciesConfig.spacecraft_service_url_with_port}/health`;
     this._evaMissionServiceHealthCheckUrl = `http://${dependenciesConfig.eva_mission_service_url_with_port}/health`;
+    this._meteoriteMonitoringHealthCheckUrl = `http://${dependenciesConfig.meteorite_monitoring_service_url_with_port}/health`;
+    this._meteoriteMonitoringHealthCheckUrl = `http://${dependenciesConfig.meteorite_monitoring_service_url_with_port}/health`;
+    this._alertNotificationHealthCheckUrl = `http://${dependenciesConfig.alert_notification_service_url_with_port}/health`;
     console.log(this._survivalControlServiceHealthCheckUrl);
     console.log(this._moduleLifeServiceHealthCheckUrl);
     console.log(this._needsControlServiceHealthCheckUrl);
@@ -38,6 +43,8 @@ export class HealthController {
     console.log(this._spacesuitServiceHealthCheckUrl);
     console.log(this._spacecraftServiceHealthCheckUrl);
     console.log(this._evaMissionServiceHealthCheckUrl);
+    console.log(this._meteoriteMonitoringHealthCheckUrl);
+    console.log(this._alertNotificationHealthCheckUrl);
   }
 
   async checkIsHealthy(name, url) {
@@ -91,6 +98,16 @@ export class HealthController {
             "eva-mission-service",
             this._evaMissionServiceHealthCheckUrl
         ),
+      async () =>
+          this.checkIsHealthy(
+              "meteorite-monitoring-service",
+              this._meteoriteMonitoringHealthCheckUrl
+          ),
+      async () =>
+          this.checkIsHealthy(
+              "alert-notification-service",
+              this._alertNotificationHealthCheckUrl
+          ),
     ]);
   }
 }

@@ -6,4 +6,6 @@ export interface DependenciesConfig {
   spacecraft_service_url_with_port:string,
   spacesuit_service_url_with_port: string,
   eva_mission_service_url_with_port: string,
+  meteorite_monitoring_service_url_with_port: string,
+  alert_notification_service_url_with_port: string,
 }

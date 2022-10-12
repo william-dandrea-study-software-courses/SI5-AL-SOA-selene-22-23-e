@@ -95,6 +95,26 @@ async function bootstrap() {
             },
         })
     );
+    app.use(
+        "/meteorite-monitoring",
+        createProxyMiddleware({
+            target: `http://${dependenciesConfig.meteorite_monitoring_service_url_with_port}`,
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/meteorite-monitoring`]: "",
+            },
+        })
+    );
+    app.use(
+        "/alert-notification",
+        createProxyMiddleware({
+            target: `http://${dependenciesConfig.alert_notification_service_url_with_port}`,
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/alert-notification`]: "",
+            },
+        })
+    );
   // Run the app
   const appPort = configService.get("app.port");
   await app.listen(appPort, () => {

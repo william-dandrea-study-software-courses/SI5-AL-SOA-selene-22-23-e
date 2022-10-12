@@ -145,6 +145,44 @@ services:
     networks:
       - soa-team-e-network
 
+  meteorite-monitoring-service:
+    image: meteorite-monitoring-service
+    restart: always
+    ports:
+      - 4308:4308
+    environment:
+      - APP_PORT=4308
+      - APP_NAME=meteorite-monitoring-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=meteorite-monitoring-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Meteorite Monitoring Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à contrôler la trajectoire des météorites et à alerter en cas de besoin
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  alert-notification-service:
+    image: alert-notification-service
+    restart: always
+    ports:
+      - 4309:4309
+    environment:
+      - APP_PORT=4309
+      - APP_NAME=alert-notification-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=alert-notification-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Alert Notification Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à garder en mémoire les alertes qui ont été envoyées
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
   gateway:
     image: gateway
     restart: always
@@ -159,6 +197,8 @@ services:
       - SPACECRAFT_SERVICE=spacecraft-service
       - SPACESUIT_SERVICE=spacesuit-service
       - EVA_MISSION_SERVICE=eva-mission-service
+      - METEORITE_MONITORING_SERVICE=meteorite-monitoring
+      - ALERT_NOTIFICATION_SERVIC=alert-notification-service
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
@@ -166,6 +206,8 @@ services:
       - SPACECRAFT_SERVICE_URL_WITH_PORT=spacecraft-service:4305
       - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service:4306
       - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
+      - METEORITE_MONITORING_SERVICE_URL_WITH_PORT=meteorite-monitoring-service:4308
+      - ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT=alert-notification-service:4309
 
 
     networks:
