@@ -236,6 +236,53 @@ services:
       - spacecraft-service-dev
 
 
+
+
+  zookeeper:
+    container_name: soa-team-e-zookeeper
+    restart: unless-stopped
+    image: wurstmeister/zookeeper
+    environment:
+      zk_id: "1"
+    expose:
+      - 2181
+    networks:
+      - soa-team-e-network-dev
+
+  kafka-service:
+    container_name: soa-team-e-kafka
+    restart: unless-stopped
+    image: wurstmeister/kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka-service
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: soa-team-e-zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
+      KAFKA_CREATE_TOPICS: "topic-poll:1:1,topic-poll-response:1:1,topic-rocket-event:1:1,topic-launch-event:1:1,topic-launch-order:1:1"
+    expose:
+      - 9092
+    networks:
+      - soa-team-e-network-dev
+
+  init-kafka:
+    image: confluentinc/cp-kafka:6.1.1
+    depends_on:
+      - kafka-service
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server --if-not-exists broker:9092 --create --topic test-topic
+      "
+    networks:
+      - soa-team-e-network-dev
+
+
 networks:
   soa-team-e-network-dev:
     driver: bridge
