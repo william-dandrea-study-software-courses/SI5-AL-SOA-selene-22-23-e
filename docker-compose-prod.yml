@@ -166,8 +166,35 @@ services:
       - SPACECRAFT_SERVICE_URL_WITH_PORT=spacecraft-service:4305
       - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service:4306
       - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
+    networks:
+      - soa-team-e-network
 
+  zookeeper:
+    container_name: soa-team-e-zookeeper
+    restart: unless-stopped
+    image: wurstmeister/zookeeper
+    environment:
+      zk_id: "1"
+    expose:
+      - 2181
+    networks:
+      - soa-team-e-network
 
+  kafka-service:
+    container_name: soa-team-e-kafka
+    restart: unless-stopped
+    image: wurstmeister/kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka-service
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: soa-team-e-zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
+      KAFKA_CREATE_TOPICS: "topic-poll:1:1,topic-poll-response:1:1,topic-rocket-event:1:1,topic-launch-event:1:1,topic-launch-order:1:1"
+    expose:
+      - 9092
     networks:
       - soa-team-e-network
 

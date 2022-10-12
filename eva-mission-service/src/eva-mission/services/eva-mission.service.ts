@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, Logger} from '@nestjs/common';
 import { Model} from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 
@@ -6,11 +6,22 @@ import {EVAMission, EVAMissionDocument} from '../schemas/eva-mission.schema';
 
 import {EVAMissionDTO} from "../dto/eva-mission.dto";
 import {EVAMisionAlreadyExistException} from "../exceptions/eva-mission-already-exist.exception";
+import {Kafka} from "kafkajs";
+import {EvaMissionController} from "../controllers/eva-mission.controller";
 
 @Injectable()
 export class EvaMissionService {
 
-  constructor(@InjectModel(EVAMission.name) private evaMissionModel: Model<EVAMissionDocument>) {}
+  private readonly logger = new Logger(EvaMissionController.name);
+
+  private kafka = new Kafka({
+    clientId: 'eva-mission',
+    brokers: ['kafka-service:9092']
+  })
+
+  constructor(@InjectModel(EVAMission.name) private evaMissionModel: Model<EVAMissionDocument>) {
+
+  }
 
   async getEVAMissions(): Promise<EVAMissionDTO[]> {
     return this.evaMissionModel.find().then(evaMissions => {
@@ -50,4 +61,46 @@ export class EvaMissionService {
     evaMission.save();
     return evaMission;
   }
+
+
+  public async testKafka(): Promise<any> {
+
+    const producer = await this.kafka.producer()
+
+
+
+    // Producing
+    await producer.connect()
+    await producer.send({
+      topic: 'test-topic',
+      messages: [
+        { value: 'Hello KafkaJS user!' },
+      ],
+    });
+
+    await producer.disconnect();
+
+    return null;
+  }
+
+
+  public async receiveKafka() {
+    const consumer = await this.kafka.consumer({ groupId: 'test-group' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'test-topic', fromBeginning: true })
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        this.logger.log({
+          partition,
+          offset: message.offset,
+          value: message.value.toString(),
+        })
+      },
+    });
+
+    // Tant que lui n'est pas disconnect, il continuera a lire
+  }
+
 }

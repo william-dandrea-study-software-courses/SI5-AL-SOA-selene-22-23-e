@@ -48,4 +48,23 @@ export class EvaMissionController {
     return this.spaceCraftService.putEVAMission(evaId, evaMissionDTO);
   }
 
+
+
+
+
+
+
+  // =============================================================================================================== //
+  @Get("/testKafkaEmit")
+  async testKafka(): Promise<any> {
+    return this.spaceCraftService.testKafka();
+  }
+
+  @Get("/testKafkaReceive")
+  async testKafkaReceive(): Promise<any> {
+    return this.spaceCraftService.receiveKafka();
+  }
+
+
+
 }

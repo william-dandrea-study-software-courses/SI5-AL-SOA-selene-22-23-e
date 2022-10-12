@@ -9,7 +9,10 @@ services:
       - soa-team-e-network-dev
 
   module-life-service-dev:
-    image: module-life-service-dev
+    build:
+      context: ./module-life-service
+      dockerfile: ./Dockerfile
+      target: docker-development
     restart: always
     command: npm run start:dev
     ports:
@@ -32,7 +35,10 @@ services:
       - soa-team-e-network-dev
 
   survival-control-service-dev:
-    image:   survival-control-service-dev
+    build:
+      context: ./survival-control-service
+      dockerfile: ./Dockerfile
+      target: docker-development
     restart: always
     command: npm run start:dev
     ports:
@@ -57,7 +63,10 @@ services:
       - soa-team-e-network-dev
 
   needs-control-service-dev:
-    image: needs-control-service-dev
+    build:
+      context: ./needs-control-service
+      dockerfile: ./Dockerfile
+      target: docker-development
     restart: always
     command: npm run start:dev
     ports:
@@ -84,7 +93,10 @@ services:
       - soa-team-e-network-dev
 
   resupply-service-dev:
-    image: resupply-service-dev
+    build:
+      context: ./resupply-service
+      dockerfile: ./Dockerfile
+      target: docker-development
     restart: always
     command: npm run start:dev
     ports:
@@ -106,8 +118,89 @@ services:
     networks:
       - soa-team-e-network-dev
 
+  spacecraft-service-dev:
+    build:
+      context: ./spacecraft-service
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4305:4305
+    environment:
+      - APP_PORT=4305
+      - APP_NAME=spacecraft-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacecraft-dev-db
+      - SWAGGERUI_PATH=doc/spacecraft
+      - SWAGGERUI_TITLE=spacecraft Micro-Service
+      - SWAGGERUI_DESCRIPTION=spacecraft-dev
+    volumes:
+      - ./spacecraft-service:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - soa-team-e-network-dev
+    depends_on:
+      - database-dev
+
+  eva-mission-service-dev:
+    build:
+      context: ./eva-mission-service
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4307:4307
+    environment:
+      - APP_PORT=4307
+      - APP_NAME=eva-mission-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=eva-mission-service-dev-db
+      - SWAGGERUI_PATH=doc/eva-mission-service
+      - SWAGGERUI_TITLE=eva-mission-service-dev
+      - SWAGGERUI_DESCRIPTION=eva-mission-service-dev
+    volumes:
+      - ./eva-mission-service:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - soa-team-e-network-dev
+    depends_on:
+      - database-dev
+
+  spacesuit-service-dev:
+    build:
+      context: ./spacesuit-service
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4306:4306
+    environment:
+      - APP_PORT=4306
+      - APP_NAME=spacesuit-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacesuit-service-dev-db
+      - SWAGGERUI_PATH=doc/spacesuit
+      - SWAGGERUI_TITLE=spacesuit-dev
+      - SWAGGERUI_DESCRIPTION=spacesuit-dev
+    volumes:
+      - ./spacesuit-service:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - soa-team-e-network-dev
+    depends_on:
+      - database-dev
+
   gateway-dev:
-    image: gateway-dev
+    build:
+      context: ./gateway
+      dockerfile: ./Dockerfile
+      target: docker-development
     restart: always
     command: npm run start:dev
     ports:
@@ -118,10 +211,16 @@ services:
       - MODULE_LIFE_SERVICE=module-life-service-dev
       - NEEDS_CONTROL_SERVICE=needs-control-service-dev
       - RESUPPLY_CONTROL_SERVICE=resupply-service-dev
+      - SPACECRAFT_SERVICE_URL=spacecraft-service-dev
+      - SPACESUIT_SERVICE_URL=spacesuit-service-dev
+      - EVA_MISSION_SERVICE_URL=eva-mission-service-dev
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service-dev:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service-dev:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service-dev:4302
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service-dev:4301
+      - SPACECRAFT_SERVICE_URL_WITH_PORT=spacecraft-service-dev:4305
+      - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service-dev:4306
+      - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service-dev:4307
     volumes:
       - ./gateway:/usr/src/app
       - /usr/src/app/node_modules
@@ -132,6 +231,57 @@ services:
       - module-life-service-dev
       - needs-control-service-dev
       - resupply-service-dev
+      - spacesuit-service-dev
+      - eva-mission-service-dev
+      - spacecraft-service-dev
+
+
+
+
+  zookeeper:
+    container_name: soa-team-e-zookeeper
+    restart: unless-stopped
+    image: wurstmeister/zookeeper
+    environment:
+      zk_id: "1"
+    expose:
+      - 2181
+    networks:
+      - soa-team-e-network-dev
+
+  kafka-service:
+    container_name: soa-team-e-kafka
+    restart: unless-stopped
+    image: wurstmeister/kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka-service
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: soa-team-e-zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
+      KAFKA_CREATE_TOPICS: "topic-poll:1:1,topic-poll-response:1:1,topic-rocket-event:1:1,topic-launch-event:1:1,topic-launch-order:1:1"
+    expose:
+      - 9092
+    networks:
+      - soa-team-e-network-dev
+
+  init-kafka:
+    image: confluentinc/cp-kafka:6.1.1
+    depends_on:
+      - kafka-service
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server --if-not-exists broker:9092 --create --topic test-topic
+      "
+    networks:
+      - soa-team-e-network-dev
+
 
 networks:
   soa-team-e-network-dev:
