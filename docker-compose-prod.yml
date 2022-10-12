@@ -100,7 +100,7 @@ services:
         - MONGODB_PORT=27017
         - MONGODB_DATABASE=spacecraft-db
         - SWAGGERUI_PATH=doc
-        - SWAGGERUI_TITLE=Space Craft Micro-Service
+        - SWAGGERUI_TITLE=Spacecraft Micro-Service
         - SWAGGERUI_DESCRIPTION=Destiné au controle des Space Craft
       depends_on:
         - database
@@ -156,14 +156,14 @@ services:
       - MODULE_LIFE_SERVICE=module-life-service
       - NEEDS_CONTROL_SERVICE=needs-control-service
       - RESUPPLY_CONTROL_SERVICE=resupply-service
-      - SPACE_CRAFT_SERVICE=spacecraft-service
+      - SPACECRAFT_SERVICE=spacecraft-service
       - SPACESUIT_SERVICE=spacesuit-service
       - EVA_MISSION_SERVICE=eva-mission-service
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
-      - SPACE_CRAFT_SERVICE_URL_WITH_PORT=spacecraft-service:4305
+      - SPACECRAFT_SERVICE_URL_WITH_PORT=spacecraft-service:4305
       - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service:4306
       - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
 

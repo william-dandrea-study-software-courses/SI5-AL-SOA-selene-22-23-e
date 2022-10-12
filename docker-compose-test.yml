@@ -9,7 +9,7 @@ services:
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
-      - SPACE_CRAFT_SERVICE_URL_WITH_PORT=spacecraft-service:4305
+      - SPACECRAFT_SERVICE_URL_WITH_PORT=spacecraft-service:4305
       - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service:4306
       - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
       - GATEWAY_URL_WITH_PORT=gateway:9500

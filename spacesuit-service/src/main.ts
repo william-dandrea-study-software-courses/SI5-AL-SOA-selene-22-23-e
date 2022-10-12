@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { SwaggerUIConfig } from './shared/config/interfaces/swaggerui-config.interface';
+import {ExpressSwaggerCustomOptions} from "@nestjs/swagger/dist/interfaces/legacy-swagger-custom-options.interfaces";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,7 +27,8 @@ async function bootstrap() {
       .addServer('/spacesuit', 'Through gateway')
       .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(swaggeruiConfig.path, app, document);
+  const options : ExpressSwaggerCustomOptions = {customSiteTitle: swaggeruiConfig.title};
+  SwaggerModule.setup(swaggeruiConfig.path, app, document, options);
 
   // Starts listening for shutdown hooks
   app.enableShutdownHooks();

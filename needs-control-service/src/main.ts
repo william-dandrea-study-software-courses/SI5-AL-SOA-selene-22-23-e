@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {SwaggerUIConfig} from "./shared/config/interfaces/swaggerui-config.interface";
+import {ExpressSwaggerCustomOptions} from "@nestjs/swagger/dist/interfaces/legacy-swagger-custom-options.interfaces";
 import {ValidationPipe} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 
@@ -26,7 +27,8 @@ async function bootstrap() {
       .addServer('/needs-control', 'Through gateway')
       .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(swaggeruiConfig.path, app, document);
+  const options : ExpressSwaggerCustomOptions = {customSiteTitle: swaggeruiConfig.title};
+  SwaggerModule.setup(swaggeruiConfig.path, app, document, options);
 
   app.enableShutdownHooks();
 

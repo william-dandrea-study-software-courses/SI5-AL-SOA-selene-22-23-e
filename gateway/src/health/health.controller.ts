@@ -29,8 +29,15 @@ export class HealthController {
     this._needsControlServiceHealthCheckUrl = `http://${dependenciesConfig.needs_control_service_service_url_with_port}/health`;
     this._resupplyServiceHealthCheckUrl = `http://${dependenciesConfig.resupply_service_service_url_with_port}/health`;
     this._spacesuitServiceHealthCheckUrl = `http://${dependenciesConfig.spacesuit_service_url_with_port}/health`;
-    this._spacecraftServiceHealthCheckUrl = `http://${dependenciesConfig.space_craft_service_url_with_port}/health`;
+    this._spacecraftServiceHealthCheckUrl = `http://${dependenciesConfig.spacecraft_service_url_with_port}/health`;
     this._evaMissionServiceHealthCheckUrl = `http://${dependenciesConfig.eva_mission_service_url_with_port}/health`;
+    console.log(this._survivalControlServiceHealthCheckUrl);
+    console.log(this._moduleLifeServiceHealthCheckUrl);
+    console.log(this._needsControlServiceHealthCheckUrl);
+    console.log(this._resupplyServiceHealthCheckUrl);
+    console.log(this._spacesuitServiceHealthCheckUrl);
+    console.log(this._spacecraftServiceHealthCheckUrl);
+    console.log(this._evaMissionServiceHealthCheckUrl);
   }
 
   async checkIsHealthy(name, url) {
