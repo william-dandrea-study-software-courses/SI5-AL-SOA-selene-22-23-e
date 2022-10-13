@@ -62,4 +62,44 @@ export class SpacecraftService {
     return spaceCraft;
 
   }
+
+  async getAvailableSpaceCrafts(): Promise<SpacecraftDto[]> {
+    const spaceCrafts = await this.spaceCraftModel.find({status: StatusSpacecraftEnumSchema.PREPARING})
+    return spaceCrafts;
+  }
+
+  async affectSpaceCraftToMission(resupplyMissionId: string): Promise<SpacecraftDto> {
+    const spaceCrafts = await this.spaceCraftModel.findOne({status: StatusSpacecraftEnumSchema.PREPARING, id_resupplyMission: "None"})
+
+    if (spaceCrafts == null) {
+      throw new HttpException("Aucun SpaceCraft n'est disponible pour être envoye en mission", HttpStatus.CONFLICT);
+    }
+
+    spaceCrafts.id_resupplyMission = resupplyMissionId;
+    await spaceCrafts.save();
+
+    return spaceCrafts;
+  }
+
+  async launchSpaceCraft(idSpaceCraft: number): Promise<SpacecraftDto> {
+    const spaceCrafts = await this.spaceCraftModel.findOne({id_spacecraft: idSpaceCraft})
+
+    if (spaceCrafts == null) {
+      throw new HttpException("Aucun SpaceCraft ne correspond a votre idSpaceCraft", HttpStatus.CONFLICT);
+    }
+
+    if (spaceCrafts.id_resupplyMission === "None") {
+      throw new HttpException("Vous ne pouvez pas lancer un spacecraft qui n'est associé à aucune mission", HttpStatus.CONFLICT );
+    }
+
+    spaceCrafts.status = StatusSpacecraftEnumSchema.TRAVELING;
+    await spaceCrafts.save();
+
+    return spaceCrafts;
+  }
+
+
+
+
+
 }

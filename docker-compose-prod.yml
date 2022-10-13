@@ -208,8 +208,35 @@ services:
       - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
       - METEORITE_MONITORING_SERVICE_URL_WITH_PORT=meteorite-monitoring-service:4308
       - ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT=alert-notification-service:4309
+    networks:
+      - soa-team-e-network
 
+  zookeeper:
+    container_name: soa-team-e-zookeeper
+    restart: unless-stopped
+    image: wurstmeister/zookeeper
+    environment:
+      zk_id: "1"
+    expose:
+      - 2181
+    networks:
+      - soa-team-e-network
 
+  kafka-service:
+    container_name: soa-team-e-kafka
+    restart: unless-stopped
+    image: wurstmeister/kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka-service
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: soa-team-e-zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
+      KAFKA_CREATE_TOPICS: "topic-poll:1:1,topic-poll-response:1:1,topic-rocket-event:1:1,topic-launch-event:1:1,topic-launch-order:1:1"
+    expose:
+      - 9092
     networks:
       - soa-team-e-network
 
