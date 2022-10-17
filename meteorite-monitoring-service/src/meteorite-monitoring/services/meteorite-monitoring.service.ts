@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {ModuleLifeProxyService} from "./module-life-proxy.service";
 
 @Injectable()
 export class MeteoriteMonitoringService {
-  constructor(private moduleLifeProxyService: ModuleLifeProxyService) {}
+  constructor() {}
 
   async get(): Promise<string> {
     return "helloWorld !";

@@ -1,13 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {Kafka} from "kafkajs";
 
 import { SwaggerUIConfig } from './shared/config/interfaces/swaggerui-config.interface';
 import {ExpressSwaggerCustomOptions} from "@nestjs/swagger/dist/interfaces/legacy-swagger-custom-options.interfaces";
 
+
 async function bootstrap() {
+
+  let logger = new Logger();
+
+  let kafka = new Kafka({
+    clientId: 'module-life',
+    brokers: ['kafka-service:9092']
+  })
+
   const app = await NestFactory.create(AppModule);
   app.enableCors();
 
@@ -33,6 +43,16 @@ async function bootstrap() {
   // Starts listening for shutdown hooks
   app.enableShutdownHooks();
 
+  const consumer = await kafka.consumer({ groupId: 'test-group' });
+  // Consuming
+  await consumer.connect()
+  await consumer.subscribe({ topic: 'test-topic', fromBeginning: true })
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      logger.log("Alert !")
+    },
+  });
 
   // Run the app
   const appPort = configService.get('app.port');

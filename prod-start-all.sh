@@ -17,6 +17,8 @@ compile_dir "survival-control-service"
 compile_dir "spacecraft-service"
 compile_dir "spacesuit-service"
 compile_dir "eva-mission-service"
+compile_dir "meteorite-monitoring-service"
+compile_dir "alert-notification-service"
 compile_dir "resupply-service"
 
 echo -e "\033[0;32m ===> END BUILD \033[0m"

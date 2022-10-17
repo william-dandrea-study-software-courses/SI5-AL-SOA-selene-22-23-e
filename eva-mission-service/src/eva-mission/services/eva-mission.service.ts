@@ -67,8 +67,6 @@ export class EvaMissionService {
 
     const producer = await this.kafka.producer()
 
-
-
     // Producing
     await producer.connect()
     await producer.send({

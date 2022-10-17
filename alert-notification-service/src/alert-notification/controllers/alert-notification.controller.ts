@@ -8,7 +8,6 @@ import {
 
 import { AlertNotificationService } from "../services/alert-notification.service";
 import {AlertDto} from "../dto/alert.dto";
-import {EVAMisionAlreadyExistException} from "../exceptions/eva-mission-already-exist.exception";
 
 @ApiTags("module")
 @Controller("")
@@ -34,5 +33,13 @@ export class AlertNotificationController {
     return this.spaceCraftService.postAlert(alertDto);
   }
 
+  @Post("/test-kafka")
+  @ApiCreatedResponse({
+    description: "The alert event has been successfully dispatch.",
+  })
+  async postEvent() {
+    this.logger.log("Création d'une nouvelle alerte");
+    return this.spaceCraftService.testKafka();
+  }
 
 }
