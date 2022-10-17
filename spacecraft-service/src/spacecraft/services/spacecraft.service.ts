@@ -1,8 +1,9 @@
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import { Model} from "mongoose";
-import { InjectModel } from "@nestjs/mongoose";
+import {Model} from "mongoose";
+import {InjectModel} from "@nestjs/mongoose";
 
 import {SpaceCraft, SpaceCraftDocument} from '../schemas/spacecraft.schema';
+import {Kafka} from "kafkajs";
 
 import {SpacecraftDto} from "../dto/spacecraft.dto";
 import {SpacecraftAlreadyExistException} from "../exceptions/spacecraft-already-exist.exception";
@@ -10,6 +11,11 @@ import {StatusSpacecraftEnumSchema} from "../schemas/status-spacecraft-enum.sche
 
 @Injectable()
 export class SpacecraftService {
+
+  private kafka = new Kafka({
+    clientId: 'spacecraft',
+    brokers: ['kafka-service:9092']
+  })
 
   constructor(@InjectModel(SpaceCraft.name) private spaceCraftModel: Model<SpaceCraftDocument>) {}
 
@@ -49,6 +55,22 @@ export class SpacecraftService {
       spaceCraft.id_resupplyMission = spaceCraftDto.id_resupplyMission;
     }
     spaceCraft.save();
+
+    if(spaceCraftDto.vitals == false || spaceCraftDto.status === StatusSpacecraftEnumSchema.BROKEN){
+      spaceCraftDto.vitals = false;
+      spaceCraftDto.status = StatusSpacecraftEnumSchema.BROKEN;
+      const producer = await this.kafka.producer()
+
+      // Producing
+      await producer.connect()
+      await producer.send({
+        topic: 'spacecraft-destroyed',
+        messages: [
+          { id_resupplyMission: spaceCraftDto.id_resupplyMission},
+        ],
+      });
+      await producer.disconnect();
+    }
     return spaceCraft;
   }
 

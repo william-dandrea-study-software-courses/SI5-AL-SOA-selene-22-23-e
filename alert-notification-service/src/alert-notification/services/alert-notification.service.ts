@@ -35,6 +35,10 @@ export class AlertNotificationService {
     return await this.alertModel.create(alertDTO);
   }
 
+
+  /*
+  A simple test of kafka, to see the result go into the main of module life service
+   */
   public async testKafka(): Promise<any> {
 
     const producer = await this.kafka.producer()
@@ -42,7 +46,7 @@ export class AlertNotificationService {
     // Producing
     await producer.connect()
     await producer.send({
-      topic: 'test-topic',
+      topic: 'alert-event',
       messages: [
         { value: 'Hello KafkaJS user!' },
       ],

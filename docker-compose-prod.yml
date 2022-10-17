@@ -24,6 +24,8 @@ services:
       - SWAGGERUI_TITLE=Module Life Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à notifier des besoins vitaux d’un module, il sera (pour le moment) contacté par Life Support Service et Moon Village
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -179,6 +181,8 @@ services:
       - SWAGGERUI_TITLE=Alert Notification Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à garder en mémoire les alertes qui ont été envoyées
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network

@@ -46,11 +46,13 @@ async function bootstrap() {
   const consumer = await kafka.consumer({ groupId: 'test-group' });
   // Consuming
   await consumer.connect()
-  await consumer.subscribe({ topic: 'test-topic', fromBeginning: true })
+  await consumer.subscribe({ topic: 'alert-event', fromBeginning: true })
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      logger.log("Alert !")
+      logger.log(topic)
+      logger.log(partition)
+      logger.log(message.value)
     },
   });
 
