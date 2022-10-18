@@ -1,4 +1,12 @@
-import {Body, Controller, Get, Logger, Param, Post, Put} from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Put,
+} from "@nestjs/common";
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -7,21 +15,22 @@ import {
 } from "@nestjs/swagger";
 
 import { EvaMissionService } from "../services/eva-mission.service";
-import {EVAMissionDTO} from "../dto/eva-mission.dto";
-import {EVAMisionAlreadyExistException} from "../exceptions/eva-mission-already-exist.exception";
+import { EVAMissionDTO } from "../dto/eva-mission.dto";
+import { EVAMisionAlreadyExistException } from "../exceptions/eva-mission-already-exist.exception";
+import { SpacesuitMetricsDTO } from "../dto/spacesuit-metrics.dto";
 
 @ApiTags("module")
 @Controller("")
 export class EvaMissionController {
   private readonly logger = new Logger(EvaMissionController.name);
 
-  constructor(private readonly spaceCraftService: EvaMissionService) {}
+  constructor(private readonly evaMissionService: EvaMissionService) {}
 
   @Get("/eva-mission")
   @ApiOkResponse()
-  async getModules(): Promise<EVAMissionDTO[]> {
+  async getEVAMissions(): Promise<EVAMissionDTO[]> {
     this.logger.log("Récuperation des vaisseaux");
-    return this.spaceCraftService.getEVAMissions();
+    return this.evaMissionService.getEVAMissions();
   }
 
   @Post("/eva-mission")
@@ -33,9 +42,9 @@ export class EvaMissionController {
     type: EVAMisionAlreadyExistException,
     description: "SpaceCraft already exists",
   })
-  async postModule(@Body() evaMissionDTO: EVAMissionDTO) {
+  async postEVAMissions(@Body() evaMissionDTO: EVAMissionDTO) {
     this.logger.log("Création d'un nouveau vaisseau");
-    return this.spaceCraftService.postEVAMission(evaMissionDTO);
+    return this.evaMissionService.postEVAMission(evaMissionDTO);
   }
 
   @Put("/eva-mission/:evaMissionId")
@@ -43,28 +52,31 @@ export class EvaMissionController {
     description: "The spaceCraft has been successfully updated.",
     type: EVAMissionDTO,
   })
-  async putModule(@Param("evaMissionId") evaId: number, @Body() evaMissionDTO: EVAMissionDTO) {
+  async putEVAMissions(
+    @Param("evaMissionId") evaId: number,
+    @Body() evaMissionDTO: EVAMissionDTO
+  ) {
     this.logger.log("Modification d'un vaisseau");
-    return this.spaceCraftService.putEVAMission(evaId, evaMissionDTO);
+    return this.evaMissionService.putEVAMission(evaId, evaMissionDTO);
   }
 
-
-
-
-
-
+  @Get("eva-mission/metrics")
+  @ApiOkResponse()
+  async getPastEVAMissionsMetrics(): Promise<SpacesuitMetricsDTO[]> {
+    this.logger.log(
+      "Récuperation des métriques des combinaisons pour les EVA missions terminées"
+    );
+    return this.evaMissionService.getPastEVAMissionsMetrics();
+  }
 
   // =============================================================================================================== //
   @Get("/testKafkaEmit")
   async testKafka(): Promise<any> {
-    return this.spaceCraftService.testKafka();
+    return this.evaMissionService.testKafka();
   }
 
   @Get("/testKafkaReceive")
   async testKafkaReceive(): Promise<any> {
-    return this.spaceCraftService.receiveKafka();
+    return this.evaMissionService.receiveKafka();
   }
-
-
-
 }

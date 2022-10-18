@@ -102,6 +102,8 @@ export class EvaMissionService {
     });
   }
 
+  /* ------------------------------------------- KAFKA ---------------------------------------------------- */
+
   public async testKafka(): Promise<any> {
     const producer = await this.kafka.producer();
 
