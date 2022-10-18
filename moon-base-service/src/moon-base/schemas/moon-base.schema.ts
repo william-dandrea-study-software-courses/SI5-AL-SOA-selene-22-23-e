@@ -1,7 +1,6 @@
 import {Document} from "mongoose";
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import {ApiProperty} from "@nestjs/swagger";
-import {LifeModule} from "./life-module.schema";
 
 export type MoonBaseDocument = MoonBase & Document;
 
@@ -19,8 +18,12 @@ export class MoonBase {
     stock: number;
 
     @ApiProperty()
+    @Prop({required: true})
+    alarm_on: boolean;
+
+    @ApiProperty()
     @Prop({ required: true })
-    modules: LifeModule[];
+    modules: string[];
 }
 
 export const MoonBaseSchema =

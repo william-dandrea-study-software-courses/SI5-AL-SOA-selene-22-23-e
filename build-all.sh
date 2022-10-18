@@ -3,7 +3,7 @@
 function compile_dir()  # $1 is the dir to get it
 {
     cd $1
-    ./build.sh
+    ./prod-build.sh
     cd ..
 }
 

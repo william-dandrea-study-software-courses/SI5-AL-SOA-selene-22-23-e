@@ -4,21 +4,21 @@ import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { MeteoriteMonitoringService } from "../services/meteorite-monitoring.service";
 
 
-@ApiTags("survival-control")
-@Controller("/survival-control")
+@ApiTags("meteorite")
+@Controller("meteorite")
 export class MeteoriteMonitoringController {
   private readonly logger = new Logger(MeteoriteMonitoringController.name);
 
   constructor(private meteoriteMonitoringService: MeteoriteMonitoringService) {}
 
   @ApiOkResponse({ type: Boolean })
-  @Get("/")
+  @Get("")
   async get(): Promise<string> {
     this.logger.log("Get récupéré");
     return this.meteoriteMonitoringService.get();
   }
 
-  @Post('/')
+  @Post('')
   @ApiOkResponse({ type: Boolean })
   async isolateModule(@Param("moduleId") moduleId: number): Promise<string> {
     this.logger.log('Post récupéré');

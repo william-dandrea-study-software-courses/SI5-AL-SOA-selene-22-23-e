@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 
-import { ErrorDto } from '../../shared/dto/error.dto';
+import { ErrorDto } from '../../../../module-life-service/src/shared/dto/error.dto';
 
 export class LunarModuleOutOfStocksException extends ErrorDto {
     constructor() {

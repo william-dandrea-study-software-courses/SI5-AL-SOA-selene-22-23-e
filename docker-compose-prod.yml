@@ -189,6 +189,25 @@ services:
     networks:
       - soa-team-e-network
 
+  moon-base-service:
+    image: moon-base-service
+    restart: always
+    ports:
+      - 4310:4310
+    environment:
+      - APP_PORT=4310
+      - APP_NAME=moon-base-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=moon-base-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Moon Base Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à contrôler à la gestion de la base lunaire
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
   gateway:
     image: gateway
     restart: always
@@ -204,7 +223,8 @@ services:
       - SPACESUIT_SERVICE=spacesuit-service
       - EVA_MISSION_SERVICE=eva-mission-service
       - METEORITE_MONITORING_SERVICE=meteorite-monitoring
-      - ALERT_NOTIFICATION_SERVIC=alert-notification-service
+      - ALERT_NOTIFICATION_SERVICE=alert-notification-service
+      - MOON_BASE_SERVICE=moon-base-service
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
@@ -214,6 +234,7 @@ services:
       - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
       - METEORITE_MONITORING_SERVICE_URL_WITH_PORT=meteorite-monitoring-service:4308
       - ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT=alert-notification-service:4309
+      - MOON_BASE_SERVICE_URL_WITH_PORT=moon-base-service:4310
     networks:
       - soa-team-e-network
 

@@ -6,15 +6,14 @@ import { LifeModule, LifeModuleSchema } from './schemas/life-module.schema';
 import { ModuleController } from './controllers/module.controller';
 import { ModuleService } from './services/module.service';
 import {VitalsModule, VitalsModuleSchema} from "./schemas/vitals-module.schema";
-import {MoonBase, MoonBaseSchema} from "./schemas/moon-base.schema";
+import {MoonBaseProxyService} from "./services/moon-base-proxy.service.spec";
 
 @Module({
   imports: [MongooseModule.forFeature([
       { name: LifeModule.name, schema: LifeModuleSchema },
-    { name: VitalsModule.name, schema: VitalsModuleSchema },
-    { name: MoonBase.name, schema: MoonBaseSchema }
+    { name: VitalsModule.name, schema: VitalsModuleSchema }
   ])],
   controllers: [ModuleController],
-  providers: [ModuleService],
+  providers: [ModuleService, MoonBaseProxyService],
 })
 export class ModuleModule {}

@@ -19,21 +19,21 @@ import { EVAMissionDTO } from "../dto/eva-mission.dto";
 import { EVAMisionAlreadyExistException } from "../exceptions/eva-mission-already-exist.exception";
 import { SpacesuitMetricsDTO } from "../dto/spacesuit-metrics.dto";
 
-@ApiTags("module")
-@Controller("")
+@ApiTags("eva-mission")
+@Controller("eva-mission")
 export class EvaMissionController {
   private readonly logger = new Logger(EvaMissionController.name);
 
   constructor(private readonly evaMissionService: EvaMissionService) {}
 
-  @Get("/eva-mission")
+  @Get("")
   @ApiOkResponse()
   async getEVAMissions(): Promise<EVAMissionDTO[]> {
     this.logger.log("Récuperation des vaisseaux");
     return this.evaMissionService.getEVAMissions();
   }
 
-  @Post("/eva-mission")
+  @Post("")
   @ApiCreatedResponse({
     description: "The module has been successfully added.",
     type: EVAMissionDTO,
@@ -47,7 +47,7 @@ export class EvaMissionController {
     return this.evaMissionService.postEVAMission(evaMissionDTO);
   }
 
-  @Put("/eva-mission/:evaMissionId")
+  @Put("/:evaMissionId")
   @ApiOkResponse({
     description: "The spaceCraft has been successfully updated.",
     type: EVAMissionDTO,

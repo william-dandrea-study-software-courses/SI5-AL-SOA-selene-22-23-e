@@ -19,6 +19,7 @@ export class HealthController {
   private _evaMissionServiceHealthCheckUrl: string;
   private _meteoriteMonitoringHealthCheckUrl: string;
   private _alertNotificationHealthCheckUrl: string;
+  private _moonBaseHealthCheckUrl: string;
 
   constructor(
     private configService: ConfigService,
@@ -36,6 +37,7 @@ export class HealthController {
     this._meteoriteMonitoringHealthCheckUrl = `http://${dependenciesConfig.meteorite_monitoring_service_url_with_port}/health`;
     this._meteoriteMonitoringHealthCheckUrl = `http://${dependenciesConfig.meteorite_monitoring_service_url_with_port}/health`;
     this._alertNotificationHealthCheckUrl = `http://${dependenciesConfig.alert_notification_service_url_with_port}/health`;
+    this._moonBaseHealthCheckUrl = `http://${dependenciesConfig.moon_base_service_url_with_port}/health`;
     console.log(this._survivalControlServiceHealthCheckUrl);
     console.log(this._moduleLifeServiceHealthCheckUrl);
     console.log(this._needsControlServiceHealthCheckUrl);
@@ -45,6 +47,7 @@ export class HealthController {
     console.log(this._evaMissionServiceHealthCheckUrl);
     console.log(this._meteoriteMonitoringHealthCheckUrl);
     console.log(this._alertNotificationHealthCheckUrl);
+    console.log(this._moonBaseHealthCheckUrl);
   }
 
   async checkIsHealthy(name, url) {
@@ -108,6 +111,11 @@ export class HealthController {
               "alert-notification-service",
               this._alertNotificationHealthCheckUrl
           ),
+      async () =>
+          this.checkIsHealthy(
+              "moon-base-service",
+              this._moonBaseHealthCheckUrl
+          )
     ]);
   }
 }

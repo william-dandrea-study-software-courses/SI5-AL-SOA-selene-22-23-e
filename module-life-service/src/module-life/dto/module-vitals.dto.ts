@@ -3,7 +3,7 @@ import { LifeModule } from "../schemas/life-module.schema";
 import {ApiProperty} from "@nestjs/swagger";
 import {VitalsModuleDto} from "./vitals-module.dto";
 
-export class ModuleLifeStatusDto {
+export class ModuleVitalsDto {
   constructor(x: LifeModule) {
     this.id_module = x.id_module;
     this.vitals = x.vitals;

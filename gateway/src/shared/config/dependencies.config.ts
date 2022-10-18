@@ -10,4 +10,5 @@ export default registerAs('dependencies', () => ({
   eva_mission_service_url_with_port:process.env.EVA_MISSION_SERVICE_URL_WITH_PORT,
   meteorite_monitoring_service_url_with_port:process.env.METEORITE_MONITORING_SERVICE_URL_WITH_PORT,
   alert_notification_service_url_with_port:process.env.ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT,
+  moon_base_service_url_with_port:process.env.MOON_BASE_SERVICE_URL_WITH_PORT,
 }));

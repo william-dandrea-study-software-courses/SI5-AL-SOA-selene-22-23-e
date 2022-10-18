@@ -8,4 +8,5 @@ export interface DependenciesConfig {
   eva_mission_service_url_with_port: string,
   meteorite_monitoring_service_url_with_port: string,
   alert_notification_service_url_with_port: string,
+  moon_base_service_url_with_port: string,
 }
