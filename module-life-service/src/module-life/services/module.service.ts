@@ -17,15 +17,10 @@ import {
   VitalsModule,
   VitalsModuleDocument,
 } from "../schemas/vitals-module.schema";
-import {
-  ModuleAlreadyAtTheMaximumSupplyQuantityException
-} from "../exceptions/module-already-at-the-maximum-supply-quantity.exception";
-import {LunarModuleOutOfStocksException} from "../exceptions/lunar-module-out-of-stocks.exception";
-import {NewMoonBaseDto} from "../dto/new-moon-base.dto";
-import {ModuleNotExistException} from "../exceptions/module-not-exist.exception";
-import {MoonBaseNotExistException} from "../exceptions/moon-base-not-exist.exception";
-import {ErrorDto} from "../../shared/dto/error.dto";
-import {VitalsModuleDto} from "../dto/vitals-module.dto";
+import { ModuleAlreadyAtTheMaximumSupplyQuantityException } from "../exceptions/module-already-at-the-maximum-supply-quantity.exception";
+import { NewMoonBaseDto } from "../dto/new-moon-base.dto";
+import { ModuleNotExistException } from "../exceptions/module-not-exist.exception";
+import { MoonBaseNotExistException } from "../exceptions/moon-base-not-exist.exception";
 
 @Injectable()
 export class ModuleService {
@@ -40,9 +35,10 @@ export class ModuleService {
     @InjectModel(VitalsModule.name)
     private vitalsModel: Model<VitalsModuleDocument>,
     @InjectModel(MoonBase.name)
-    private moonBaseModel: Model<MoonBaseDocument>,
+    private moonBaseModel: Model<MoonBaseDocument>
   ) {
-    this._baseUrlNeedsControl = "http://" + process.env.RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT
+    this._baseUrlNeedsControl =
+      "http://" + process.env.RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT;
   }
 
   async getModules(): Promise<LifeModuleDto[]> {
@@ -59,8 +55,6 @@ export class ModuleService {
       return response;
     });
   }
-
-
 
   async getModulesLifeStatus(): Promise<ModuleLifeStatusDto[]> {
     return this.moduleModel.find().then((listDto) => {
@@ -152,7 +146,11 @@ export class ModuleService {
     return new InventoryDto(quantity);
   }
 
-  async supplyOneModule(supply: SupplyDto, moduleId: number, baseId: number): Promise<any> {
+  async supplyOneModule(
+    supply: SupplyDto,
+    moduleId: number,
+    baseId: number
+  ): Promise<any> {
     const module = await this.moduleModel.findOne({ id_module: moduleId });
 
     if (module === null) {
@@ -160,56 +158,52 @@ export class ModuleService {
     }
 
     if (module.supplies + supply.quantity > this.suppliesQuantityMax) {
-      throw new ModuleAlreadyAtTheMaximumSupplyQuantityException(moduleId, module.supplies, module.supplies + supply.quantity);
+      throw new ModuleAlreadyAtTheMaximumSupplyQuantityException(
+        moduleId,
+        module.supplies,
+        module.supplies + supply.quantity
+      );
     }
-
 
     // Call the needs control service for decreasing the stock
     const stockBase = await this.getBase(baseId);
     stockBase.stock = stockBase.stock - supply.quantity;
-    await stockBase.save()
+    await stockBase.save();
 
-
-    module.supplies =  module.supplies + supply.quantity;
+    module.supplies = module.supplies + supply.quantity;
     await module.save();
     return module;
   }
 
-
-
   async createMoonBase(newMoonBaseDto: NewMoonBaseDto): Promise<any> {
-
-    const listOfModules = []
+    const listOfModules = [];
     for (const id of newMoonBaseDto.listOfModuleIds) {
-      const currentObject = await this.moduleModel.findOne({id_module: id})
-      if (currentObject == null)
-        throw new ModuleNotExistException(id)
-      listOfModules.push(currentObject)
+      const currentObject = await this.moduleModel.findOne({ id_module: id });
+      if (currentObject == null) throw new ModuleNotExistException(id);
+      listOfModules.push(currentObject);
     }
 
+    const newMoonBase = await this.moonBaseModel.insertMany([
+      {
+        id_base: newMoonBaseDto.id_base,
+        stock: newMoonBaseDto.initialStock,
+        modules: listOfModules,
+      },
+    ]);
 
-    const newMoonBase = await this.moonBaseModel.insertMany([{
-      id_base: newMoonBaseDto.id_base,
-      stock: newMoonBaseDto.initialStock,
-      modules: listOfModules
-    }])
-
-    return newMoonBase
-
+    return newMoonBase;
   }
 
-
   async getBase(idBase: number): Promise<any> {
-    const moonBase = await this.moonBaseModel.findOne({id_base: idBase});
-    if (moonBase == null)
-      throw new MoonBaseNotExistException(idBase);
+    const moonBase = await this.moonBaseModel.findOne({ id_base: idBase });
+    if (moonBase == null) throw new MoonBaseNotExistException(idBase);
     return moonBase;
   }
 
   async fillStockBase(quantity: SupplyDto, idBase: number): Promise<any> {
     const stockBase = await this.getBase(idBase);
     stockBase.stock = stockBase.stock + quantity.quantity;
-    await stockBase.save()
+    await stockBase.save();
 
     return stockBase;
   }
@@ -235,10 +229,4 @@ export class ModuleService {
 
     return await this.stockBase();
   } */
-
-
-
-
-
-
 }
