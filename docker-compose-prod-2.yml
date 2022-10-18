@@ -1,0 +1,279 @@
+version: "3.8"
+services:
+  database:
+    image: "mongo:4.4.15"
+    restart: always
+    ports:
+      - 27017:27017
+    networks:
+      - soa-team-e-network
+
+
+  module-life-service:
+    build:
+      context: ./module-life-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 4303:4303
+    environment:
+      - APP_PORT=4303
+      - APP_NAME=module-life-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=module-life-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Module Life Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à notifier des besoins vitaux d’un module, il sera (pour le moment) contacté par Life Support Service et Moon Village
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
+
+  survival-control-service:
+    build:
+      context: ./survival-control-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 4304:4304
+    environment:
+      - APP_PORT=4304
+      - APP_NAME=survival-control-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=survival-control-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Survival Control Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à la surveillance des conditions des systèmes de support des modules habités
+      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  needs-control-service:
+    build:
+      context: ./needs-control-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 4302:4302
+    environment:
+      - APP_PORT=4302
+      - APP_NAME=needs-control-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=needs-control-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Needs Control Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à surveiller les besoins des modules en contactant Module Life Service et à envoyer les demandes de ravitaillement au Resupply Service
+      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
+      - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  resupply-service:
+    build:
+      context: ./resupply-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 4301:4301
+    environment:
+      - APP_PORT=4301
+      - APP_NAME=resupply-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=resupply-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Resupply Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à la gestion du réapprovisionnement de la base lunaire
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  spacecraft-service:
+    build:
+      context: ./spacecraft-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 4305:4305
+    environment:
+      - APP_PORT=4305
+      - APP_NAME=spacecraft-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacecraft-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Spacecraft Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné au controle des Space Craft
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  spacesuit-service:
+    build:
+      context: ./spacesuit-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 4306:4306
+    environment:
+      - APP_PORT=4306
+      - APP_NAME=spacesuit-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacesuit-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Spacesuit Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à controler les vitals des combinaison
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  eva-mission-service:
+    build:
+      context: ./eva-mission-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 4307:4307
+    environment:
+      - APP_PORT=4307
+      - APP_NAME=eva-mission-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=eva-mission-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Eva Mission Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à controler les missions Extra Vehiculaire
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  meteorite-monitoring-service:
+    build:
+      context: ./meteorite-monitoring-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 4308:4308
+    environment:
+      - APP_PORT=4308
+      - APP_NAME=meteorite-monitoring-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=meteorite-monitoring-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Meteorite Monitoring Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à contrôler la trajectoire des météorites et à alerter en cas de besoin
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  alert-notification-service:
+    build:
+      context: ./alert-notification-service
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 4309:4309
+    environment:
+      - APP_PORT=4309
+      - APP_NAME=alert-notification-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=alert-notification-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Alert Notification Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à garder en mémoire les alertes qui ont été envoyées
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: ./Dockerfile
+      target: production
+    restart: always
+    ports:
+      - 9500:3000
+    environment:
+      - APP_PORT=3000
+      - SURVIVAL_CONTROL_SERVICE=survival-control-service
+      - MODULE_LIFE_SERVICE=module-life-service
+      - NEEDS_CONTROL_SERVICE=needs-control-service
+      - RESUPPLY_CONTROL_SERVICE=resupply-service
+      - SPACECRAFT_SERVICE=spacecraft-service
+      - SPACESUIT_SERVICE=spacesuit-service
+      - EVA_MISSION_SERVICE=eva-mission-service
+      - METEORITE_MONITORING_SERVICE=meteorite-monitoring
+      - ALERT_NOTIFICATION_SERVIC=alert-notification-service
+      - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service:4304
+      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
+      - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
+      - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
+      - SPACECRAFT_SERVICE_URL_WITH_PORT=spacecraft-service:4305
+      - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service:4306
+      - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
+      - METEORITE_MONITORING_SERVICE_URL_WITH_PORT=meteorite-monitoring-service:4308
+      - ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT=alert-notification-service:4309
+    networks:
+      - soa-team-e-network
+
+  zookeeper:
+    container_name: soa-team-e-zookeeper
+    restart: unless-stopped
+    image: wurstmeister/zookeeper
+    environment:
+      zk_id: "1"
+    expose:
+      - 2181
+    networks:
+      - soa-team-e-network
+
+  kafka-service:
+    container_name: soa-team-e-kafka
+    restart: unless-stopped
+    image: wurstmeister/kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka-service
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: soa-team-e-zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
+      KAFKA_CREATE_TOPICS: "topic-poll:1:1,topic-poll-response:1:1,topic-rocket-event:1:1,topic-launch-event:1:1,topic-launch-order:1:1"
+    expose:
+      - 9092
+    networks:
+      - soa-team-e-network
+
+networks:
+  soa-team-e-network:
+    driver: bridge

@@ -235,7 +235,59 @@ services:
       - eva-mission-service-dev
       - spacecraft-service-dev
 
+  meteorite-monitoring-service-dev:
+    build:
+      context: ./meteorite-monitoring-service
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4308:4308
+    environment:
+      - APP_PORT=4308
+      - APP_NAME=meteorite-monitoring-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=meteorite-monitoring-dev-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Meteorite Monitoring Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à contrôler la trajectoire des météorites et à alerter en cas de besoin
+    volumes:
+      - ./meteorite-monitoring-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - database-dev
+    networks:
+      - soa-team-e-network-dev
 
+  alert-notification-service-dev:
+    build:
+      context: ./alert-notification-service
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4309:4309
+    environment:
+      - APP_PORT=4309
+      - APP_NAME=alert-notification-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=alert-notification-dev-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Alert Notification Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à garder en mémoire les alertes qui ont été envoyées
+    volumes:
+      - ./alert-notification-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database-dev
+    networks:
+      - soa-team-e-network-dev
 
 
   zookeeper:
@@ -264,21 +316,6 @@ services:
       KAFKA_CREATE_TOPICS: "topic-poll:1:1,topic-poll-response:1:1,topic-rocket-event:1:1,topic-launch-event:1:1,topic-launch-order:1:1"
     expose:
       - 9092
-    networks:
-      - soa-team-e-network-dev
-
-  init-kafka:
-    image: confluentinc/cp-kafka:6.1.1
-    depends_on:
-      - kafka-service
-    entrypoint: [ '/bin/sh', '-c' ]
-    command: |
-      "
-      # blocks until kafka is reachable
-
-      echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server --if-not-exists broker:9092 --create --topic test-topic
-      "
     networks:
       - soa-team-e-network-dev
 
