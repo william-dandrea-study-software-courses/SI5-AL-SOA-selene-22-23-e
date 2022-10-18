@@ -57,4 +57,12 @@ export class ResupplyService {
     dto.resupply_status = StatusResupplyEnumSchema.TRAVELING
     return dto
   }
+
+  async spacecrafthasbeendestroyed(id_resupply: string){
+    let resupplyMission = await this.resupplyMissionOrderModel.findOne({_id: id_resupply});
+    if(resupplyMission === null){
+      throw new ResupplyMissionNotExist(id_resupply);
+    }
+    resupplyMission.state = StatusResupplyEnumSchema.PREPARING
+  }
 }

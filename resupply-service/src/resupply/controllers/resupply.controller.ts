@@ -13,15 +13,25 @@ import { ResupplyService } from "../services/resupply.service";
 import { ResupplyMissionDto } from "../dto/resupply-mission.dto";
 import { SupplyOrderDTO } from "../dto/supply-order.dto";
 import { ResupplyMissionNotExist } from "../exceptions/resupply-mission-not-exist.exception";
+import { Kafka } from "kafkajs"
 
 @ApiTags("resupply")
 @Controller("/resupply")
 export class ResupplyController {
   private readonly logger = new Logger(ResupplyController.name);
 
+  private kafka = new Kafka({
+    clientId: 'spacecraft',
+    brokers: ['kafka-service:9092']
+  })
+
   constructor(
     private readonly resupplyService: ResupplyService
-  ) {}
+  ) {
+    this.event_destroyed_listener()
+  }
+
+
 
   @ApiOkResponse({ type: Boolean })
   @Post("/supply")
@@ -67,5 +77,20 @@ export class ResupplyController {
   ): Promise<any> {
     this.logger.log("Envoie d'une fusée");
     return this.resupplyService.send(resupplyMissionId);
+  }
+
+  async event_destroyed_listener(){
+    const consumer = await this.kafka.consumer({ groupId: 'spacecraft-event' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'spacecraft-destroyed', fromBeginning: true })
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        this.logger.log("Spacecraft has been destroyed")
+        let id = message.value.toLocaleString()
+        await this.resupplyService.spacecrafthasbeendestroyed(id)
+      },
+    });
   }
 }

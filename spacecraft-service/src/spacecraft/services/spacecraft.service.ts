@@ -41,6 +41,21 @@ export class SpacecraftService {
     if (alreadyExists.length > 0) {
       throw new SpacecraftAlreadyExistException(spacecraftDTO.id_spacecraft);
     }
+    if(spacecraftDTO.vitals == false || spacecraftDTO.status === StatusSpacecraftEnumSchema.BROKEN){
+      spacecraftDTO.vitals = false;
+      spacecraftDTO.status = StatusSpacecraftEnumSchema.BROKEN;
+      const producer = await this.kafka.producer()
+
+      // Producing
+      await producer.connect()
+      await producer.send({
+        topic: 'spacecraft-destroyed',
+        messages: [
+          { value: spacecraftDTO.id_resupplyMission},
+        ],
+      });
+      await producer.disconnect();
+    }
     return await this.spaceCraftModel.create(spacecraftDTO);
   }
 
@@ -66,7 +81,7 @@ export class SpacecraftService {
       await producer.send({
         topic: 'spacecraft-destroyed',
         messages: [
-          { id_resupplyMission: spaceCraftDto.id_resupplyMission},
+          { value: spaceCraftDto.id_resupplyMission},
         ],
       });
       await producer.disconnect();
