@@ -5,7 +5,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from "@nestjs/swagger";
-
+import { Kafka } from "kafkajs"
 import {SpacesuitService} from "../services/spacesuit.service";
 import {SpacesuitDTO} from "../dto/spacesuit.dto";
 import {

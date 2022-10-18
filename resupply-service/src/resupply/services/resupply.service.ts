@@ -7,6 +7,8 @@ import {InjectModel} from '@nestjs/mongoose';
 import {SupplyOrder, SupplyOrderDocument,} from '../schemas/supply-order.schema';
 import {StatusResupplyEnumSchema, StatusSupplyOrderEnumSchema} from "../schemas/status-resupply-enum.schema";
 import {ResupplyMissionNotExist} from "../exceptions/resupply-mission-not-exist.exception";
+import {SpacecraftIdDto} from "../dto/spacecraft-id.dto";
+import {ResupplyConnotBeReaffectedException} from "../exceptions/resupply-connot-be-reaffected.exception";
 
 @Injectable()
 export class ResupplyService {
@@ -58,11 +60,32 @@ export class ResupplyService {
     return dto
   }
 
+  async affectSpacecraft(resupply_mission_id: string, spacecraft_id_dto: SpacecraftIdDto){
+    let resupplyMission = await this.resupplyMissionOrderModel.findOne({_id: resupply_mission_id});
+    if(resupplyMission === null){
+      throw new ResupplyMissionNotExist(resupply_mission_id);
+    }
+    if(resupplyMission.state === StatusResupplyEnumSchema.TRAVELING || resupplyMission.state === StatusResupplyEnumSchema.DONE){
+      throw new ResupplyConnotBeReaffectedException(resupply_mission_id);
+    }
+
+    resupplyMission.spacecraft_id = spacecraft_id_dto.spacecraft_id;
+    await resupplyMission.save()
+    let dto = new ResupplyMissionDto()
+    dto._id = resupplyMission._id
+    dto.orders = resupplyMission.orders
+    dto.resupply_status = resupplyMission.state
+    dto.spacecraft_id = resupplyMission.spacecraft_id
+    return dto
+  }
+
   async spacecrafthasbeendestroyed(id_resupply: string){
     let resupplyMission = await this.resupplyMissionOrderModel.findOne({_id: id_resupply});
     if(resupplyMission === null){
       throw new ResupplyMissionNotExist(id_resupply);
     }
     resupplyMission.state = StatusResupplyEnumSchema.PREPARING
+
+    resupplyMission.save()
   }
 }

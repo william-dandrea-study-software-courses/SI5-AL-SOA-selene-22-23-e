@@ -18,6 +18,5 @@ export class SpacecraftDto {
   status: StatusSpacecraftEnumSchema;
 
   @ApiProperty({required:false})
-  @IsNotEmpty()
   id_resupplyMission: string;
 }

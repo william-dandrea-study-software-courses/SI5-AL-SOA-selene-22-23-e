@@ -9,6 +9,7 @@ import {
 import { SpacecraftService } from "../services/spacecraft.service";
 import {SpacecraftDto} from "../dto/spacecraft.dto";
 import {SpacecraftAlreadyExistException} from "../exceptions/spacecraft-already-exist.exception";
+import {SpacecraftAffectDto} from "../dto/spacecraft_affect.dto";
 
 @ApiTags("module")
 @Controller("")
@@ -55,7 +56,7 @@ export class SpacecraftController {
   })
   async launch(@Param("spacecraftId") spaceCraftId: number) {
     this.logger.log("Lancement d'un vaisseau");
-    return this.spaceCraftService.launch(spaceCraftId);
+    return this.spaceCraftService.launchSpaceCraft(spaceCraftId)
   }
 
   @Get('/availableSpaceCrafts')
@@ -63,14 +64,9 @@ export class SpacecraftController {
     return this.spaceCraftService.getAvailableSpaceCrafts();
   }
 
-  @Put('affectSpaceCraftToMission/:resupplyMissionId')
-  async affectSpaceCraftToMission(@Param('resupplyMissionId') resupplyMissionId: string): Promise<SpacecraftDto> {
-    return this.spaceCraftService.affectSpaceCraftToMission(resupplyMissionId);
-  }
-
-  @Put(':idSpaceCraft/launchSpaceCraft')
-  async launchSpaceCraft(@Param('idSpaceCraft') idSpaceCraft: number): Promise<SpacecraftDto> {
-    return this.spaceCraftService.launchSpaceCraft(idSpaceCraft)
+  @Put('/spacecraft/:spacecraftId/affectSpaceCraftToMission/')
+  async affectSpaceCraftToMission(@Param('spacecraftId') spacecraftId: string,@Body() spacecraftAffectDto : SpacecraftAffectDto): Promise<SpacecraftDto> {
+    return this.spaceCraftService.affectSpaceCraftToMission(spacecraftId,spacecraftAffectDto.id_resupplyMission);
   }
 
 

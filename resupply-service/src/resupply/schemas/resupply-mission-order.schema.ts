@@ -20,6 +20,10 @@ export class ResupplyMissionOrder {
   @ApiProperty()
   @Prop({ type: String, enum: StatusResupplyEnumSchema })
   state: StatusResupplyEnumSchema
+
+  @ApiProperty()
+  @Prop({required:false})
+  spacecraft_id: string;
 }
 
 export const ResupplyMissionOrderSchema =

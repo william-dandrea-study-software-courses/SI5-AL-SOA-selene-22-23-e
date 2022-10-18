@@ -1,7 +1,7 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, Logger} from '@nestjs/common';
 import { Model} from "mongoose";
 import {InjectModel, Prop} from "@nestjs/mongoose";
-
+import { Kafka } from "kafkajs"
 import {Spacesuit, SpacesuitDocument} from '../schemas/spacesuit.schema';
 
 import { SpacesuitDTO} from "../dto/spacesuit.dto";
@@ -9,6 +9,13 @@ import {SpacesuitAlreadyExistException} from "../exceptions/spacesuit-already-ex
 
 @Injectable()
 export class SpacesuitService {
+  private readonly logger = new Logger(SpacesuitService.name);
+
+
+  private kafka = new Kafka({
+    clientId: 'spacecraft',
+    brokers: ['kafka-service:9092']
+  })
 
   constructor(@InjectModel(Spacesuit.name) private spacesuitModel: Model<SpacesuitDocument>) {}
 
@@ -44,7 +51,19 @@ export class SpacesuitService {
     spacesuit.temperature = spacesuitDTO.temperature;
     spacesuit.pressure = spacesuitDTO.pressure;
     spacesuit.power = spacesuitDTO.power;
+    if(spacesuit.o2_rate < 80 || spacesuit.temperature<10||spacesuit.power < 10){
+      const producer = await this.kafka.producer()
 
+      // Producing
+      await producer.connect()
+      await producer.send({
+        topic: 'problem-spacesuit',
+        messages: [
+          { key: 'spacesuit-problem',value:'{"o2_rate" :'+spacesuitDTO.o2_rate+',"temperature" :'+ spacesuitDTO.temperature+',"power" :'+ spacesuitDTO.power+',"spacesuit_id":'+ id_spacesuit+'}'},
+        ],
+      });
+      await producer.disconnect();
+    }
     spacesuit.save();
     return spacesuit;
   }

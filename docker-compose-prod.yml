@@ -104,7 +104,9 @@ services:
         - SWAGGERUI_PATH=doc
         - SWAGGERUI_TITLE=Spacecraft Micro-Service
         - SWAGGERUI_DESCRIPTION=Destiné au controle des Space Craft
+        - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
       depends_on:
+        - resupply-service
         - database
       networks:
         - soa-team-e-network

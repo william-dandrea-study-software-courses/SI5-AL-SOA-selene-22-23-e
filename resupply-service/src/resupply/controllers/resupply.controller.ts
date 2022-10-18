@@ -14,6 +14,7 @@ import { ResupplyMissionDto } from "../dto/resupply-mission.dto";
 import { SupplyOrderDTO } from "../dto/supply-order.dto";
 import { ResupplyMissionNotExist } from "../exceptions/resupply-mission-not-exist.exception";
 import { Kafka } from "kafkajs"
+import {SpacecraftIdDto} from "../dto/spacecraft-id.dto";
 
 @ApiTags("resupply")
 @Controller("/resupply")
@@ -42,7 +43,7 @@ export class ResupplyController {
   }
 
   @ApiOkResponse({ type: Boolean })
-  @Get("/rocketStatus")
+  @Get("/resupplyMission")
   async retrieveResupplyMissionsStatus(): Promise<ResupplyMissionDto[]> {
     this.logger.log(
       "Récupération du statut des différentes missions de réapprovisionnement"
@@ -79,17 +80,34 @@ export class ResupplyController {
     return this.resupplyService.send(resupplyMissionId);
   }
 
+  @ApiOkResponse({ type: Boolean })
+  @Put("/:resupplyMissionId/affectSpacecraft")
+  @ApiConflictResponse({
+    type: ResupplyMissionNotExist,
+    description: "Resupply mission does not exist",
+  })
+  @HttpCode(200)
+  async affectSpacecraft(@Param("resupplyMissionId") resupplyMissionId: string, @Body() spacecraftIdDto: SpacecraftIdDto ): Promise<any> {
+    this.logger.log("Affect spacecraft to a resupply mission");
+    return this.resupplyService.affectSpacecraft(resupplyMissionId,spacecraftIdDto );
+  }
+
   async event_destroyed_listener(){
-    const consumer = await this.kafka.consumer({ groupId: 'spacecraft-event' });
+    const consumer = this.kafka.consumer({ groupId: 'resupply-consumer' });
     // Consuming
     await consumer.connect()
-    await consumer.subscribe({ topic: 'spacecraft-destroyed', fromBeginning: true })
+    await consumer.subscribe({ topic: 'spacecraft-damaged'})
 
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         this.logger.log("Spacecraft has been destroyed")
-        let id = message.value.toLocaleString()
-        await this.resupplyService.spacecrafthasbeendestroyed(id)
+        if(message.key.toLocaleString() == "resupply_mission_id") {
+          let id = message.value.toLocaleString()
+          await this.resupplyService.spacecrafthasbeendestroyed(id)
+        }
+        else{
+          this.logger.log("Event spacecraft destroyed received but with key "+message.key.toLocaleString())
+        }
       },
     });
   }
