@@ -17,7 +17,7 @@ export class ModuleLifeProxyService {
         this._baseUrl = 'http://'+ process.env.MODULE_LIFE_SERVICE_URL_WITH_PORT;
     }
 
-    async getModule(moduleId: string) {
+    async getModule(moduleId: number) {
         try {
             const retrieveModuleCallResponse: AxiosResponse<any> = await firstValueFrom(this.httpService.get(`${this._baseUrl}${this._moduleLifePath}/${moduleId}`));
         }
@@ -46,7 +46,7 @@ export class ModuleLifeProxyService {
         }
     }
 
-    async isolate(moduleId: string) {
+    async isolate(moduleId: number) {
         try {
             const retrieveIsolateModuleCallResponse: AxiosResponse<any> = await firstValueFrom(this.httpService.put(`${this._baseUrl}${this._moduleLifePath}/${moduleId}/isolate`));
         }

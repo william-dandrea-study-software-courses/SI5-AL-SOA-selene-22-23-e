@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import {Injectable, Logger} from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 
@@ -15,10 +15,12 @@ import { InventoryDto } from "../dto/inventory.dto";
 import { VitalsModule, VitalsModuleDocument } from "../schemas/vitals-module.schema";
 import { ModuleAlreadyAtTheMaximumSupplyQuantityException } from "../exceptions/module-already-at-the-maximum-supply-quantity.exception";
 import { ModuleNotExistException } from "../exceptions/module-not-exist.exception";
-import { MoonBaseProxyService } from "./moon-base-proxy.service.spec";
+import { MoonBaseProxyService } from "./moon-base-proxy.service";
 
 @Injectable()
 export class ModuleService {
+  private readonly logger = new Logger(ModuleService.name);
+
   private suppliesQuantityMax = 10;
   private suppliesQuantityMin = 5;
 
@@ -48,12 +50,14 @@ export class ModuleService {
 
   async getModule(moduleId: number): Promise<LifeModuleDto> {
     const module = await this.moduleModel.findOne({id_module: moduleId})
-    if (module == null)
+    if (module == null) {
       throw new ModuleNotExistException(moduleId)
+    }
     return module;
   }
 
-  async getModulesVitals(): Promise<ModuleVitalsDto[]> {
+  async getVitals(): Promise<ModuleVitalsDto[]> {
+    return await this.moduleModel.find().lean();
     return this.moduleModel.find().then((listDto) => {
       const response: ModuleVitalsDto[] = [];
       listDto.forEach((x) => {
@@ -114,10 +118,7 @@ export class ModuleService {
     return module;
   }
 
-  async putModule(
-    moduleId: number,
-    moduleDto: LifeModuleDto
-  ): Promise<LifeModuleDto> {
+  async putModule(moduleId: number, moduleDto: LifeModuleDto): Promise<LifeModuleDto> {
     const module = await this.moduleModel.findOne({ id_module: moduleId });
     if (module === null) {
       throw new ModuleNotExistException(moduleId);
@@ -129,13 +130,10 @@ export class ModuleService {
     return module;
   }
 
-  async isolateModule(moduleId: string) {
-    const module = await this.moduleModel.findOne({ _id: moduleId });
+  async isolateModule(moduleId: number) {
+    const module = await this.moduleModel.findOne({ id_module: moduleId });
     if (module === null) {
       throw new ModuleNotExistException(moduleId);
-    }
-    if (module.isolated) {
-      throw new ModuleAlreadyIsolatedException(moduleId);
     }
     module.isolated = true;
     module.save();

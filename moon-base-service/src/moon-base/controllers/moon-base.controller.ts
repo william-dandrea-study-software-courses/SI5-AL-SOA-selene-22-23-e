@@ -1,6 +1,6 @@
 import {Controller, Get, Logger, Param, Post, Put, Body} from "@nestjs/common";
 import { ApiOkResponse, ApiCreatedResponse, ApiConflictResponse, ApiTags } from "@nestjs/swagger";
-
+import { Kafka } from "kafkajs"
 import { MoonBaseService } from "../services/moon-base.service";
 import {NewMoonBaseDto} from "../dto/new-moon-base.dto";
 import {NeedsDto} from "../dto/needs.dto";
@@ -14,16 +14,15 @@ import {SupplyDto} from "../dto/supply.dto";
 export class MoonBaseController {
   private readonly logger = new Logger(MoonBaseController.name);
 
+  private kafka = new Kafka({
+    clientId: 'resupply',
+    brokers: ['kafka-service:9092']
+  })
+
   constructor(
     private readonly moonBaseService: MoonBaseService,
 
-  ) {}
-
-  @Get("/:moonBaseId")
-  @ApiOkResponse()
-  async getMoonBase(@Param("moonBaseId") moonBaseId: number): Promise<MoonBaseDto> {
-    this.logger.log("Récuperation de la base lunaire");
-    return this.moonBaseService.getMoonBase(moonBaseId);
+  ) {    this.event_dangerous_meteorite();
   }
 
   @Get("/needs")
@@ -40,6 +39,13 @@ export class MoonBaseController {
     return this.moonBaseService.getInventory();
   }
 
+  @Get("/:moonBaseId")
+  @ApiOkResponse()
+  async getMoonBase(@Param("moonBaseId") moonBaseId: number): Promise<MoonBaseDto> {
+    this.logger.log("Récuperation de la base lunaire");
+    return this.moonBaseService.getMoonBase(moonBaseId);
+  }
+
   @Post("")
   @ApiCreatedResponse({
     description: "The moon base has been successfully added.",
@@ -50,7 +56,7 @@ export class MoonBaseController {
     description: "Id moon base already exists",
   })
   async postMoonBase(@Body() moonBaseDto: NewMoonBaseDto) {
-    this.logger.log("Création d'un nouveau module");
+    this.logger.log("Création d'une nouvelle base");
     return this.moonBaseService.postMoonBase(moonBaseDto);
   }
 
@@ -91,13 +97,23 @@ export class MoonBaseController {
       @Param("moonBaseId") moonBaseId: number
   ) {
     this.logger.log("Isolement de la base lunaire");
-    return this.moonBaseService.isolateMoonBase(moonBaseId);
+    return this.moonBaseService.isolateMoonBase();
   }
 
-  // @ApiOkResponse({ type: Boolean })
-  // @Get("moonBase/:idBase")
-  // async superviseStockBase(@Param('idBase') idBase: number): Promise<any> {
-  //   this.logger.log("Récupère le stock de la base lunaire");
-  //   return this.moduleService.getBase(idBase);
-  // }
+  /*
+  @MessageListener('dangerous-meteorite')
+   */
+  async event_dangerous_meteorite() {
+    const consumer = this.kafka.consumer({groupId: 'moon-base-consumer'});
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({topic: 'dangerous-meteorite'})
+
+    await consumer.run({
+      eachMessage: async ({topic, partition, message}) => {
+        this.logger.log("A dangerous meteorite has been detected, isolate moon base");
+        await this.moonBaseService.isolateMoonBase();
+      },
+    });
+  }
 }

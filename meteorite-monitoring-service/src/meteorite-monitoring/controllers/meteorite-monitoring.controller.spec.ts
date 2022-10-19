@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SurvivalControlController } from './meteorite-monitoring.controller';
 
 describe('ModuleLifeController', () => {
 /*  let controller: SurvivalControlController;

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {ModuleLifeProxyService} from "./module-life-proxy.service";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
@@ -13,6 +13,7 @@ import {SupplyDto} from "../dto/supply.dto";
 @Injectable()
 export class MoonBaseService {
   private stockMax: number = 100;
+  private readonly logger = new Logger(MoonBaseService.name);
 
   constructor(
       @InjectModel(MoonBase.name) private moonBaseModel: Model<MoonBaseDocument>,
@@ -23,7 +24,7 @@ export class MoonBaseService {
     if(moonBase===null) {
       throw new MoonBaseNotExistException(moonBaseId);
     }
-    return moonBase;
+    return new MoonBaseDto(moonBase);
   }
 
   async getNeeds(): Promise<NeedsDto> {
@@ -40,19 +41,16 @@ export class MoonBaseService {
   }
 
   async postMoonBase(newMoonBaseDto: NewMoonBaseDto): Promise<MoonBaseDto> {
-    const listOfModules = []
     for (const id of newMoonBaseDto.listOfModuleIds) {
-      const currentObject = await this.moduleLifeProxyService.getModule(id);
-      listOfModules.push(currentObject)
+     await this.moduleLifeProxyService.getModule(id);
     }
-    const newMoonBase = await this.moonBaseModel.insertMany([{
+    const newMoonBase = await this.moonBaseModel.create({
       id_base: newMoonBaseDto.id_base,
       stock: newMoonBaseDto.initialStock,
       alarm_on: newMoonBaseDto.alarm_on,
-      modules: listOfModules
-    }])
-
-    return newMoonBase
+      modules: newMoonBaseDto.listOfModuleIds
+    });
+    return new MoonBaseDto(newMoonBase);
   }
 
   async fillStockBase(supply: SupplyDto, moonBaseId: number): Promise<MoonBaseDto> {
@@ -63,7 +61,7 @@ export class MoonBaseService {
     moonBase.stock += supply.quantity;
     await moonBase.save()
 
-    return moonBase;
+    return new MoonBaseDto(moonBase);
   }
 
   async pickStockMoonBase(needs: NeedsDto, moonBaseId: number): Promise<MoonBaseDto> {
@@ -74,7 +72,7 @@ export class MoonBaseService {
     moonBase.stock -= needs.quantity;
     await moonBase.save()
 
-    return moonBase;
+    return new MoonBaseDto(moonBase);
   }
 
   async putMoonBase(moonBaseId: number, newMoonBaseDto: NewMoonBaseDto): Promise<MoonBaseDto> {
@@ -92,20 +90,19 @@ export class MoonBaseService {
     moonBase.alarm_on = newMoonBaseDto.alarm_on;
     moonBase.modules = listOfModules;
     await moonBase.save();
-    return moonBase
+    return new MoonBaseDto(moonBase);
   }
 
-  async isolateMoonBase(moonBaseId: number): Promise<MoonBaseDto> {
-    const moonBase = await this.moonBaseModel.findOne({id_base:moonBaseId});
+  async isolateMoonBase() {
+    const moonBase = await this.moonBaseModel.findOne();
     if(moonBase===null) {
-      throw new MoonBaseNotExistException(moonBaseId);
+      throw new MoonBaseNotExistException(1);
     }
     for (const id of moonBase.modules) {
       await this.moduleLifeProxyService.isolate(id);
     }
     moonBase.alarm_on = true;
     await moonBase.save();
-    return moonBase;
   }
 
 }

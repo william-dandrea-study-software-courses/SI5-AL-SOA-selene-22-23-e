@@ -40,38 +40,37 @@ export class ModuleController {
     return this.moduleService.getModules();
   }
 
-  @Get("/:moduleId")
-  @ApiOkResponse({
-    description: "The module was successfully retrieved.",
-    type: LifeModuleDto,
-  })
-  async getModule(
-      @Param("moduleId") moduleId: number,
-      @Body() moduleDto: LifeModuleDto
-  ) {
-    this.logger.log("Récupération du module" + moduleId);
-    return this.moduleService.getModule(moduleId);
-  }
-
   @Get("/vitals")
-  @ApiOkResponse({ type: Boolean })
-  async getModuleVitals(): Promise<ModuleVitalsDto[]> {
+  @ApiOkResponse()
+  async getVitals(): Promise<ModuleVitalsDto[]> {
     this.logger.log("Récuperation des conditions de vie des modules");
-    return this.moduleService.getModulesVitals();
+    return this.moduleService.getVitals();
   }
 
   @Get("/needs")
-  @ApiOkResponse({ type: Boolean })
+  @ApiOkResponse()
   async getNeeds(): Promise<NeedsDto> {
     this.logger.log("Récupération des besoins des modules");
     return this.moduleService.getNeeds();
   }
 
   @Get("/inventory")
-  @ApiOkResponse({ type: InventoryDto })
+  @ApiOkResponse()
   async getInventory(): Promise<InventoryDto> {
     this.logger.log("Récuperation de l'inventaire de la base");
     return this.moduleService.getInventory();
+  }
+
+  @Get("/:moduleId")
+  @ApiOkResponse({
+    description: "The module was successfully retrieved.",
+    type: LifeModuleDto,
+  })
+  async getModule(
+      @Param("moduleId") moduleId: number
+  ) {
+    this.logger.log("Récupération du module " + moduleId);
+    return this.moduleService.getModule(moduleId);
   }
 
   @Post("")
@@ -125,7 +124,7 @@ export class ModuleController {
     type: ModuleAlreadyIsolatedException,
     description: "Module already isolated",
   })
-  async isolateModule(@Param("moduleId") moduleId: string) {
+  async isolateModule(@Param("moduleId") moduleId: number) {
     this.logger.log("Isolement d'un module");
     await this.moduleService.isolateModule(moduleId);
   }

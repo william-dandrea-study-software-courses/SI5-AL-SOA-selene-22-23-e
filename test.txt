@@ -1,0 +1,318 @@
+===> Awaiting all services ready
+gateway service is up and running at http://localhost:9500
+===> Launch docker container running python integration script
+------------------------------------------------------------------------------------------
+
+=> Peuplement de la base de données Module Life
+
+Ajout de 4 modules pour un quota de provisions max à 10:
+  - Inventaire de 32 provisions
+  - Modules isolés : 1 (514) 
+  - Modules en mauvaise situation : 2
+  - Besoins de 8 provisions
+
+POST http://localhost:4303/module
+{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f2"}],"supplies":10,"isolated":false,"_id":"6350425acdb2c55a0877f7f1"}
+{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f6"}],"supplies":7,"isolated":false,"_id":"6350425acdb2c55a0877f7f5"}
+{"id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6350425acdb2c55a0877f7fa"}],"supplies":9,"isolated":true,"_id":"6350425acdb2c55a0877f7f9"}
+{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7fe"}],"supplies":6,"isolated":false,"_id":"6350425acdb2c55a0877f7fd"}
+
+=> Peuplement de la base de données Spacesuit
+
+Ajout d'une combinaison numéro 1 avec:
+  - 20 de temperature
+  - 3 de pression 
+  - 80 de taux d'oxygene
+  - 60 de rythme cardiaque
+
+POST http://localhost:4306/module
+{"id_spacesuit":1,"cardiac_rythm":60,"o2_rate":80,"temperature":20,"pressure":3,"power":100,"_id":"6350425ad55685d92bb1229b"}
+
+=> Peuplement de la base de données Spacecraft
+
+Ajout de 2 vaisseaux 2 avec:
+  - des bonnes conditions matérielles 
+  - status à PREPARING
+  - aucune mission de ravitaillement lié
+
+POST http://localhost:4305/spacecraft
+{"id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"None","_id":"6350425ac85600a923e0f93b"}
+{"id_spacecraft":2,"vitals":true,"status":"Au sol","id_resupplyMission":"None","_id":"6350425ac85600a923e0f93e"}
+
+=> Peuplement de la base de données Moon Base
+
+Ajout d'une base lunaire 1 
+POST http://localhost:4310/moon-base
+{"id_base":1,"stock":100,"alarm_on":false,"modules":[512,513,514,515]}
+
+=> Peuplement de la base de données Meteorite Monitoring e
+
+Ajout de 5 meteorites inoffensives
+POST http://localhost:4308/meteorite
+{"id_meteorite":1,"dangerous":false,"_id":"6350425a853ed1ddb1dee084"}
+{"id_meteorite":2,"dangerous":false,"_id":"6350425a853ed1ddb1dee086"}
+{"id_meteorite":3,"dangerous":false,"_id":"6350425a853ed1ddb1dee088"}
+{"id_meteorite":4,"dangerous":false,"_id":"6350425a853ed1ddb1dee08a"}
+{"id_meteorite":5,"dangerous":false,"_id":"6350425a853ed1ddb1dee08c"}
+
+--------------------------------- Start Integration Tests --------------------------------
+
+
+---------------------- Scenario 1 ----------------------
+
+---------------------- US 1 ----------------------
+
+=> Récupérer l'état individuel des modules via Survival Control Service
+   En tant que Deke, je veux controler l'état des conditions de vie de chaque module
+   On s'attend à recevoir les 4 modules avec leur vitals
+GET http://localhost:4304/survival-control/supervision/
+Response : 
+[{"_id":"6350425acdb2c55a0877f7f1","id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f2"}],"supplies":10,"isolated":false},{"_id":"6350425acdb2c55a0877f7f5","id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f6"}],"supplies":7,"isolated":false},{"_id":"6350425acdb2c55a0877f7f9","id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6350425acdb2c55a0877f7fa"}],"supplies":9,"isolated":true},{"_id":"6350425acdb2c55a0877f7fd","id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7fe"}],"supplies":6,"isolated":false}]
+
+=> Récupération des données d'un module lunaire via Survival Control Service
+   On veut s'assurer qu'un seul module est isolé
+   On s'attend à ce que le champ isolated du module 512 soit à false 
+GET http://localhost:4303/module
+Response : 
+[{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f2"}],"supplies":10,"isolated":false},{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f6"}],"supplies":7,"isolated":false},{"id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6350425acdb2c55a0877f7fa"}],"supplies":9,"isolated":true},{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7fe"}],"supplies":6,"isolated":false}]
+
+---------------------- US 4 ----------------------
+
+=> Isolement d'un module lunaire via Survival Control Service
+   En tant que Deke, je veux isoler le module 512 aprés avoir controlé les vitals
+PUT http://localhost:4304/supervision/:idModule/isolate
+Response : 
+Module isolé
+
+=> Récupération des données d'un module lunaire via Survival Control Service
+   On veut s'assurer que le module 512 a bien été isolé
+   On s'attend à ce que le champ isolated du module 512 soit à true 
+GET http://localhost:4303/module
+Response : 
+{"_id":"6350425acdb2c55a0877f7f1","id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f2"}],"supplies":10,"isolated":false}
+
+---------------------- US 13 ----------------------
+
+=> Récupération des données d'un module lunaire via Meteorite Monitoring Service
+   On veut s'assurer que la base lunaire n'est pas menacée par des météorites
+   On s'attend à ce que réponse soit false en effet aucune météorite n'est classée comme dangereuse
+GET http://localhost:4308/meteorite/danger
+Response : 
+false
+
+---------------------- US 14 ----------------------
+
+=> Ajout d'une nouvelle météorite dans Meteorite Monitoring Service
+   Un scientifique à détecter une nouvelle météorite qu'il considère comme dangereuse
+   On s'attend à ce que la base lunaire s'isole
+POST http://localhost:4308/meteorite
+Response : 
+{"id_meteorite":6,"dangerous":true,"_id":"6350425a853ed1ddb1dee08f"}
+=> Petite attente pour récupérer l'event
+=> Isolement de la base lunaire en cas de nuage de météorite
+   En tant que Deke, je veux faire sonner l'alarme de la base lunaire et isoler tous les modules car j'ai détecté un danger
+   On s'attend à ce que le champ alarm_on de la base soit à true et que tous les modules soient isolés 
+GET http://localhost:4310/moon-base/1
+Response : 
+{"id_base":1,"stock":100,"alarm_on":true,"modules":[512,513,514,515]}
+GET http://localhost:4303/module
+Response : 
+[{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f2"}],"supplies":10,"isolated":true},{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f6"}],"supplies":7,"isolated":true},{"id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6350425acdb2c55a0877f7fa"}],"supplies":9,"isolated":true},{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7fe"}],"supplies":6,"isolated":true}]
+
+---------------------- Scenario 2 ----------------------
+
+---------------------- US 5 ----------------------
+
+=> Récupération de l'inventaire de la base lunaire via Module Life Service
+   En tant que Jim, je veux contrôler l'inventaire de la base lunaire
+   On s'attend à récupérer un objet avec le champ quantity à 132 car les modules possèdent respectivement 10, 7, 9 et 6 provisions et la base un stock de 100
+GET http://localhost:4303/inventory
+Response : 
+{"quantity":132}
+
+---------------------- US 3 ----------------------
+
+=> Récupérer la liste des besoins des modules via Needs Control Service
+   En tant que Buzz, je veux récupérer tous les besoins des modules ainsi que les besoins de la base lunaire
+   On s'attend à recevoir un objet avec le champ quantity à 8 car il manque respectivement 0, 3, 1 et 4 provisions à chaque module pour atteindre le stock maximal et la base est déjà à son maximum
+GET http://localhost:4302/needs-control/moduleNeeds
+Response : 
+{"quantity":8}
+
+=> Envoyer une commande à la terre via needs control service
+   En tant que Buzz, je veux envoyer 2 commandes au Resupply Service, une de 13 objets et une autre de 26
+POST http://localhost:4302/needs-control/sendOrder
+Body :
+{'quantity': 13}
+Response : 
+Commande passée
+
+POST http://localhost:4302/needs-control/sendOrder
+Body :
+{'quantity': 26}
+Response : 
+Commande passée
+
+---------------------- US 2 ----------------------
+
+=> Récupération des commandes de la base lunaire via Resupply Service
+   En tant que Dorothy, je veux voir toutes les commandes passées
+   On s'attend à voir les deux commandes de 13 et 26 provisions passées par Buzz précédemment. Elles seront toutes les deux en En cours de traitement 
+GET http://localhost:4301/resupply/supplyOrders
+Response : 
+[{"_id":"6350425b19855bdd4356558f","quantity":13,"status":"En attente de validation"},{"_id":"6350425b19855bdd43565591","quantity":26,"status":"En attente de validation"}]
+
+=> Récupération des missions de ravitaillement via Resupply Service
+   En tant que Dorothy, je veux controler les missions de ravitaillement
+   On s'attend à n'avoir aucune mission de ravitaillement car aucune mission n'a été lancée et aucune commande n'a été validée
+GET http://localhost:4301/resupply/resupplyMission
+Response : 
+[]
+
+=> Validation d'une commande via Resupply Service
+   En tant que Dorothy, je veux valider une commande passée par la base lunaire
+   On valide la première commande de Buzz, celle avec 13 provisions demandées et on s'attend à récupérer un Commande validée
+PUT http://localhost:4301/resupply/:idCommande/validate
+Response : 
+Commande validée
+
+=> Récupération de la commande via Resupply Service
+   En tant que Dorothy, je veux m'assurer que la commande a été bien été validée
+   Cette fois, on s'attend toujours à récupérer les deux commandes de Buzz mais la première sera passée en Validé
+GET http://localhost:4301/resupply/supplyOrders
+Response : 
+[{"_id":"6350425b19855bdd4356558f","quantity":13,"status":"Validé"},{"_id":"6350425b19855bdd43565591","quantity":26,"status":"En attente de validation"}]
+
+=> Récupération des missions de ravitaillement via Resupply Service
+   En tant que Dorothy, je veux controler les missions de ravitaillement
+   On s'attend cette fois à retrouver une seule mission de ravitaillement qui contient la commande de 13 provisions. Cette commande sera En cours de traitement
+GET http://localhost:4301/resupply/resupplyMission
+Response : 
+[{"_id":"6350425b19855bdd43565598","orders":[{"quantity":13,"status":"Validé","_id":"6350425b19855bdd4356558f"}],"state":"En cours de traitement"}]
+
+---------------------- US 8 ----------------------
+
+=> Récupération des vaisseaux disponibles pour une mission de ravitaillement via Spacecraft Service
+   En tant que Gene, je veux regarder tous les vaisseaux disponibles
+   On s'attend à trouver un seul vaisseau qui n'a aucune mission de ravitaillement et qui est au sol
+GET http://localhost:4305/spacecraft
+Response : 
+[{"id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"None"},{"id_spacecraft":2,"vitals":true,"status":"Au sol","id_resupplyMission":"None"}]
+
+=> Attribution d'une mission de ravitaillement à un vaisseau via Spacecraft Service
+   En tant que Gene, je veux attribuer un vaisseau à une mission de ravitaillement
+   On s'attend à trouver l'id de la mission changé et l'id du vaisseau de la mission changé
+PUT http://localhost:4305/spacecraft/:idSpacecraft
+Response : 
+{"_id":"6350425ac85600a923e0f93b","id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"6350425b19855bdd43565598"}
+[{"_id":"6350425b19855bdd43565598","orders":[{"quantity":13,"status":"Validé","_id":"6350425b19855bdd4356558f"}],"state":"En cours de traitement","spacecraft_id":"1"}]
+
+=> Envoi d'un vaisseau via Spacecraft Service
+   En tant que Gene, je veux controler le lancement des vaisseaux
+   On s'attend à trouver le status du vaisseau à envoyé et le statut de la mission à en cours d'acheminement
+PUT http://localhost:4305/spacecraft/:idSpacecraf/launch
+Response : 
+{"_id":"6350425ac85600a923e0f93b","id_spacecraft":1,"vitals":true,"status":"Envoyé","id_resupplyMission":"6350425b19855bdd43565598"}
+[{"_id":"6350425b19855bdd43565598","orders":[{"quantity":13,"status":"Validé","_id":"6350425b19855bdd4356558f"}],"state":"En cours de traitement","spacecraft_id":"1"}]
+
+---------------------- US 14 ----------------------
+
+=> Explosion du vaisseau en plein vol
+   On s'attend à trouver le status du vaisseau à Damaged et le statut de la mission à en cours de traitement
+PUT http://localhost:4305/spacecraft/:idSpacecraf
+Response : 
+{"_id":"6350425ac85600a923e0f93b","id_spacecraft":1,"vitals":false,"status":"Endommagé","id_resupplyMission":"6350425b19855bdd43565598"}
+[{"_id":"6350425b19855bdd43565598","orders":[{"quantity":13,"status":"Validé","_id":"6350425b19855bdd4356558f"}],"state":"En cours de traitement","spacecraft_id":"1"}]
+
+=> Reattribution d'une mission de ravitaillement à un vaisseau via Spacecraft Service
+   En tant que Gene, je veux pouvoir attribuer un nouveau vaisseau pour lancer la mission de réapprovisionnement lorsque la précédente échoue
+   On s'attend à trouver l'id de la mission inchangé et l'id du vaisseau de la mission changé
+PUT http://localhost:4305/spacecraft/:idSpacecraft
+Response : 
+{"_id":"6350425ac85600a923e0f93e","id_spacecraft":2,"vitals":true,"status":"Au sol","id_resupplyMission":"6350425b19855bdd43565598"}
+[{"_id":"6350425b19855bdd43565598","orders":[{"quantity":13,"status":"Validé","_id":"6350425b19855bdd4356558f"}],"state":"En cours de traitement","spacecraft_id":"2"}]
+
+=> Envoi d'un vaisseau via Spacecraft Service
+   En tant que Gene, je veux envoyer un nouveau vaisseau
+   On s'attend à trouver le status du vaisseau 2 à envoyé et le statut de la mission à en cours d'acheminement
+PUT http://localhost:4305/spacecraft/:idSpacecraf/launch
+Response : 
+{"_id":"6350425ac85600a923e0f93e","id_spacecraft":2,"vitals":true,"status":"Envoyé","id_resupplyMission":"6350425b19855bdd43565598"}
+[{"_id":"6350425b19855bdd43565598","orders":[{"quantity":13,"status":"Validé","_id":"6350425b19855bdd4356558f"}],"state":"En cours de traitement","spacecraft_id":"2"}]
+
+---------------------- Scenario 3 ----------------------
+
+---------------------- US 6 ----------------------
+
+=> Récupérer les EVA Missions
+   En tant que Buzz, je veux verifier les EVA Missions des prochains jours
+   On s'attend à recevoir 0 eva mission
+GET http://localhost:4307/eva-mission/
+http://eva-mission-service:4307/eva-mission
+Response : 
+[]
+
+=> Création d'une EVA Mission
+   On constate qu'aucune EVA Mission existe et Buzz veut en programmer une pour le 20 janvier
+POST http://localhost:4307/eva-mission
+Response : 
+{"id_mission":1,"type":"Mission scientifique","date_begin":"2022-10-31","date_end":"undefined","status":true,"supervisor":"Buzz","notes":"Aucune","metrics":[{"id_spacesuit":12,"o2_rate":[],"temperature":[],"pressure":[],"power":[]}],"_id":"6350425cf209244e58a55812"}
+
+=> Récupérer les EVA Missions
+   En tant que Buzz, je veux reverifier les EVA Missions des prochains jours
+   On s'attend à recevoir 1 eva mission avec une date de début au 20 janvier
+GET http://localhost:4307/eva-mission/
+Response : 
+[{"id_mission":1,"type":"Mission scientifique","date_begin":"2022-10-31T00:00:00.000Z","date_end":null,"status":true,"supervisor":"Buzz","notes":"Aucune","metrics":[{"id_spacesuit":12,"o2_rate":[],"temperature":[],"pressure":[],"power":[]}]}]
+
+---------------------- US 7 ----------------------
+
+=> Récupération des données d'une combinaison lunaire via SpaceSuit Service
+   Jim veut s'assurer de l'état de sa combinaison (la combinaison 1) pour sortir préparer le départ du rover pour l'EVA, il demande donc à spacesuit service
+   On s'attend à ce que la combinaison ait une pression de 3 et 80 d'oxygne
+GET http://localhost:4307/spacesuit/1
+Response : 
+{"id_spacesuit":1,"cardiac_rythm":60,"o2_rate":80,"power":100,"pressure":3,"temperature":20}
+
+---------------------- US 11 ----------------------
+
+=> Création d'une seconde EVA Mission terminée
+   Voici un exemple de mission scientifique terminée avec métriques
+POST http://localhost:4307/eva-mission
+Response : 
+{"id_mission":2,"type":"Mission scientifique","date_begin":"2022-10-15","date_end":"2022-10-18","status":false,"supervisor":"Buzz","notes":"Aucune","metrics":[{"id_spacesuit":25,"o2_rate":[94,92,88],"temperature":[25,26,24],"pressure":[3,3.1,2.8],"power":[62,56,48]}],"_id":"6350425cf209244e58a55816"}
+
+=> Récupérer les métriques des EVA Missions précédentes
+   En tant que Deke, je veux verifier les métriques des EVA Missions précédentes pour vérifier qu'il n'y a pas eu des précédents
+   On s'attend à recevoir les métriques pour une seule EVA mission, la 2
+GET http://localhost:4307/eva-mission/metrics
+http://eva-mission-service:4307/eva-mission/metrics
+Response : 
+[{"id_spacesuit":25,"o2_rate":[94,92,88],"temperature":[25,26,24],"pressure":[3,3.1,2.8],"power":[62,56,48]}]
+
+
+---------------------- Scenario 4 ----------------------
+
+---------------------- US 9 ----------------------
+
+=> Récupération des données d'un module lunaire via Vitals Module
+   En tant que Jim, je veux que les épurateurs de CO2 s'activent et se désactivent en fonction des niveaux de CO2 dans les modules de la base, afin de garantir un air respirable sans risque pour l'équipage. Par exemple le 514
+GET http://localhost:4303/module
+   On s'attend à ce que le champ co2_rate du module 514 soit à 20 
+   On s'attend à ce que le champ co2_scrubbers_activated du module 514 soit à false
+Response : 
+[{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f2"}],"supplies":10,"isolated":true},{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f6"}],"supplies":7,"isolated":true},{"id_module":514,"vitals":[{"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6350425acdb2c55a0877f7fa"}],"supplies":9,"isolated":true},{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7fe"}],"supplies":6,"isolated":true}]
+
+=> Changement du taux de co2 à 100 dans le module 514
+PUT http://localhost:4303/module/:idModule
+Response : 
+{"_id":"6350425acdb2c55a0877f7f9","id_module":514,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6350425ccdb2c55a0877f831"}],"supplies":9,"isolated":true}
+
+=> Récupération des données d'un module lunaire via Survival Control Service
+   On veut s'assurer que l'épurateur d'air du module 514 s'est bien mis en marche
+   On s'attend à ce que le champ co2_scrubbers_activated du module 514 soit à true
+GET http://localhost:4303/module
+Response : 
+[{"id_module":512,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f2"}],"supplies":10,"isolated":true},{"id_module":513,"vitals":[{"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7f6"}],"supplies":7,"isolated":true},{"id_module":514,"vitals":[{"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6350425ccdb2c55a0877f831"}],"supplies":9,"isolated":true},{"id_module":515,"vitals":[{"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6350425acdb2c55a0877f7fe"}],"supplies":6,"isolated":true}]
+
+---------------------------------- End Integration Tests ---------------------------------

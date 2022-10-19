@@ -13,7 +13,7 @@ URL_eva_mission = 'http://'+ os.environ.get("EVA_MISSION_SERVICE_URL_WITH_PORT",
 def scenario4() :
     print("\n---------------------- Scenario 4 ----------------------\n")
 
-    print("\n---------------------- US 9 ----------------------\n")
+    print("---------------------- US 9 ----------------------\n")
     print("=> Récupération des données d'un module lunaire via Vitals Module")
     print("   En tant que Jim, je veux que les épurateurs de CO2 s'activent et se désactivent en fonction des niveaux de CO2 dans les modules de la base, afin de garantir un air respirable sans risque pour l'équipage. Par exemple le 514")
     print("GET http://localhost:4303/module")
@@ -37,5 +37,3 @@ def scenario4() :
     print("Response : ")
     response = requests.get(URL_module_life+'module')
     print(response.text + "\n")
-
-scenario4()

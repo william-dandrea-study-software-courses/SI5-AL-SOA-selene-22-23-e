@@ -5,7 +5,7 @@ export enum StatusResupplyEnumSchema {
 }
 
 export enum StatusSupplyOrderEnumSchema {
-  PREPARING = 'En cours de traitement',
+  AWAITING = 'En attente de validation',
   ACCEPTED = "Validé",
   DECLINED = 'Refusé',
 }

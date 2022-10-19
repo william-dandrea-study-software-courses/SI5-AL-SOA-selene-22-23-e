@@ -7,12 +7,9 @@ import {HttpModule} from "@nestjs/axios";
 import {MoonBase, MoonBaseSchema} from "./schemas/moon-base.schema";
 
 @Module({
+  imports:[MongooseModule.forFeature([{ name: MoonBase.name, schema: MoonBaseSchema }]), HttpModule],
   controllers: [
-    MongooseModule.forFeature([
-      { name: MoonBase.name, schema: MoonBaseSchema }
-    ]),
     MoonBaseController],
   providers: [MoonBaseService, ModuleLifeProxyService],
-  imports:[HttpModule]
 })
 export class MoonBaseModule {}

@@ -1,7 +1,9 @@
-import {Controller, Get, Logger, Param, Post} from "@nestjs/common";
+import {Controller, Get, Logger, Param, Post, Body} from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 
 import { MeteoriteMonitoringService } from "../services/meteorite-monitoring.service";
+import {MeteoriteDto} from "../dto/meteorite.dto";
+import {Meteorite} from "../schemas/meteorite.schema";
 
 
 @ApiTags("meteorite")
@@ -11,18 +13,25 @@ export class MeteoriteMonitoringController {
 
   constructor(private meteoriteMonitoringService: MeteoriteMonitoringService) {}
 
-  @ApiOkResponse({ type: Boolean })
+  @ApiOkResponse({ type: Meteorite })
   @Get("")
-  async get(): Promise<string> {
-    this.logger.log("Get récupéré");
-    return this.meteoriteMonitoringService.get();
+  async getMeteorites(): Promise<Meteorite[]> {
+    this.logger.log("Get all meteorites");
+    return this.meteoriteMonitoringService.getMeteorites();
+  }
+
+  @ApiOkResponse({ type: Boolean })
+  @Get("/danger")
+  async getMeteoriteDanger(): Promise<Boolean> {
+    this.logger.log("Check if there are dangerous meteorites");
+    return this.meteoriteMonitoringService.getMeteoriteDanger();
   }
 
   @Post('')
-  @ApiOkResponse({ type: Boolean })
-  async isolateModule(@Param("moduleId") moduleId: number): Promise<string> {
-    this.logger.log('Post récupéré');
-    return this.meteoriteMonitoringService.post();
+  @ApiOkResponse({ type: Meteorite })
+  async postMeteorite(@Body() meteoriteDto: MeteoriteDto): Promise<Meteorite> {
+    this.logger.log('Save new meteorite');
+    return this.meteoriteMonitoringService.post(meteoriteDto);
 
   }
 }

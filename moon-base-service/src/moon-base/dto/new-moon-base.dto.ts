@@ -17,7 +17,7 @@ export class NewMoonBaseDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    id_base: string;
+    id_base: number;
 
     @ApiProperty()
     @IsNotEmpty()
@@ -27,5 +27,5 @@ export class NewMoonBaseDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsArray()
-    listOfModuleIds: string[];
+    listOfModuleIds: number[];
 }

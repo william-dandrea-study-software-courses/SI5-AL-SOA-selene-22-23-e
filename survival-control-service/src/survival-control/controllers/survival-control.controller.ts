@@ -26,10 +26,10 @@ export class SurvivalControlController {
   }
 
   @ApiOkResponse({ type: Boolean })
-  @Get("/")
+  @Get("/supervision")
   async supervise(): Promise<ModuleDto[]> {
     this.logger.log("Récupération du statut de chacun des modules");
-    return this.moduleLifeProxyService.superviseModules();
+    return await this.moduleLifeProxyService.superviseModules();
   }
 
   @ApiOkResponse({ type: Boolean })

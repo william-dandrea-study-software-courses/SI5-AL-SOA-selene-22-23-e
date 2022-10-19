@@ -1,18 +1,20 @@
 import {IsArray, IsNotEmpty, IsNumber, IsBoolean} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import {MoonBase} from "../schemas/moon-base.schema";
 
 export class MoonBaseDto {
 
-    constructor(initialStock, id_base, listOfModuleIds, alarm_on) {
-        this.initialStock = initialStock;
-        this.id_base = id_base;
-        this.alarm_on = alarm_on;
-        this.listOfModuleIds = listOfModuleIds;
+    constructor(moonBase: MoonBase) {
+        this.id_base = moonBase.id_base;
+        this.stock = moonBase.stock;
+        this.alarm_on = moonBase.alarm_on;
+        this.modules = moonBase.modules;
     }
 
     @ApiProperty()
     @IsNotEmpty()
-    id: string;
+    @IsNumber()
+    id_base: number;
 
     @ApiProperty()
     @IsNotEmpty()
@@ -22,15 +24,16 @@ export class MoonBaseDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    id_base: number;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsArray()
-    listOfModuleIds: string[];
+    stock: number;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsBoolean()
     alarm_on: boolean;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsArray()
+    modules: number[];
+
 }

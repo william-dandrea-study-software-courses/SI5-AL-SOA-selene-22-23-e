@@ -65,4 +65,3 @@ def scenario3():
     response = requests.get(URL_eva_mission+'eva-mission/metrics')
     print(response.text + "\n")
 
-scenario3()

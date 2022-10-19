@@ -9,32 +9,29 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Needs, NeedsDocument } from "../schemas/status-life-module.schema";
 import { NeedsDto } from "../dto/needs.dto";
 import { SupplyOrderDto } from "../dto/supply-order.dto";
-import {MainStockEmptyException} from "../exceptions/main-stock-empty.exception";
 
 @Injectable()
 export class NeedsControlService {
-  private _baseUrlModule: string;
+  private _baseUrlMoonBase: string;
   private _baseUrlResupply: string;
-
-  private _moduleLifePath = "/module/";
 
   constructor(
     private configService: ConfigService,
     private readonly httpService: HttpService,
     @InjectModel(Needs.name) private needsDocumentModel: Model<NeedsDocument>
   ) {
-    this._baseUrlModule =
-      "http://" + process.env.MODULE_LIFE_SERVICE_URL_WITH_PORT;
+    this._baseUrlMoonBase =
+      "http://" + process.env.MOON_BASE_SERVICE_URL_WITH_PORT;
     this._baseUrlResupply =
       "http://" + process.env.RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT;
   }
 
   async needsModules(): Promise<NeedsDto[]> {
-    const retrieveModuleStatusResponse: AxiosResponse<NeedsDto[]> =
+    const retrieveMoonBaseNeedsResponse: AxiosResponse<NeedsDto[]> =
       await firstValueFrom(
-        this.httpService.get(this._baseUrlModule + "/needs")
+        this.httpService.get(this._baseUrlMoonBase + "/moon-base/needs")
       );
-    return retrieveModuleStatusResponse.data;
+    return retrieveMoonBaseNeedsResponse.data;
   }
 
   async supplyOrderToSent(supplyOrderDTO: SupplyOrderDto): Promise<string> {

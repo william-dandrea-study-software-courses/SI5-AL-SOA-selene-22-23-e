@@ -23,8 +23,7 @@ export class MoonBase {
 
     @ApiProperty()
     @Prop({ required: true })
-    modules: string[];
+    modules: number[];
 }
 
-export const MoonBaseSchema =
-    SchemaFactory.createForClass(MoonBase);
+export const MoonBaseSchema = SchemaFactory.createForClass(MoonBase);

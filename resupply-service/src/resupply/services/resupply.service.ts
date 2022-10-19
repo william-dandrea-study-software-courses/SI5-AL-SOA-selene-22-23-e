@@ -32,7 +32,7 @@ export class ResupplyService {
   }
 
   async resupply(resupply: SupplyOrderDTO): Promise<any> {
-    await this.supplyOrderDocumentModel.create({...resupply, status: StatusSupplyOrderEnumSchema.PREPARING});
+    await this.supplyOrderDocumentModel.create({...resupply, status: StatusSupplyOrderEnumSchema.AWAITING});
     return Promise.resolve();
   }
 

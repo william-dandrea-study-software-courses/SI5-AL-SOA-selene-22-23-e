@@ -102,8 +102,8 @@ export class SpacecraftService {
     ) {
       spaceCraft.vitals = false;
       spaceCraft.status = StatusSpacecraftEnumSchema.DAMAGED;
-      const producer = await this.kafka.producer();
 
+      const producer = await this.kafka.producer();
       // Producing
       await producer.connect();
       await producer.send({

@@ -18,7 +18,7 @@ export class MoonBaseProxyService {
 
     async pickFromMoonBase(supply: SupplyDto) {
         try {
-            const retrievePickFromMoonBaseCallResponse: AxiosResponse<any> = await firstValueFrom(this.httpService.post(`${this._baseUrl}${this._moduleLifePath}/pick`, supply));
+            const retrievePickFromMoonBaseCallResponse: AxiosResponse<any> = await firstValueFrom(this.httpService.post(`${this._baseUrl}${this._moonBasePath}/pick`, supply));
         }
         catch (exception) {
             throw exception;

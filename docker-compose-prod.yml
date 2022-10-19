@@ -64,7 +64,7 @@ services:
       - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Needs Control Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à surveiller les besoins des modules en contactant Module Life Service et à envoyer les demandes de ravitaillement au Resupply Service
-      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
+      - MOON_BASE_SERVICE_URL_WITH_PORT=moon-base-service:4310
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
     depends_on:
       - database
@@ -203,6 +203,8 @@ services:
       - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Moon Base Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à contrôler à la gestion de la base lunaire
+      - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
+
     depends_on:
       - database
     networks:

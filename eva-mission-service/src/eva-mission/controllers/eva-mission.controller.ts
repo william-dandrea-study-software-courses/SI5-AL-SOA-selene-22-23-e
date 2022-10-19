@@ -60,7 +60,7 @@ export class EvaMissionController {
     return this.evaMissionService.putEVAMission(evaId, evaMissionDTO);
   }
 
-  @Get("eva-mission/metrics")
+  @Get("/metrics")
   @ApiOkResponse()
   async getPastEVAMissionsMetrics(): Promise<SpacesuitMetricsDTO[]> {
     this.logger.log(
