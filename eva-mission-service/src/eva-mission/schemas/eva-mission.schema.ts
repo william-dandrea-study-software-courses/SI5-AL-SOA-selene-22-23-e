@@ -24,7 +24,7 @@ export class EVAMission {
 
   @ApiProperty()
   @Prop({ required: false })
-  date_end: string;
+  date_end: string | null;
 
   @ApiProperty()
   @Prop({ required: false })

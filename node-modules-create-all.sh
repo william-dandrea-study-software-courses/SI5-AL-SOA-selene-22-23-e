@@ -7,8 +7,10 @@ function run_install()  # $1 is the dir to get it
     cd ..
 }
 
+run_install "alert-notification-service"
 run_install "eva-mission-service"
 run_install "gateway"
+run_install "meteorite-monitoring-service"
 run_install "module-life-service"
 run_install "needs-control-service"
 run_install "resupply-service"
