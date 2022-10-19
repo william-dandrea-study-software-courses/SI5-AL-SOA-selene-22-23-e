@@ -10,6 +10,7 @@ import { MongooseConfigService } from './shared/services/mongoose-config.service
 
 import { HealthModule } from './health/health.module';
 import { SurvivalControlModule } from './survival-control/survival-control.module';
+import {ClientsModule, Transport} from "@nestjs/microservices";
 
 @Module({
   imports: [

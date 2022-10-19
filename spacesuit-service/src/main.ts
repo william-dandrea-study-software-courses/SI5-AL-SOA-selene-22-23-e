@@ -3,12 +3,27 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {MicroserviceOptions, Transport} from "@nestjs/microservices";
 
 import { SwaggerUIConfig } from './shared/config/interfaces/swaggerui-config.interface';
 import {ExpressSwaggerCustomOptions} from "@nestjs/swagger/dist/interfaces/legacy-swagger-custom-options.interfaces";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.connectMicroservice(
+      {
+        logger: console,
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            brokers: ['kafka-service:9092'],
+            clientId: 'spacesuit',
+          },
+            consumer: {
+                groupId: 'test'
+            },
+        },
+      })
   app.enableCors();
 
   // Retrieve config service
@@ -36,6 +51,7 @@ async function bootstrap() {
 
   // Run the app
   const appPort = configService.get('app.port');
+  await app.startAllMicroservices();
   await app.listen(appPort, () => {
     console.log('Listening on port ' + appPort);
   });

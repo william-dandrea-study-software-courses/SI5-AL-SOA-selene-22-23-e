@@ -22,7 +22,7 @@ export class ResupplyController {
   private readonly logger = new Logger(ResupplyController.name);
 
   private kafka = new Kafka({
-    clientId: 'spacecraft',
+    clientId: 'resupply',
     brokers: ['kafka-service:9092']
   })
 
@@ -30,6 +30,7 @@ export class ResupplyController {
     private readonly resupplyService: ResupplyService
   ) {
     this.event_destroyed_listener()
+    this.event_resupply_mission_launched_listener()
   }
 
 
@@ -92,8 +93,11 @@ export class ResupplyController {
     return this.resupplyService.affectSpacecraft(resupplyMissionId,spacecraftIdDto );
   }
 
+  /*
+  @MessageListener('spacecraft-damaged')
+   */
   async event_destroyed_listener(){
-    const consumer = this.kafka.consumer({ groupId: 'resupply-consumer' });
+    const consumer = this.kafka.consumer({ groupId: 'resupply-consumer-spacecraft-destroyed' });
     // Consuming
     await consumer.connect()
     await consumer.subscribe({ topic: 'spacecraft-damaged'})
@@ -103,11 +107,29 @@ export class ResupplyController {
         this.logger.log("Spacecraft has been destroyed")
         if(message.key.toLocaleString() == "resupply_mission_id") {
           let id = message.value.toLocaleString()
-          await this.resupplyService.spacecrafthasbeendestroyed(id)
+          await this.resupplyService.spacecraft_has_been_destroyed(id)
         }
         else{
           this.logger.log("Event spacecraft destroyed received but with key "+message.key.toLocaleString())
         }
+      },
+    });
+  }
+
+  /*
+  @MessageListener('spacecraft-launched')
+   */
+  async event_resupply_mission_launched_listener(){
+    const consumer = this.kafka.consumer({ groupId: 'resupply-consumer-mission-launched' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'spacecraft-launch'})
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        let messageJson = JSON.parse(message.value.toLocaleString());
+        this.logger.log("Spacecraft "+messageJson["spacecraft_id"]+" has been launched with mission "+messageJson["resupply_mission_id"])
+        await this.resupplyService.send(messageJson["resupply_mission_id"])
       },
     });
   }

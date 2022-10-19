@@ -69,5 +69,4 @@ export class SpacecraftController {
     return this.spaceCraftService.affectSpaceCraftToMission(spacecraftId,spacecraftAffectDto.id_resupplyMission);
   }
 
-
 }
