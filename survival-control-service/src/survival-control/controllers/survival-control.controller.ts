@@ -16,6 +16,8 @@ export class SurvivalControlController {
     brokers: ['kafka-service:9092']
   })
 
+  private spacesuit_problems = new Set();
+  
   constructor(
     private readonly survivalControlService: SurvivalControlService,
     private readonly moduleLifeProxyService: ModuleLifeProxyService,
@@ -39,6 +41,14 @@ export class SurvivalControlController {
   }
 
 
+  @ApiOkResponse({ type: Boolean })
+  @Get("/spacesuit-with-problem/")
+  async getSpacesuitProblem(): Promise<any> {
+    this.logger.log("Récupération des tenue ayant actuellement des problème");
+
+    return [...this.spacesuit_problems];
+  }
+  
   async event_spacesuit_problem_listener(){
     const consumer = this.kafka.consumer({ groupId: 'survival-control-consumer' });
     // Consuming
@@ -49,6 +59,7 @@ export class SurvivalControlController {
       eachMessage: async ({ topic, partition, message }) => {
         this.logger.log("Spacesuit problem detected value: " + message.value.toLocaleString())
         this.logger.log("Spacesuit id : " + JSON.parse(message.value.toLocaleString())["spacesuit_id"])
+        this.spacesuit_problems.add(JSON.parse(message.value.toLocaleString())["spacesuit_id"])
       },
     });
   }

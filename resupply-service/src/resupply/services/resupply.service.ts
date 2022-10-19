@@ -9,9 +9,17 @@ import {StatusResupplyEnumSchema, StatusSupplyOrderEnumSchema} from "../schemas/
 import {ResupplyMissionNotExist} from "../exceptions/resupply-mission-not-exist.exception";
 import {SpacecraftIdDto} from "../dto/spacecraft-id.dto";
 import {ResupplyConnotBeReaffectedException} from "../exceptions/resupply-connot-be-reaffected.exception";
+import {Kafka} from "kafkajs";
 
 @Injectable()
 export class ResupplyService {
+
+  private kafka = new Kafka({
+    clientId: 'resupply',
+    brokers: ['kafka-service:9092']
+  })
+
+
   constructor(
     @InjectModel(ResupplyMissionOrder.name)
     private resupplyMissionOrderModel: Model<ResupplyMissionOrderDocument>,
@@ -76,10 +84,24 @@ export class ResupplyService {
     dto.orders = resupplyMission.orders
     dto.resupply_status = resupplyMission.state
     dto.spacecraft_id = resupplyMission.spacecraft_id
+
+    const producer = await this.kafka.producer()
+
+    // Producing
+    await producer.connect()
+    await producer.send({
+      topic: 'spacecraft-assigned',
+      messages: [
+        { value:'{ spacecraft_id:'+dto.spacecraft_id+', resupply_mission_id: '+ dto._id +' }'},
+      ],
+    });
+    await producer.disconnect();
+
     return dto
   }
 
-  async spacecrafthasbeendestroyed(id_resupply: string){
+
+  async spacecraft_has_been_destroyed(id_resupply: string){
     let resupplyMission = await this.resupplyMissionOrderModel.findOne({_id: id_resupply});
     if(resupplyMission === null){
       throw new ResupplyMissionNotExist(id_resupply);

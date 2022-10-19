@@ -2,14 +2,14 @@ import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { firstValueFrom } from "rxjs";
-
 import { SpaceCraft, SpaceCraftDocument } from "../schemas/spacecraft.schema";
-import { Kafka } from "kafkajs";
+import {Kafka} from "kafkajs";
 import { HttpService } from "@nestjs/axios";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios"
 import { SpacecraftDto } from "../dto/spacecraft.dto";
 import { SpacecraftAlreadyExistException } from "../exceptions/spacecraft-already-exist.exception";
 import { StatusSpacecraftEnumSchema } from "../schemas/status-spacecraft-enum.schema";
+import { AxiosResponse } from "@nestjs/terminus/dist/health-indicator/http/axios.interfaces";
 import { resupplyMissionConnotBeAssignedException } from "../exceptions/resupply-mission-connot-be-assigned.exception";
 
 @Injectable()
@@ -205,21 +205,20 @@ export class SpacecraftService {
 
     spaceCrafts.status = StatusSpacecraftEnumSchema.TRAVELING;
     await spaceCrafts.save();
-    this.logger.log(
-      "Send resupply mission at adress : " +
-        this._baseUrlResupply +
-        "/resupply/" +
-        spaceCrafts.id_resupplyMission +
-        "/send"
-    );
-    await firstValueFrom(
-      await this.httpService.put(
-        this._baseUrlResupply +
-          "/resupply/" +
-          spaceCrafts.id_resupplyMission +
-          "/send"
-      )
-    );
+    //this.logger.log("Send event at address : "+this._baseUrlResupply + "/resupply/"+spaceCrafts.id_resupplyMission+"/send")
+    //await firstValueFrom(await this.httpService.put(this._baseUrlResupply + "/resupply/"+spaceCrafts.id_resupplyMission+"/send"));
+
+    const producer = await this.kafka.producer()
+    // Producing
+    await producer.connect()
+    this.logger.log("Send spacecraft-launch event")
+    await producer.send({
+      topic: 'spacecraft-launch',
+      messages: [
+        { value:'{ "spacecraft_id":'+spaceCrafts.id_spacecraft+', "resupply_mission_id": "'+ spaceCrafts.id_resupplyMission +'" }'},
+      ],
+    });
+    await producer.disconnect();
     return spaceCrafts;
   }
 }
