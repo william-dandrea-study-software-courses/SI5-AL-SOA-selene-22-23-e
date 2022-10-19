@@ -52,7 +52,7 @@ def scenario3():
     print("   Voici un exemple de mission scientifique terminée avec métriques")
     print("POST http://localhost:4307/eva-mission")
     print("Response : ")
-    payload = {"id_mission": 2, "type":'Mission scientifique', "date_begin":'2022-10-15', "date_end": '2022-10-18', "status":False,"supervisor":"Buzz", "notes":"Aucune", "metrics":[{"id_mission":25, "o2_rate": [94,92,88],"temperature":[25,26,24],"pressure":[3,3.1,2.8], "power":[62,56,48]}]}
+    payload = {"id_mission": 2, "type":'Mission scientifique', "date_begin":'2022-10-15', "date_end": '2022-10-18', "status":False,"supervisor":"Buzz", "notes":"Aucune", "metrics":[{"id_spacesuit":25, "o2_rate": [94,92,88],"temperature":[25,26,24],"pressure":[3,3.1,2.8], "power":[62,56,48]}]}
     response = requests.post(URL_eva_mission+'eva-mission', json=payload)
     print(response.text + "\n")
 

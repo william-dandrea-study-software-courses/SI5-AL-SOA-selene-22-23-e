@@ -100,15 +100,15 @@ export class EvaMissionService {
         dto.supervisor = evaMission.supervisor;
         dto.notes = evaMission.notes;
         dto.metrics = evaMission.metrics;
-        if (
-          dto.date_end !== null &&
-          dto.date_end.getDate() < new Date().getDate()
-        ) {
+
+
+
+        if ( dto.date_end !== null && dto.date_end.getDate() < new Date().getDate()) {
           dto.metrics.forEach((spacesuit) => {
             const spacesuitMetrics = new SpacesuitMetricsDTO();
             spacesuitMetrics.id_spacesuit = spacesuit.id_spacesuit;
             spacesuitMetrics.o2_rate = spacesuit.o2_rate;
-            spacesuitMetrics.power = spacesuit.power;
+            spacesuitMetrics.temperature = spacesuit.temperature;
             spacesuitMetrics.pressure = spacesuit.pressure;
             spacesuitMetrics.power = spacesuit.power;
             response.push(spacesuitMetrics);

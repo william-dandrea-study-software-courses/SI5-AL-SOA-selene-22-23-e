@@ -55,7 +55,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install --only=development
+RUN npm i --only=development npm@8.19.2
 
 COPY . .
 
