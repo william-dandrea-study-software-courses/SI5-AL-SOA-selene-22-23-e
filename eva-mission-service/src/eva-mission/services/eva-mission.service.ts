@@ -8,8 +8,8 @@ import { EVAMissionDTO } from "../dto/eva-mission.dto";
 import { EVAMisionAlreadyExistException } from "../exceptions/eva-mission-already-exist.exception";
 import { Kafka } from "kafkajs";
 import { EvaMissionController } from "../controllers/eva-mission.controller";
-import {SpacesuitMetrics} from "../schemas/spacesuit-metrics.schema";
-import {SpacesuitMetricsDTO} from "../dto/spacesuit-metrics.dto";
+import { SpacesuitMetrics } from "../schemas/spacesuit-metrics.schema";
+import { SpacesuitMetricsDTO } from "../dto/spacesuit-metrics.dto";
 
 @Injectable()
 export class EvaMissionService {
@@ -32,8 +32,8 @@ export class EvaMissionService {
         const dto = new EVAMissionDTO();
         dto.id_mission = evaMission.id_mission;
         dto.type = evaMission.type;
-        dto.date_begin = evaMission.date_begin;
-        dto.date_end = evaMission.date_end;
+        dto.date_begin = new Date(evaMission.date_begin);
+        dto.date_end = new Date(evaMission.date_end);
         dto.status = evaMission.status;
         dto.supervisor = evaMission.supervisor;
         dto.notes = evaMission.notes;
@@ -51,7 +51,10 @@ export class EvaMissionService {
     if (alreadyExists.length > 0) {
       throw new EVAMisionAlreadyExistException(evaMissionDTO.id_mission);
     }
-    return await this.evaMissionModel.create(evaMissionDTO);
+    return await this.evaMissionModel
+      .create(evaMissionDTO)
+      .then((value) => value)
+      .catch((error) => null);
   }
 
   async putEVAMission(
@@ -62,15 +65,25 @@ export class EvaMissionService {
       id_mission: evaMissionId,
     });
     if (evaMission === null) {
-      throw new HttpException("spaceCraft not found", HttpStatus.NOT_FOUND);
+      throw new HttpException("EVA mission not found", HttpStatus.NOT_FOUND);
     }
-    evaMission.date_begin = evaMissionDTO.date_begin;
-    evaMission.date_end = evaMissionDTO.date_end;
+    evaMission.date_begin = evaMissionDTO.date_begin.toISOString();
+    evaMission.date_end =
+      evaMissionDTO.date_end === null
+        ? null
+        : new Date(evaMissionDTO.date_end).toISOString();
     evaMission.status = evaMissionDTO.status;
     evaMission.supervisor = evaMissionDTO.supervisor;
     evaMission.notes = evaMissionDTO.notes;
-    evaMission.save();
-    return evaMission;
+    evaMission.metrics = evaMissionDTO.metrics;
+    return await evaMission
+      .save()
+      .then((result) => {
+        return result;
+      })
+      .catch((error) => {
+        return null;
+      });
   }
 
   async getPastEVAMissionsMetrics(): Promise<SpacesuitMetrics[]> {
@@ -80,13 +93,17 @@ export class EvaMissionService {
         const dto = new EVAMissionDTO();
         dto.id_mission = evaMission.id_mission;
         dto.type = evaMission.type;
-        dto.date_begin = evaMission.date_begin;
-        dto.date_end = evaMission.date_end;
+        dto.date_begin = new Date(evaMission.date_begin);
+        dto.date_end =
+          evaMission.date_end === null ? null : new Date(evaMission.date_end);
         dto.status = evaMission.status;
         dto.supervisor = evaMission.supervisor;
         dto.notes = evaMission.notes;
         dto.metrics = evaMission.metrics;
-        if (dto.status == false) {
+        if (
+          dto.date_end !== null &&
+          dto.date_end.getDate() < new Date().getDate()
+        ) {
           dto.metrics.forEach((spacesuit) => {
             const spacesuitMetrics = new SpacesuitMetricsDTO();
             spacesuitMetrics.id_spacesuit = spacesuit.id_spacesuit;

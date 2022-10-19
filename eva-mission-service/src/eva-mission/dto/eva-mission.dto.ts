@@ -15,11 +15,11 @@ export class EVAMissionDTO {
 
   @ApiProperty()
   @IsNotEmpty()
-  date_begin: string;
+  date_begin: Date;
 
   @ApiProperty()
   @IsNotEmpty()
-  date_end: string;
+  date_end: Date | null;
 
   @ApiProperty()
   @IsNotEmpty()
