@@ -40,6 +40,7 @@ export class AstronautService {
         dto.name = astronaut.name;
         dto.job = astronaut.job;
         dto.planet = astronaut.planet;
+        dto.location = astronaut.location;
         response.push(dto);
       });
       return response;
@@ -86,6 +87,7 @@ export class AstronautService {
     astronaut.isDead = astronautDto.isDead;
     astronaut.job = astronautDto.job;
     astronaut.planet = astronautDto.planet;
+    astronaut.location = astronautDto.location;
     if (
       astronautDto.isDead == true
     ) {
