@@ -3,22 +3,33 @@ import {Injectable} from '@nestjs/common';
 import {HttpService} from '@nestjs/axios';
 import {ConfigService} from '@nestjs/config';
 
-import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
-import {SupplyDto} from "../dto/supply.dto";
+import {SupplyDTO} from "../dto/supply.dto";
 
 @Injectable()
 export class MoonBaseProxyService {
 
-    private _baseUrl: string;
+    private _moonBaseBaseUrl: string;
+    private _astronautBaseUrl: string;
     private _moonBasePath = '/moonBase';
+    private _astronautPath = '/astronaut';
 
     constructor(private configService: ConfigService, private readonly httpService: HttpService) {
-        this._baseUrl = 'http://'+ process.env.MOON_BASE_SERVICE_URL_WITH_PORT;
+        this._moonBaseBaseUrl = 'http://'+ process.env.MOON_BASE_SERVICE_URL_WITH_PORT;
+        this._astronautBaseUrl = 'http://'+ process.env.ASTRONAUT_SERVICE_URL_WITH_PORT;
     }
 
-    async pickFromMoonBase(supply: SupplyDto) {
+    async pickFromMoonBase(supplies: SupplyDTO[]) {
         try {
-            const retrievePickFromMoonBaseCallResponse: AxiosResponse<any> = await firstValueFrom(this.httpService.post(`${this._baseUrl}${this._moonBasePath}/pick`, supply));
+            await firstValueFrom(this.httpService.post(`${this._moonBaseBaseUrl}${this._moonBasePath}/pick`, supplies));
+        }
+        catch (exception) {
+            throw exception;
+        }
+    }
+
+    async secureAstronaut(astronautId: number) {
+        try {
+            await firstValueFrom(this.httpService.put(`${this._astronautBaseUrl}${this._astronautPath}/${astronautId}/secure`));
         }
         catch (exception) {
             throw exception;

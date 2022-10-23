@@ -1,15 +1,14 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { firstValueFrom } from "rxjs";
 
 import { Kafka } from "kafkajs";
 import { HttpService } from "@nestjs/axios";
-import { AxiosError, AxiosResponse } from "axios";
 import { AstronautDto } from "../dto/astronaut.dto";
 import { AstronautPlanetEnumSchema } from "../schemas/astronaut-planet-enum.schema";
 import {AstronautAlreadyExistsException} from "../exceptions/astronaut-already-exists.exception";
 import {Astronaut, AstronautDocument} from "../schemas/astronaut.schema";
+import {AstronautMoonSectorEnumSchema} from "../schemas/astronaut-moon-sector-enum";
 
 @Injectable()
 export class AstronautService {
@@ -81,7 +80,7 @@ export class AstronautService {
       id_astronaut: astronautId,
     });
     if (astronaut === null) {
-      throw new HttpException("Astroanut not found", HttpStatus.NOT_FOUND);
+      throw new HttpException("Astronaut not found", HttpStatus.NOT_FOUND);
     }
     astronaut.name = astronautDto.name;
     astronaut.isDead = astronautDto.isDead;
@@ -109,6 +108,17 @@ export class AstronautService {
     return astronaut;
   }
 
+  async secureAstronaut(astronautId: number): Promise<AstronautDto> {
+    const astronaut = await this.astronautModel.findOne({id_astronaut: astronautId});
+    if (astronaut === null) {
+      throw new HttpException("Astronaut not found", HttpStatus.NOT_FOUND);
+    }
+    astronaut.location = AstronautMoonSectorEnumSchema.EMERGENCY_MODULE;
+    await astronaut.save();
+
+    return astronaut;
+  }
+
   async getOnMoonAstronauts(): Promise<AstronautDto[]> {
     const astronauts = await this.astronautModel.find({
       planet: AstronautPlanetEnumSchema.MOON,
@@ -121,6 +131,16 @@ export class AstronautService {
       planet: AstronautPlanetEnumSchema.EARTH,
     });
     return astronauts;
+  }
+
+  async rotationMissionHasFailed(astronauts: number[]) {
+    for (const astronautId in astronauts) {
+      const astronaut = await this.astronautModel.findOne({id_astronaut : astronautId});
+      if(astronaut !== null) {
+        astronaut.isDead = true;
+        await astronaut.save();
+      }
+    }
   }
 
 }

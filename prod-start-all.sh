@@ -10,9 +10,9 @@ function compile_dir()  # $1 is the dir to get it
 }
 
 echo -e "\033[0;32m ===> LAUNCH BUILD \033[0m"
+compile_dir "gateway"
 compile_dir "module-life-service"
 compile_dir "needs-control-service"
-compile_dir "gateway"
 compile_dir "survival-control-service"
 compile_dir "spacecraft-service"
 compile_dir "spacesuit-service"
@@ -21,6 +21,8 @@ compile_dir "meteorite-monitoring-service"
 compile_dir "alert-notification-service"
 compile_dir "resupply-service"
 compile_dir "moon-base-service"
+compile_dir "astronaut-service"
+compile_dir "rotation-mission-service"
 
 echo -e "\033[0;32m ===> END BUILD \033[0m"
 

@@ -5,10 +5,10 @@ import { InjectModel } from "@nestjs/mongoose";
 import {MoonBase, MoonBaseDocument} from "../schemas/moon-base.schema";
 import {NewMoonBaseDto} from "../dto/new-moon-base.dto";
 import {MoonBaseNotExistException} from "../exceptions/moon-base-not-exist.exception";
-import {NeedsDto} from "../dto/needs.dto";
 import {MoonBaseDto} from "../dto/moon-base.dto";
-import {InventoryDto} from "../dto/inventory.dto";
 import {SupplyDto} from "../dto/supply.dto";
+import {Supply} from "../schemas/supply.schema";
+import {LunarModuleOutOfStocksException} from "../exceptions/lunar-module-out-of-stocks.exception";
 
 @Injectable()
 export class MoonBaseService {
@@ -27,17 +27,34 @@ export class MoonBaseService {
     return new MoonBaseDto(moonBase);
   }
 
-  async getNeeds(): Promise<NeedsDto> {
-    const modulesNeeds = await this.moduleLifeProxyService.getNeeds();
+  async getNeeds(): Promise<SupplyDto[]> {
+    const modulesNeeds: SupplyDto[] = await this.moduleLifeProxyService.getNeeds();
     const moonBase: MoonBase = await this.moonBaseModel.findOne();
-    return new NeedsDto(this.stockMax-moonBase.stock + modulesNeeds.quantity);
-
+    if (!moonBase) {
+      throw new MoonBaseNotExistException(1);
+    }
+    let needs : SupplyDto[] = [];
+    moonBase.stock.forEach(supply => {
+      if(supply.quantity<this.stockMax) {
+        needs.push(new SupplyDto(supply.label, this.stockMax - supply.quantity));
+      }
+    });
+    this.addModulesNeedsToMoonBaseNeeds(modulesNeeds, needs);
+    return needs;
   }
 
-  async getInventory(): Promise<InventoryDto> {
+  async getInventory(): Promise<SupplyDto[]> {
     const modulesInventory = await this.moduleLifeProxyService.getInventory();
     const moonBase: MoonBase = await this.moonBaseModel.findOne();
-    return new InventoryDto(moonBase.stock + modulesInventory.quantity);
+    if (!moonBase) {
+      throw new MoonBaseNotExistException(1);
+    }
+    let inventory : SupplyDto[] = [];
+    moonBase.stock.forEach(supply => {
+      inventory.push(new SupplyDto(supply.label, supply.quantity));
+    });
+    this.addModulesInventoryToMoonBaseInventory(modulesInventory, inventory);
+    return inventory;
   }
 
   async postMoonBase(newMoonBaseDto: NewMoonBaseDto): Promise<MoonBaseDto> {
@@ -53,23 +70,38 @@ export class MoonBaseService {
     return new MoonBaseDto(newMoonBase);
   }
 
-  async fillStockBase(supply: SupplyDto, moonBaseId: number): Promise<MoonBaseDto> {
+  async fillStockBase(supplies: SupplyDto[], moonBaseId: number): Promise<MoonBaseDto> {
     const moonBase = await this.moonBaseModel.findOne({id_base:moonBaseId});
     if(moonBase===null) {
       throw new MoonBaseNotExistException(moonBaseId);
     }
-    moonBase.stock += supply.quantity;
+    for (const supply of supplies) {
+      let moonBaseSupply : Supply | undefined = moonBase.stock.find( s => s.label === supply.label);
+      if (moonBaseSupply) {
+        moonBaseSupply.quantity += supply.quantity;
+      }
+      else {
+        moonBase.stock.push({label: supply.label, quantity: supply.quantity});
+      }
+    }
     await moonBase.save()
-
     return new MoonBaseDto(moonBase);
   }
 
-  async pickStockMoonBase(needs: NeedsDto, moonBaseId: number): Promise<MoonBaseDto> {
+  async pickStockMoonBase(needs: SupplyDto[], moonBaseId: number): Promise<MoonBaseDto> {
     const moonBase = await this.moonBaseModel.findOne({id_base:moonBaseId});
     if(moonBase===null) {
       throw new MoonBaseNotExistException(moonBaseId);
     }
-    moonBase.stock -= needs.quantity;
+    for (const supply of needs) {
+      let moonBaseSupply : Supply | undefined = moonBase.stock.find( s => s.label === supply.label);
+      if (moonBaseSupply && moonBaseSupply.quantity-supply.quantity>=0) {
+        moonBaseSupply.quantity -= supply.quantity;
+      }
+      else {
+        throw new LunarModuleOutOfStocksException();
+      }
+    }
     await moonBase.save()
 
     return new MoonBaseDto(moonBase);
@@ -105,4 +137,30 @@ export class MoonBaseService {
     await moonBase.save();
   }
 
+  /*
+    Privates methods
+   */
+  private addModulesNeedsToMoonBaseNeeds(modulesNeeds : SupplyDto[], moonBaseNeeds: SupplyDto[]) {
+    modulesNeeds.forEach(supply => {
+      const need: SupplyDto | undefined = moonBaseNeeds.find(s => s.label===supply.label);
+      if(need) {
+        need.quantity += supply.quantity;
+      }
+      else {
+        moonBaseNeeds.push(supply);
+      }
+    });
+  }
+
+  private addModulesInventoryToMoonBaseInventory(modulesInventory : SupplyDto[], moonBaseInventory: SupplyDto[]) {
+    modulesInventory.forEach(supply => {
+      const inventory: SupplyDto | undefined = moonBaseInventory.find(s => s.label===supply.label);
+      if(inventory) {
+        inventory.quantity += supply.quantity;
+      }
+      else {
+        moonBaseInventory.push(supply);
+      }
+    });
+  }
 }

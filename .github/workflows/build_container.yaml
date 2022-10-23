@@ -44,6 +44,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build the Production resupply-service Container
-        working-directory: ./resupply-service
+      - name: Build the Production rotation-mission-service Container
+        working-directory: ./rotation-mission-service
         run: docker build --target production -f docker-compose.yml -t "survival-control-service" .

@@ -1,6 +1,7 @@
 import {IsArray, IsNotEmpty, IsNumber, IsBoolean} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import {MoonBase} from "../schemas/moon-base.schema";
+import {SupplyDto} from "./supply.dto";
 
 export class MoonBaseDto {
 
@@ -18,13 +19,8 @@ export class MoonBaseDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
-    initialStock: number;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
-    stock: number;
+    @IsArray()
+    stock: SupplyDto[];
 
     @ApiProperty()
     @IsNotEmpty()

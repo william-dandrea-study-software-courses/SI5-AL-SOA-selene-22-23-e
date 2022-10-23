@@ -22,6 +22,7 @@ export class SpacecraftService {
   });
 
   private _baseUrlResupply: string;
+  private _baseUrlRotation: string;
 
   constructor(
     @InjectModel(SpaceCraft.name)
@@ -30,6 +31,8 @@ export class SpacecraftService {
   ) {
     this._baseUrlResupply =
       "http://" + process.env.RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT;
+    this._baseUrlRotation =
+        "http://" + process.env.ROTATION_MISSION_SERVICE_URL_WITH_PORT;
   }
 
   async getSpaceCraft(): Promise<SpacecraftDto[]> {
@@ -126,7 +129,7 @@ export class SpacecraftService {
     return spaceCrafts;
   }
 
-  async affectSpaceCraftToMission(
+  async affectSpaceCraftToResupplyMission(
     spacecraft_id: string,
     resupplyMissionId: string
   ): Promise<SpacecraftDto> {
@@ -137,10 +140,7 @@ export class SpacecraftService {
     });
 
     if (spaceCrafts == null) {
-      throw new HttpException(
-        "Aucun SpaceCraft n'est disponible pour être envoye en mission",
-        HttpStatus.CONFLICT
-      );
+      throw new HttpException("Aucun SpaceCraft n'est disponible pour être envoyé en mission", HttpStatus.CONFLICT);
     }
 
     try {
@@ -178,6 +178,56 @@ export class SpacecraftService {
     return spaceCrafts;
   }
 
+  async affectSpaceCraftToRotationMission(
+      spacecraft_id: string,
+      rotationMissionId: string
+  ): Promise<SpacecraftDto> {
+    const spaceCrafts = await this.spaceCraftModel.findOne({
+      spacecraft_id: spacecraft_id,
+    });
+
+    if (spaceCrafts == null) {
+      throw new HttpException(
+          "Aucun SpaceCraft n'est disponible pour être envoyé en mission",
+          HttpStatus.CONFLICT
+      );
+    }
+
+    try {
+      this.logger.log(
+          "Send resupply mission at adress : " +
+          this._baseUrlRotation +
+          "/rotation-mission/" +
+          rotationMissionId +
+          "/affectSpacecraft"
+      );
+      const retrieveModuleStatusResponse: AxiosResponse<any> =
+          await firstValueFrom(
+              this.httpService.put(
+                  this._baseUrlRotation +
+                  "/rotation-mission/" +
+                  rotationMissionId +
+                  "/affectSpacecraft",
+                  { spacecraft_id: spacecraft_id }
+              )
+          );
+    } catch (exception) {
+      this.logger.log("Request failed");
+      if (exception instanceof AxiosError) {
+        if (exception.response.status === 403) {
+          throw new resupplyMissionConnotBeAssignedException(rotationMissionId);
+        } else {
+          throw exception;
+        }
+      }
+      throw exception;
+    }
+
+    spaceCrafts.id_rotationMissions.push(rotationMissionId);
+    await spaceCrafts.save();
+    return spaceCrafts;
+  }
+
   async launchSpaceCraft(idSpaceCraft: number): Promise<SpacecraftDto> {
     const spaceCrafts = await this.spaceCraftModel.findOne({
       id_spacecraft: idSpaceCraft,
@@ -190,7 +240,7 @@ export class SpacecraftService {
       );
     }
 
-    if (spaceCrafts.id_resupplyMission === "None") {
+    if (spaceCrafts.id_resupplyMission === "None" && spaceCrafts.id_rotationMissions.length===0) {
       throw new HttpException(
         "Vous ne pouvez pas lancer un spacecraft qui n'est associé à aucune mission",
         HttpStatus.CONFLICT
@@ -205,8 +255,6 @@ export class SpacecraftService {
 
     spaceCrafts.status = StatusSpacecraftEnumSchema.TRAVELING;
     await spaceCrafts.save();
-    //this.logger.log("Send event at address : "+this._baseUrlResupply + "/resupply/"+spaceCrafts.id_resupplyMission+"/send")
-    //await firstValueFrom(await this.httpService.put(this._baseUrlResupply + "/resupply/"+spaceCrafts.id_resupplyMission+"/send"));
 
     const producer = await this.kafka.producer()
     // Producing

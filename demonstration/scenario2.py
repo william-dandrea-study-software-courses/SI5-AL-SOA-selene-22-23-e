@@ -12,6 +12,8 @@ URL_eva_mission = 'http://'+ os.environ.get("EVA_MISSION_SERVICE_URL_WITH_PORT",
 URL_meteorite_monitoring = 'http://'+ os.environ.get("METEORITE_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4308')+'/'
 URL_alert_notification = 'http://'+ os.environ.get("ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT", 'localhost:4309')+'/'
 URL_moon_base = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'localhost:43010')+'/'
+URL_astronaut = 'http://'+ os.environ.get("ASTRONAUT_SERVICE_URL_WITH_PORT", 'localhost:4311')+'/'
+URL_rotation_mission = 'http://'+ os.environ.get("ROTATION_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4312')+'/'
 
 URL_gateway = "http://" + os.environ.get("GATEWAY_URL_WITH_PORT",'localhost:9500')
 
@@ -97,8 +99,35 @@ def scenario2():
     id_resupplyMission = response.json()[0].get("_id")
     print(response.text + "\n")
 
+    print("---------------------- US 16 ----------------------\n")
+    print("=> Récupération des astronautes sur la Terre")
+    print("   On s'attend à trouver les astronautes 1 à 5")
+    print("GET http://localhost:4311/astronaut/onEarthAstronauts")
+    print("Response : ")
+    response = requests.get(URL_astronaut+'astronaut/onEarthAstronauts')
+    print(response.text + "\n")
+
+    print("=> Récupération des astronautes sur la Lune")
+    print("   On s'attend à trouver les astronautes 6 à 11")
+    print("GET http://localhost:4311/astronaut/onMoonAstronauts")
+    print("Response : ")
+    response = requests.get(URL_astronaut+'astronaut/onMoonAstronauts')
+    print(response.text + "\n")
+
+    print("=> Affectation de nouvelles missions de roulement des astronautes")
+    print("   En tant que Gene, je veux faire voler des astronautes de la Terre à la Lune et inversement")
+    print("   On créé une première mission Terre-Lune avec les astronautes terriens et une deuxième mission Lune-Terre avec les astronautes lunaires excepté Buzz")
+    print("POST http://localhost:4312/rotation-mission")
+    print("Response : ")
+    payload = {"date": "2022-10-23T10:50:05.739Z", "astronauts": [1,2,3,4,5]}
+    response = requests.post(URL_rotation_mission+'rotation-mission', json=payload)
+    print(response.text + "\n")
+    payload = {"date": "2022-10-23T10:50:05.739Z", "astronauts": [7,8,9,10,11]}
+    response = requests.post(URL_rotation_mission+'rotation-mission', json=payload)
+    print(response.text + "\n")
+
     print("---------------------- US 8 ----------------------\n")
-    print("=> Récupération des vaisseaux disponibles pour une mission de ravitaillement via Spacecraft Service")
+    print("=> Récupération des vaisseaux disponibles pour une mission de ravitaillement et des missions de roulements via Spacecraft Service")
     print("   En tant que Gene, je veux regarder tous les vaisseaux disponibles")
     print("   On s'attend à trouver un seul vaisseau qui n'a aucune mission de ravitaillement et qui est au sol")
     print("GET http://localhost:4305/spacecraft")
@@ -117,6 +146,18 @@ def scenario2():
     print(response.text)
     response = requests.get(URL_resupply+'resupply/resupplyMission')
     print(response.text + "\n")
+
+#     print("=> Affectation d'un vaisseau aux missions de roulements")
+#     print("   En tant que Gene, je veux faire voler des astronautes de la Terre à la Lune et inversement")
+#     print("   On affecte d'abord la première mission et ensuite la deuxième, on s'attend à trouver les missions dans l'ordre")
+#     print("POST http://localhost:4305/spacecraft/:spacecraftId/affectSpaceCraftToRotationMission")
+#     print("Response : ")
+#     payload = {"date": "2022-10-23T10:50:05.739Z", "astronauts": [1,2,3,4,5]}
+#     response = requests.post(URL_rotation_mission+'rotation-mission', json=payload)
+#     print(response.text + "\n")
+#     payload = {"date": "2022-10-23T10:50:05.739Z", "astronauts": [7,8,9,10,11]}
+#     response = requests.post(URL_rotation_mission+'rotation-mission', json=payload)
+#     print(response.text + "\n")
 
     print("=> Envoi d'un vaisseau via Spacecraft Service")
     print("   En tant que Gene, je veux controler le lancement des vaisseaux")

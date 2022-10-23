@@ -19,4 +19,7 @@ export class SpacecraftDto {
 
   @ApiProperty({required:false})
   id_resupplyMission: string;
+
+  @ApiProperty({required:false})
+  id_rotationMissions: string[];
 }

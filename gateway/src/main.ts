@@ -54,7 +54,7 @@ async function bootstrap() {
     })
   );
   app.use(
-    "/resupply",
+    "/rotation-mission",
     createProxyMiddleware({
       target: `http://${dependenciesConfig.resupply_service_service_url_with_port}`,
       changeOrigin: true,

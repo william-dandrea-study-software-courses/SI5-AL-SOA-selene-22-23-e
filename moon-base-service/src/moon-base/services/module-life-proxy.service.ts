@@ -4,8 +4,7 @@ import {HttpService} from '@nestjs/axios';
 import {ConfigService} from '@nestjs/config';
 
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
-import {NeedsDto} from "../dto/needs.dto";
-import {InventoryDto} from "../dto/inventory.dto";
+import {SupplyDto} from "../dto/supply.dto";
 
 @Injectable()
 export class ModuleLifeProxyService {
@@ -26,9 +25,9 @@ export class ModuleLifeProxyService {
         }
     }
 
-    async getNeeds(): Promise<NeedsDto> {
+    async getNeeds(): Promise<SupplyDto[]> {
         try {
-            const retrieveModulesNeedsCallResponse: AxiosResponse<NeedsDto> = await firstValueFrom(this.httpService.get(`${this._baseUrl}${this._moduleLifePath}/needs`));
+            const retrieveModulesNeedsCallResponse: AxiosResponse<SupplyDto[]> = await firstValueFrom(this.httpService.get(`${this._baseUrl}${this._moduleLifePath}/needs`));
             return retrieveModulesNeedsCallResponse.data;
         }
         catch (exception) {
@@ -36,9 +35,9 @@ export class ModuleLifeProxyService {
         }
     }
 
-    async getInventory(): Promise<InventoryDto> {
+    async getInventory(): Promise<SupplyDto[]> {
         try {
-            const retrieveModulesInventoryCallResponse: AxiosResponse<InventoryDto> = await firstValueFrom(this.httpService.get(`${this._baseUrl}${this._moduleLifePath}/inventory`));
+            const retrieveModulesInventoryCallResponse: AxiosResponse<SupplyDto[]> = await firstValueFrom(this.httpService.get(`${this._baseUrl}${this._moduleLifePath}/inventory`));
             return retrieveModulesInventoryCallResponse.data;
         }
         catch (exception) {

@@ -50,5 +50,5 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: npm install --prefix resupply-service/
-      - run: npm run build --prefix resupply-service/
+      - run: npm install --prefix rotation-mission-service/
+      - run: npm run build --prefix rotation-mission-service/

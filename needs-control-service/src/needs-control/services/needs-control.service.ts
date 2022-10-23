@@ -6,7 +6,7 @@ import { HttpService } from "@nestjs/axios";
 import { DependenciesConfig } from "../../shared/config/interfaces/dependencies-config.interface";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { Needs, NeedsDocument } from "../schemas/status-life-module.schema";
+import { Needs, NeedsDocument } from "../schemas/needs.schema";
 import { NeedsDto } from "../dto/needs.dto";
 import { SupplyOrderDto } from "../dto/supply-order.dto";
 

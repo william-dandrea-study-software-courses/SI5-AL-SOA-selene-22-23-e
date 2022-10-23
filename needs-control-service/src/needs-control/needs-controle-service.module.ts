@@ -3,7 +3,7 @@ import { NeedsControlServiceController } from "./controllers/needs-control-servi
 import { NeedsControlService } from "./services/needs-control.service";
 import { HttpModule } from "@nestjs/axios";
 import { MongooseModule } from "@nestjs/mongoose";
-import { Needs, NeedsSchema } from "./schemas/status-life-module.schema";
+import { Needs, NeedsSchema } from "./schemas/needs.schema";
 
 @Module({
   controllers: [NeedsControlServiceController],

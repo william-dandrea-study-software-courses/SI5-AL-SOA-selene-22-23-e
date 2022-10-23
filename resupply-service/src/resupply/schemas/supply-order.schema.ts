@@ -2,6 +2,7 @@ import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import {StatusSupplyOrderEnumSchema} from "./status-resupply-enum.schema";
+import {Supply, SupplySchema} from "./supply.schema";
 
 export type SupplyOrderDocument = SupplyOrder & Document;
 
@@ -13,8 +14,8 @@ export class SupplyOrder {
   _id: string;
 
   @ApiProperty()
-  @Prop({ required: true, min: 0 })
-  quantity: number;
+  @Prop({ type: [SupplySchema] })
+  supplies: Supply[];
 
   @ApiProperty()
   @Prop({ type: String, enum: StatusSupplyOrderEnumSchema })

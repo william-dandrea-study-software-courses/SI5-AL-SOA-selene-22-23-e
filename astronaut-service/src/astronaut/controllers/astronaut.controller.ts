@@ -9,11 +9,18 @@ import {
 import { AstronautService } from "../services/astronaut.service";
 import {AstronautDto} from "../dto/astronaut.dto";
 import {AstronautAlreadyExistsException} from "../exceptions/astronaut-already-exists.exception";
+import {Kafka} from "kafkajs";
+import {runInThisContext} from "vm";
 
 @ApiTags("astronaut")
 @Controller("")
 export class AstronautController {
   private readonly logger = new Logger(AstronautController.name);
+
+  private kafka = new Kafka({
+    clientId: 'astronaut',
+    brokers: ['kafka-service:9092']
+  })
 
   constructor(private readonly astronautService: AstronautService) {}
 
@@ -33,7 +40,7 @@ export class AstronautController {
     type: AstronautAlreadyExistsException,
     description: "Astronaut already exists",
   })
-  async postModule(@Body() astronautDTO: AstronautDto) {
+  async postAstronaut(@Body() astronautDTO: AstronautDto) {
     this.logger.log("Création d'un nouvel astronaute");
     return this.astronautService.postAstronaut(astronautDTO);
   }
@@ -43,9 +50,19 @@ export class AstronautController {
     description: "The astronaut has been successfully updated.",
     type: AstronautDto,
   })
-  async putModule(@Param("astronautId") astronautId: number, @Body() astronautDto: AstronautDto) {
-    this.logger.log("Modification d'un vaisseau");
+  async putAstronaut(@Param("astronautId") astronautId: number, @Body() astronautDto: AstronautDto) {
+    this.logger.log("Modification d'un astronaut");
     return this.astronautService.putAstronaut(astronautId, astronautDto);
+  }
+
+  @Put("/astronaut/:astronautId/secure")
+  @ApiOkResponse({
+    description: "The astronaut has been successfully secured.",
+    type: AstronautDto,
+  })
+  async secureAstronaut(@Param("astronautId") astronautId: number) {
+    this.logger.log("Déplacement d'un astronaute dans le module sécurisé");
+    return this.astronautService.secureAstronaut(astronautId);
   }
 
   @Get('/onMoonAstronauts')
@@ -57,5 +74,26 @@ export class AstronautController {
   async getOnEarthAstronauts(): Promise<AstronautDto[]> {
     return this.astronautService.getOnEarthAstronauts();
   }
+
+  /*
+  @MessageListener('rotation-failed-damaged')
+ */
+  async event_rotation_failed_listener(){
+    const consumer = this.kafka.consumer({ groupId: 'rotation-mission-consumer-spacecraft-destroyed' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'rotation_failed'})
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        this.logger.log("Rotation Mission has failed")
+        this.logger.log(message.value.toJSON())
+        let astronauts = message.value.toJSON()['astronauts'];
+        this.logger.log(astronauts);
+        await this.astronautService.rotationMissionHasFailed(astronauts);
+      },
+    });
+  }
+
 
 }

@@ -24,6 +24,11 @@ export class SpaceCraft {
   @ApiProperty()
   @Prop({required: false})
   id_resupplyMission: string;
+
+  @ApiProperty()
+  @Prop({required: false})
+  id_rotationMissions: string[] = [];
+
 }
 
 export const SpacecraftSchema =

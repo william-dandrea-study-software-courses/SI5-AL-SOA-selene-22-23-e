@@ -12,6 +12,8 @@ URL_eva_mission = 'http://'+ os.environ.get("EVA_MISSION_SERVICE_URL_WITH_PORT",
 URL_meteorite_monitoring = 'http://'+ os.environ.get("METEORITE_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4308')+'/'
 URL_alert_notification = 'http://'+ os.environ.get("ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT", 'localhost:4309')+'/'
 URL_moon_base = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'localhost:43010')+'/'
+URL_astronaut = 'http://'+ os.environ.get("ASTRONAUT_SERVICE_URL_WITH_PORT", 'localhost:4311')+'/'
+URL_rotation_mission = 'http://'+ os.environ.get("ROTATION_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4312')+'/'
 
 def scenario1():
     print("\n---------------------- Scenario 1 ----------------------\n")
@@ -52,11 +54,20 @@ def scenario1():
 
     print("---------------------- US 13 ----------------------\n")
     print("=> Récupération des données d'un module lunaire via Meteorite Monitoring Service")
-    print("   On veut s'assurer que la base lunaire n'est pas menacée par des météorites")
+    print("   En tant que Deke, je veux connaitre la position de chaque astronaute sur la Lune")
     print("   On s'attend à ce que réponse soit false en effet aucune météorite n'est classée comme dangereuse")
     print("GET http://localhost:4308/meteorite/danger")
     print("Response : ")
     response = requests.get(URL_meteorite_monitoring+'meteorite/danger')
+    print(response.text + "\n")
+
+    print("---------------------- US 17 ----------------------\n")
+    print("=> Récupération des positions des astronautes sur la lune via Astronaut Service")
+    print("   On veut s'assurer que la base lunaire n'est pas menacée par des météorites")
+    print("   On s'attend à ce que les astronautes de la lune soient dans différents secteurs")
+    print("GET http://localhost:4311/onMoonAstronauts")
+    print("Response : ")
+    response = requests.get(URL_astronaut+'onMoonAstronauts')
     print(response.text + "\n")
 
     print("---------------------- US 14 ----------------------\n")
@@ -73,7 +84,7 @@ def scenario1():
     time.sleep(1)
     print("=> Isolement de la base lunaire en cas de nuage de météorite")
     print("   En tant que Deke, je veux faire sonner l'alarme de la base lunaire et isoler tous les modules car j'ai détecté un danger")
-    print("   On s'attend à ce que le champ alarm_on de la base soit à true et que tous les modules soient isolés ")
+    print("   On s'attend à ce que le champ alarm_on de la base soit à true, que tous les modules soient isolés et que la position de tous les astronautes de la lune soient dans le module sécurisé")
     print("GET http://localhost:4310/moon-base/1")
     print("Response : ")
     response = requests.get(URL_moon_base+'moon-base/1')
@@ -81,5 +92,9 @@ def scenario1():
     print("GET http://localhost:4303/module")
     print("Response : ")
     response = requests.get(URL_module_life+'module')
+    print(response.text)
+    print("GET http://localhost:4311/onMoonAstronauts")
+    print("Response : ")
+    response = requests.get(URL_astronaut+'onMoonAstronauts')
     print(response.text + "\n")
 

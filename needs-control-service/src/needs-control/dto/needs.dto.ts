@@ -1,9 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsNumber } from "class-validator";
+import {IsArray, IsNotEmpty } from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
+import {SupplyDTO} from "./supply.dto";
 
 export class NeedsDto {
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  quantity = 0;
+  @IsArray()
+  supplies: SupplyDTO[];
 }

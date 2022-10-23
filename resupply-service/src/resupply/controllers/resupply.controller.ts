@@ -39,7 +39,7 @@ export class ResupplyController {
   @Post("/supply")
   @HttpCode(200)
   async supply(@Body() supplyOrderDTO: SupplyOrderDTO): Promise<any> {
-    this.logger.log("Création de la DTO supply");
+    this.logger.log("Création d'une nouvelle commande");
     return this.resupplyService.resupply(supplyOrderDTO);
   }
 
@@ -77,7 +77,7 @@ export class ResupplyController {
   async send(
     @Param("resupplyMissionId") resupplyMissionId: string
   ): Promise<any> {
-    this.logger.log("Envoie d'une fusée");
+    this.logger.log("Envoie d'une mission de réapprovisionnement");
     return this.resupplyService.send(resupplyMissionId);
   }
 

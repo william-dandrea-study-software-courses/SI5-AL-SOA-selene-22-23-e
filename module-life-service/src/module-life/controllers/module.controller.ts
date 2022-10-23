@@ -18,13 +18,12 @@ import {
 import { ModuleService } from "../services/module.service";
 
 import { ModuleAlreadyExistsException } from "../exceptions/module-already-exists.exception";
-import { NeedsDto } from "../dto/needs.dto";
 
-import { SupplyDto } from "../dto/supply.dto";
+import { SupplyDTO } from "../dto/supply.dto";
 import { ModuleVitalsDto } from "../dto/module-vitals.dto";
 import { LifeModuleDto } from "../dto/life-module.dto";
 import { ModuleAlreadyIsolatedException } from "../exceptions/module-already-isolated.exception";
-import { InventoryDto } from "../dto/inventory.dto";
+import {LifeModule} from "../schemas/life-module.schema";
 
 @ApiTags("module")
 @Controller("/module")
@@ -49,14 +48,14 @@ export class ModuleController {
 
   @Get("/needs")
   @ApiOkResponse()
-  async getNeeds(): Promise<NeedsDto> {
+  async getNeeds(): Promise<SupplyDTO[]> {
     this.logger.log("Récupération des besoins des modules");
     return this.moduleService.getNeeds();
   }
 
   @Get("/inventory")
   @ApiOkResponse()
-  async getInventory(): Promise<InventoryDto> {
+  async getInventory(): Promise<SupplyDTO[]> {
     this.logger.log("Récuperation de l'inventaire de la base");
     return this.moduleService.getInventory();
   }
@@ -64,7 +63,7 @@ export class ModuleController {
   @Get("/:moduleId")
   @ApiOkResponse({
     description: "The module was successfully retrieved.",
-    type: LifeModuleDto,
+    type: LifeModule,
   })
   async getModule(
       @Param("moduleId") moduleId: number
@@ -76,7 +75,7 @@ export class ModuleController {
   @Post("")
   @ApiCreatedResponse({
     description: "The module has been successfully added.",
-    type: LifeModuleDto,
+    type: LifeModule,
   })
   @ApiConflictResponse({
     type: ModuleAlreadyExistsException,
@@ -94,19 +93,19 @@ export class ModuleController {
 
   @ApiOkResponse({ type: Boolean })
   @Post("/:moduleId/supply")
-  async supplyModule(@Body() supply: SupplyDto, @Param("moduleId") moduleId: number): Promise<any> {
-    this.logger.log(`Reapprovisionnement du module ${moduleId} avec une quantité de ${supply.quantity}`)
-    return await this.moduleService.supplyModule(supply, moduleId)
+  async supplyModule(@Body() supplies: SupplyDTO[], @Param("moduleId") moduleId: number): Promise<any> {
+    this.logger.log(`Reapprovisionnement du module ${moduleId}`)
+    return await this.moduleService.supplyModule(supplies, moduleId)
   }
 
   @Put("/:moduleId")
   @ApiOkResponse({
     description: "The module has been successfully updated.",
-    type: LifeModuleDto,
+    type: LifeModule,
   })
   async putModule(
     @Param("moduleId") moduleId: number,
-    @Body() moduleDto: LifeModuleDto
+    @Body() moduleDto: LifeModule
   ) {
     this.logger.log("Modification d'un nouveau module");
     if (moduleDto.vitals.co2_rate >= 75) {

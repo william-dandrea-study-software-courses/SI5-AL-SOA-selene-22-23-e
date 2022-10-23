@@ -23,6 +23,8 @@ services:
       - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Module Life Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à notifier des besoins vitaux d’un module, il sera (pour le moment) contacté par Life Support Service et Moon Village
+      - MOON_BASE_SERVICE_URL_WITH_PORT=moon-base-service:4310
+      - ASTRONAUT_SERVICE_URL_WITH_PORT=astronaut-service:4311
     depends_on:
       - kafka-service
       - zookeeper
@@ -202,9 +204,50 @@ services:
       - MONGODB_DATABASE=moon-base-db
       - SWAGGERUI_PATH=doc
       - SWAGGERUI_TITLE=Moon Base Micro-Service
-      - SWAGGERUI_DESCRIPTION=Destiné à contrôler à la gestion de la base lunaire
+      - SWAGGERUI_DESCRIPTION=Destiné à la gestion de la base lunaire
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
 
+  astronaut-service:
+    image: astronaut-service
+    restart: always
+    ports:
+      - 4311:4311
+    environment:
+      - APP_PORT=4311
+      - APP_NAME=astronaut-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=astronaut-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Astronaut Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à la gestion des astronautes
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
+
+  rotation-mission-service:
+    image: rotation-mission-service
+    restart: always
+    ports:
+      - 4312:4312
+    environment:
+      - APP_PORT=4312
+      - APP_NAME=rotatino-mission-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=rotation-mission-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Rotation Mission Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à la gestion des missions de roulements entre astronautes
     depends_on:
       - database
     networks:
@@ -227,6 +270,8 @@ services:
       - METEORITE_MONITORING_SERVICE=meteorite-monitoring
       - ALERT_NOTIFICATION_SERVICE=alert-notification-service
       - MOON_BASE_SERVICE=moon-base-service
+      - ASTRONAUT_SERVICE=astronaut-service
+      - ROTATION_MISSION_SERVICE=rotation-mission-service
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
@@ -237,6 +282,8 @@ services:
       - METEORITE_MONITORING_SERVICE_URL_WITH_PORT=meteorite-monitoring-service:4308
       - ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT=alert-notification-service:4309
       - MOON_BASE_SERVICE_URL_WITH_PORT=moon-base-service:4310
+      - ASTRONAUT_SERVICE_URL_WITH_PORT=astronaut-service:4311
+      - ROTATION_MISSION_SERVICE_URL_WITH_PORT=rotation-mission-service:4312
     networks:
       - soa-team-e-network
 

@@ -15,5 +15,6 @@ export class ResupplyMissionDto {
   @IsEnum(StatusResupplyEnumSchema)
   resupply_status: StatusResupplyEnumSchema;
 
+  @IsString()
   spacecraft_id: string;
 }

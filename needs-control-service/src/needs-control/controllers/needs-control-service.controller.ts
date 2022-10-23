@@ -18,9 +18,6 @@ export class NeedsControlServiceController {
   ) {
   }
 
-
-
-
   @ApiOkResponse({ type: Boolean })
   @Get("/moduleNeeds")
   async superviseModuleStatus(): Promise<NeedsDto[]> {

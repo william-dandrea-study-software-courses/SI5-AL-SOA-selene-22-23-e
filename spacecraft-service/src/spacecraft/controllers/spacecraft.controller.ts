@@ -64,9 +64,14 @@ export class SpacecraftController {
     return this.spaceCraftService.getAvailableSpaceCrafts();
   }
 
-  @Put('/spacecraft/:spacecraftId/affectSpaceCraftToMission/')
-  async affectSpaceCraftToMission(@Param('spacecraftId') spacecraftId: string,@Body() spacecraftAffectDto : SpacecraftAffectDto): Promise<SpacecraftDto> {
-    return this.spaceCraftService.affectSpaceCraftToMission(spacecraftId,spacecraftAffectDto.id_resupplyMission);
+  @Put('/spacecraft/:spacecraftId/affectSpaceCraftToResupplyMission/')
+  async affectSpaceCraftToResupplyMission(@Param('spacecraftId') spacecraftId: string,@Body() spacecraftAffectDto : SpacecraftAffectDto): Promise<SpacecraftDto> {
+    return this.spaceCraftService.affectSpaceCraftToResupplyMission(spacecraftId,spacecraftAffectDto.id_Mission);
+  }
+
+  @Put('/spacecraft/:spacecraftId/affectSpaceCraftToRotationMission/')
+  async affectSpaceCraftToRotationMission(@Param('spacecraftId') spacecraftId: string,@Body() spacecraftAffectDto : SpacecraftAffectDto): Promise<SpacecraftDto> {
+    return this.spaceCraftService.affectSpaceCraftToRotationMission(spacecraftId,spacecraftAffectDto.id_Mission);
   }
 
 }

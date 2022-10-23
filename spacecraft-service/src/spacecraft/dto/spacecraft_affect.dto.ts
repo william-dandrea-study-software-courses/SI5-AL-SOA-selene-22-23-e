@@ -5,5 +5,5 @@ export class SpacecraftAffectDto {
 
     @ApiProperty({required:true})
     @IsNotEmpty()
-    id_resupplyMission: string;
+    id_Mission: string;
 }

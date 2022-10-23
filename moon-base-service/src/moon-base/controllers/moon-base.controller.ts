@@ -3,9 +3,7 @@ import { ApiOkResponse, ApiCreatedResponse, ApiConflictResponse, ApiTags } from 
 import { Kafka } from "kafkajs"
 import { MoonBaseService } from "../services/moon-base.service";
 import {NewMoonBaseDto} from "../dto/new-moon-base.dto";
-import {NeedsDto} from "../dto/needs.dto";
 import {MoonBaseDto} from "../dto/moon-base.dto";
-import {InventoryDto} from "../dto/inventory.dto";
 import {MoonBaseAlreadyExistsException} from "../exceptions/module-already-exists.exception";
 import {SupplyDto} from "../dto/supply.dto";
 
@@ -15,7 +13,7 @@ export class MoonBaseController {
   private readonly logger = new Logger(MoonBaseController.name);
 
   private kafka = new Kafka({
-    clientId: 'resupply',
+    clientId: 'rotation-mission',
     brokers: ['kafka-service:9092']
   })
 
@@ -26,15 +24,15 @@ export class MoonBaseController {
   }
 
   @Get("/needs")
-  @ApiOkResponse({ type: Boolean })
-  async getNeeds(): Promise<NeedsDto> {
+  @ApiOkResponse({ type: SupplyDto, isArray: true })
+  async getNeeds(): Promise<SupplyDto[]> {
     this.logger.log("Récupération des besoins de la base lunaire");
     return this.moonBaseService.getNeeds();
   }
 
   @Get("/inventory")
-  @ApiOkResponse({ type: InventoryDto })
-  async getInventory(): Promise<InventoryDto> {
+  @ApiOkResponse({ type: SupplyDto, isArray: true })
+  async getInventory(): Promise<SupplyDto[]> {
     this.logger.log("Récuperation de l'inventaire de la base");
     return this.moonBaseService.getInventory();
   }
@@ -62,16 +60,16 @@ export class MoonBaseController {
 
   @ApiOkResponse({ type: Boolean })
   @Post("/:moonBaseId/supply")
-  async supplyMoonBase(@Body() quantity: SupplyDto, @Param('moonBaseId') moonBaseId: number): Promise<any> {
+  async supplyMoonBase(@Body() supplies: SupplyDto[], @Param('moonBaseId') moonBaseId: number): Promise<any> {
     this.logger.log("Remplissage le stock de la base lunaire");
-    return this.moonBaseService.fillStockBase(quantity, moonBaseId);
+    return this.moonBaseService.fillStockBase(supplies, moonBaseId);
   }
 
   @ApiOkResponse({ type: Boolean })
   @Post("/pick")
-  async pickStockMoonBase(@Body() quantity: NeedsDto, @Param('moonBaseId') moonBaseId: number): Promise<any> {
-    this.logger.log("Suppression de " + quantity.quantity + " provisions du stock de la base lunaire");
-    return this.moonBaseService.pickStockMoonBase(quantity, moonBaseId);
+  async pickStockMoonBase(@Body() needs: SupplyDto[], @Param('moonBaseId') moonBaseId: number): Promise<any> {
+    this.logger.log("Suppression de provisions du stock de la base lunaire");
+    return this.moonBaseService.pickStockMoonBase(needs, moonBaseId);
   }
 
 

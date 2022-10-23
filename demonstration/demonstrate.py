@@ -27,7 +27,6 @@ URL_gateway = "http://" + os.environ.get("GATEWAY_URL_WITH_PORT",'localhost:9500
 
 
 
-
 print("------------------------------------------------------------------------------------------")
 initializeIntegrationTests()
 print("\n--------------------------------- Start Integration Tests --------------------------------\n")

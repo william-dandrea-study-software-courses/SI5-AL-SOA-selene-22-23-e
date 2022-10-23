@@ -9,4 +9,6 @@ export interface DependenciesConfig {
   meteorite_monitoring_service_url_with_port: string,
   alert_notification_service_url_with_port: string,
   moon_base_service_url_with_port: string,
+  astronaut_service_url_with_port: string,
+  rotation_mission_service_url_with_port: string,
 }

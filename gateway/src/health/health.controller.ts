@@ -20,6 +20,8 @@ export class HealthController {
   private _meteoriteMonitoringHealthCheckUrl: string;
   private _alertNotificationHealthCheckUrl: string;
   private _moonBaseHealthCheckUrl: string;
+  private _astronautHealthCheckUrl: string;
+  private _rotationMissionBaseHealthCheckUrl: string;
 
   constructor(
     private configService: ConfigService,
@@ -38,6 +40,8 @@ export class HealthController {
     this._meteoriteMonitoringHealthCheckUrl = `http://${dependenciesConfig.meteorite_monitoring_service_url_with_port}/health`;
     this._alertNotificationHealthCheckUrl = `http://${dependenciesConfig.alert_notification_service_url_with_port}/health`;
     this._moonBaseHealthCheckUrl = `http://${dependenciesConfig.moon_base_service_url_with_port}/health`;
+    this._astronautHealthCheckUrl = `http://${dependenciesConfig.astronaut_service_url_with_port}/health`;
+    this._rotationMissionBaseHealthCheckUrl = `http://${dependenciesConfig.rotation_mission_service_url_with_port}/health`;
     console.log(this._survivalControlServiceHealthCheckUrl);
     console.log(this._moduleLifeServiceHealthCheckUrl);
     console.log(this._needsControlServiceHealthCheckUrl);
@@ -48,6 +52,8 @@ export class HealthController {
     console.log(this._meteoriteMonitoringHealthCheckUrl);
     console.log(this._alertNotificationHealthCheckUrl);
     console.log(this._moonBaseHealthCheckUrl);
+    console.log(this._astronautHealthCheckUrl);
+    console.log(this._rotationMissionBaseHealthCheckUrl);
   }
 
   async checkIsHealthy(name, url) {
@@ -83,7 +89,7 @@ export class HealthController {
         ),
       async () =>
         this.checkIsHealthy(
-          "resupply-service",
+          "rotation-mission-service",
           this._resupplyServiceHealthCheckUrl
         ),
       async () =>
@@ -115,6 +121,16 @@ export class HealthController {
           this.checkIsHealthy(
               "moon-base-service",
               this._moonBaseHealthCheckUrl
+          ),
+      async () =>
+          this.checkIsHealthy(
+              "astronaut-service",
+              this._astronautHealthCheckUrl
+          ),
+      async () =>
+          this.checkIsHealthy(
+              "rotation-mission-service",
+              this._rotationMissionBaseHealthCheckUrl
           )
     ]);
   }
