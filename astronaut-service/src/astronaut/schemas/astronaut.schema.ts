@@ -1,9 +1,9 @@
-import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { ApiProperty } from '@nestjs/swagger';
-import {AstronautPlanetEnumSchema} from "./astronaut-planet-enum.schema";
-import {AstronautJobEnumSchema} from "./astronaut-job-enum.schema";
-import {AstronautMoonSectorEnumSchema} from "./astronaut-moon-sector-enum";
+import { SchemaFactory, Schema, Prop } from "@nestjs/mongoose";
+import { Document } from "mongoose";
+import { ApiProperty } from "@nestjs/swagger";
+import { AstronautPlanetEnumSchema } from "./astronaut-planet-enum.schema";
+import { AstronautJobEnumSchema } from "./astronaut-job-enum.schema";
+import { AstronautMoonSectorEnumSchema } from "./astronaut-moon-sector-enum";
 
 export type AstronautDocument = Astronaut & Document;
 
@@ -25,17 +25,15 @@ export class Astronaut {
 
   @ApiProperty()
   @Prop({ type: String, enum: AstronautJobEnumSchema, required: true })
-  job: AstronautJobEnumSchema
+  job: AstronautJobEnumSchema;
 
   @ApiProperty()
   @Prop({ type: String, enum: AstronautPlanetEnumSchema, required: true })
-  planet: AstronautPlanetEnumSchema
+  planet: AstronautPlanetEnumSchema;
 
   @ApiProperty()
   @Prop({ type: String, enum: AstronautMoonSectorEnumSchema, required: true })
-  location: AstronautMoonSectorEnumSchema
-
+  location: AstronautMoonSectorEnumSchema;
 }
 
-export const AstronautSchema =
-    SchemaFactory.createForClass(Astronaut);
+export const AstronautSchema = SchemaFactory.createForClass(Astronaut);
