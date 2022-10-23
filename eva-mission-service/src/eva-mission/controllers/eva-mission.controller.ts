@@ -14,6 +14,8 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 
+import {Kafka} from "kafkajs";
+
 import { EvaMissionService } from "../services/eva-mission.service";
 import { EVAMissionDTO } from "../dto/eva-mission.dto";
 import { EVAMisionAlreadyExistException } from "../exceptions/eva-mission-already-exist.exception";
@@ -24,7 +26,14 @@ import { SpacesuitMetricsDTO } from "../dto/spacesuit-metrics.dto";
 export class EvaMissionController {
   private readonly logger = new Logger(EvaMissionController.name);
 
-  constructor(private readonly evaMissionService: EvaMissionService) {}
+  private kafka = new Kafka({
+    clientId: "eva-mission",
+    brokers: ["kafka-service:9092"],
+  });
+
+  constructor(private readonly evaMissionService: EvaMissionService) {
+    this.event_spacesuit_vitals_listener();
+  }
 
   @Get("")
   @ApiOkResponse()
@@ -69,14 +78,19 @@ export class EvaMissionController {
     return this.evaMissionService.getPastEVAMissionsMetrics();
   }
 
-  // =============================================================================================================== //
-  @Get("/testKafkaEmit")
-  async testKafka(): Promise<any> {
-    return this.evaMissionService.testKafka();
-  }
+  async event_spacesuit_vitals_listener(){
+    const consumer = this.kafka.consumer({ groupId: 'eva-mission-consumer' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'spacesuit-vitals'})
 
-  @Get("/testKafkaReceive")
-  async testKafkaReceive(): Promise<any> {
-    return this.evaMissionService.receiveKafka();
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        this.logger.log("Spacesuit problem detected value: " + message.value.toLocaleString())
+        let json = JSON.parse(message.value.toLocaleString());
+        this.logger.log(json)
+        await this.evaMissionService.updateMetric(json['id_spacesuit'], json['cardiac_rythm'],json['pressure'],json['o2_rate'],json['temperature'],json['power']);
+      },
+    });
   }
 }

@@ -202,7 +202,6 @@ export class SpacecraftService {
         HttpStatus.FORBIDDEN
       );
     }
-
     spaceCrafts.status = StatusSpacecraftEnumSchema.TRAVELING;
     await spaceCrafts.save();
     //this.logger.log("Send event at address : "+this._baseUrlResupply + "/resupply/"+spaceCrafts.id_resupplyMission+"/send")

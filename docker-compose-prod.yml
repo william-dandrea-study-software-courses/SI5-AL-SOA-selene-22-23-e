@@ -210,6 +210,44 @@ services:
     networks:
       - soa-team-e-network
 
+  spacesuit-monitoring-service:
+    image: spacesuit-monitoring-service
+    restart: always
+    ports:
+      - 4313:4313
+    environment:
+      - APP_PORT=4313
+      - APP_NAME=spacesuit-monitoring-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacesuit-monitoring-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Spacesuit Monitoring Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à verifier les vitals de chaque spacesuit
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
+  news-formalisation-service:
+    image: news-formalisation-service
+    restart: always
+    ports:
+      - 4314:4314
+    environment:
+      - APP_PORT=4314
+      - APP_NAME=news-formalisation-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=news-formalisation-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=News Formalisation Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à formaté les messages avant publication
+    depends_on:
+      - database
+    networks:
+      - soa-team-e-network
+
   gateway:
     image: gateway
     restart: always

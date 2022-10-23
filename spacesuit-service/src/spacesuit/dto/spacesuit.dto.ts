@@ -1,5 +1,6 @@
 import {IsNotEmpty, IsNumber} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import {SpacesuitVitalsDto} from "./spacesuit-vitals.dto";
 
 export class SpacesuitDTO {
   @ApiProperty()
@@ -7,30 +8,12 @@ export class SpacesuitDTO {
   @IsNumber()
   id_spacesuit: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({required:false})
   @IsNumber()
-  cardiac_rythm: number;
+  id_astronaut: number;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  o2_rate: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  temperature: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  pressure: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  power: number;
+  current_vital:SpacesuitVitalsDto;
 
 
 }

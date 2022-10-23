@@ -11,13 +11,16 @@ import {SpacesuitDTO} from "../dto/spacesuit.dto";
 import {
   SpacesuitAlreadyExistException
 } from "../exceptions/spacesuit-already-exist.exception";
+import {Spacesuit} from "../schemas/spacesuit.schema";
 
 @ApiTags("spacesuit")
 @Controller("")
 export class SpacesuitController {
   private readonly logger = new Logger(SpacesuitController.name);
 
-  constructor(private readonly spacesuitService: SpacesuitService) {}
+  constructor(private readonly spacesuitService: SpacesuitService) {
+    this.testBoucle();
+  }
 
   @Get("/spacesuit")
   @ApiOkResponse()
@@ -50,11 +53,22 @@ export class SpacesuitController {
   @Put("/spacesuit/:spacesuitId")
   @ApiOkResponse({
     description: "The spacesuit has been successfully updated.",
-    type: SpacesuitDTO,
+    type: Spacesuit,
   })
   async putSpacesuit(@Param("spacesuitId") spacesuitId: number, @Body() spacesuitDTO: SpacesuitDTO) {
     this.logger.log("Modification d'une combinaison");
     return this.spacesuitService.putSpacesuit(spacesuitDTO,spacesuitId);
+  }
+
+  async testBoucle(){
+    while(1){
+      await this.sleep(1000);
+      await this.spacesuitService.sendSpacesuitVitals();
+    }
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
 }

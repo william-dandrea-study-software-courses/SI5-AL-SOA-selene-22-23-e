@@ -25,11 +25,7 @@ export class SpacesuitService {
       spacesuits.forEach(spacesuit => {
         let dto = new SpacesuitDTO();
         dto.id_spacesuit = spacesuit.id_spacesuit;
-        dto.cardiac_rythm = spacesuit.cardiac_rythm;
-        dto.o2_rate = spacesuit.o2_rate;
-        dto.power = spacesuit.power;
-        dto.pressure = spacesuit.pressure;
-        dto.temperature = spacesuit.temperature;
+        dto.current_vital = spacesuit.current_vital;
         response.push(dto);
       })
       return response;
@@ -44,26 +40,25 @@ export class SpacesuitService {
     return await this.spacesuitModel.create(spacesuitDTO);
   }
 
-  async putSpacesuit(spacesuitDTO: SpacesuitDTO, id_spacesuit: number): Promise<SpacesuitDTO>{
+  async putSpacesuit(spacesuitDTO: SpacesuitDTO, id_spacesuit: number): Promise<Spacesuit>{
     let spacesuit = await this.spacesuitModel.findOne({ id_spacesuit: id_spacesuit });
-    spacesuit.cardiac_rythm = spacesuitDTO.cardiac_rythm;
-    spacesuit.o2_rate = spacesuitDTO.o2_rate;
-    spacesuit.temperature = spacesuitDTO.temperature;
-    spacesuit.pressure = spacesuitDTO.pressure;
-    spacesuit.power = spacesuitDTO.power;
-    if(spacesuit.o2_rate < 80 || spacesuit.temperature<10||spacesuit.power < 10){
-      const producer = await this.kafka.producer()
-
-      // Producing
-      await producer.connect()
-      await producer.send({
-        topic: 'problem-spacesuit',
-        messages: [
-          { key: 'spacesuit-problem',value:'{"o2_rate" :'+spacesuitDTO.o2_rate+',"temperature" :'+ spacesuitDTO.temperature+',"power" :'+ spacesuitDTO.power+',"spacesuit_id":'+ id_spacesuit+'}'},
-        ],
-      });
-      await producer.disconnect();
-    }
+    this.logger.log(spacesuit)
+    spacesuit.id_astronaut = spacesuitDTO.id_astronaut;
+    spacesuit.current_vital = spacesuitDTO.current_vital;
+    // if(spacesuit.current_vital.o2_rate < 80 || spacesuit.current_vital.temperature<10||spacesuit.current_vital.power < 10){
+    //   const producer = await this.kafka.producer()
+    //
+    //   // Producing
+    //   await producer.connect()
+    //   this.logger.log('Sending event to inform that the combinaison has bad vitals')
+    //   await producer.send({
+    //     topic: 'problem-spacesuit',
+    //     messages: [
+    //       { key: 'spacesuit-problem',value:'{"o2_rate" :'+spacesuitDTO.current_vital.o2_rate+',"temperature" :'+ spacesuitDTO.current_vital.temperature+',"power" :'+ spacesuitDTO.current_vital.power+',"spacesuit_id":'+ id_spacesuit+'}'},
+    //     ],
+    //   });
+    //   await producer.disconnect();
+    // }
     spacesuit.save();
     return spacesuit;
   }
@@ -75,12 +70,29 @@ export class SpacesuitService {
     }
     let dto = new SpacesuitDTO();
     dto.id_spacesuit = spacesuit.id_spacesuit;
-    dto.cardiac_rythm = spacesuit.cardiac_rythm;
-    dto.o2_rate = spacesuit.o2_rate;
-    dto.power = spacesuit.power;
-    dto.pressure = spacesuit.pressure;
-    dto.temperature = spacesuit.temperature;
+    dto.current_vital = spacesuit.current_vital;
     return dto;
   }
 
+  async sendSpacesuitVitals(): Promise<void>{
+    const producer = await this.kafka.producer()
+
+    let spacesuits = await this.spacesuitModel.find();
+    let message: { value: string }[] = [];
+    spacesuits.forEach(spacesuit => {
+      if(spacesuit.id_astronaut !== -1) {
+        message.push({value: '{"cardiac_rythm" :' + spacesuit.current_vital.cardiac_rythm + ',"pressure" :' + spacesuit.current_vital.pressure + ',"o2_rate" :' + spacesuit.current_vital.o2_rate + ',"temperature" :' + spacesuit.current_vital.temperature + ',"power" :' + spacesuit.current_vital.power + ',"astronaut_id" :' + spacesuit.id_astronaut + ',"spacesuit_id":' + spacesuit.id_spacesuit + '}'})
+      }
+      })
+    // Producing
+    await producer.connect()
+    this.logger.log('Sending combinaison vitals')
+
+
+    await producer.send({
+      topic: 'spacesuit-vitals',
+      messages: message,
+    });
+    await producer.disconnect();
+  }
 }
