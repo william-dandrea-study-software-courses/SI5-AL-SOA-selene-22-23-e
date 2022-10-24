@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { Kafka } from 'kafkajs';
 import { AppModule } from './app.module';
 import {Logger} from "@nestjs/common";
+import { AppService } from './app.service';
 
 async function bootstrap() {
 
@@ -23,10 +24,13 @@ async function bootstrap() {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      logger.log(topic)
-      logger.log(partition)
-      logger.log(message.key)
-      logger.log(message.value)
+
+      if (String(message.key) === "spacesuit_metrics" && String(topic) === "spacesuits_topic") {
+
+        const spacesuitVitals: any = JSON.parse(String(message.value));
+        const appService: AppService = new AppService();
+        appService.processSpacesuitEvent(spacesuitVitals)
+      }
     },
   });
 
