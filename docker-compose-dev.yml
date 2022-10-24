@@ -376,6 +376,40 @@ services:
     networks:
       - soa-team-e-network-dev
 
+  spacesuit-metrics-alert-launcher:
+    build:
+      context: ./alerts-launcher/spacesuit-metrics-alert-launcher
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4350:4350
+    environment:
+      - APP_PORT=4350
+    volumes:
+      - ./alerts-launcher/spacesuit-metrics-alert-launcher:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - soa-team-e-network-dev
+
+  captors-mock:
+    build:
+      context: ./mocks/captors-mock
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - 4399:4399
+    environment:
+      - APP_PORT=4399
+    volumes:
+      - ./mocks/captors-mock:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - soa-team-e-network-dev
+
 
 networks:
   soa-team-e-network-dev:

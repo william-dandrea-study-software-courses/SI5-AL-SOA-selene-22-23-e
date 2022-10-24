@@ -14,7 +14,7 @@ export class SpacesuitService {
     private readonly logger = new Logger(SpacesuitService.name);
 
     private kafka = new Kafka({
-        clientId: "spacecraft",
+        clientId: "spacesuit",
         brokers: ["kafka-service:9092"],
     });
 
@@ -87,7 +87,11 @@ export class SpacesuitService {
         }
 
         spacesuit.current_vitals = await this.spacesuitVitalsModel.create(vitals);
-        return await spacesuit.save();
+        const spacesuitResult = await spacesuit.save()
+
+        await this.sendMessageToBus("spacesuits_topic", "spacesuit_metrics", spacesuitResult)
+
+        return spacesuitResult;
     }
 
 
@@ -121,7 +125,7 @@ async editSpacesuit(spacesuitDTO: SpacesuitDTO, id_spacesuit: number): Promise<S
             messages: [
                 {
                     key: key,
-                    value: message,
+                    value: JSON.stringify(message),
                 },
             ],
         });
