@@ -5,18 +5,9 @@ import {
   ApiOkResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { Kafka } from "kafkajs"
 import {SpacesuitService} from "../services/spacesuit.service";
-import {SpacesuitDTO} from "../dto/spacesuit.dto";
-import {
-  SpacesuitAlreadyExistException
-} from "../exceptions/spacesuit-already-exist.exception";
-import {Spacesuit} from "../schemas/spacesuit.schema";
-import { Kafka } from "kafkajs";
-import { SpacesuitService } from "../services/spacesuit.service";
-import {SpacesuitCreationDTO, SpacesuitDTO} from "../dto/spacesuit.dto";
+import {AffectAstronautDTO, SpacesuitCreationDTO, SpacesuitDTO} from "../dto/spacesuit.dto";
 import { SpacesuitAlreadyExistException } from "../exceptions/spacesuit-already-exist.exception";
-import {SpacesuitVitalsDto} from "../dto/spacesuit-vitals.dto";
 import {SpacesuitVitals} from "../schemas/spacesuit-vitals.schema";
 
 @ApiTags("spacesuit")
@@ -35,7 +26,7 @@ export class SpacesuitController {
     return this.spacesuitService.getSpacesuits();
   }
 
-  @Post("")
+  @Post("/old")
   @ApiCreatedResponse({
     description: "The module has been successfully added.",
     type: SpacesuitDTO,
@@ -65,28 +56,16 @@ export class SpacesuitController {
     return this.spacesuitService.createSpacesuit(spacesuitDTO);
   }
 
-  @Post("/:spacesuitId/affect-astronaut")
-  async affectAstronautToSpacesuit(@Param("spacesuitId") spacesuitId: number, @Body() body: {id_astronaut: number}) {
+  @Put("/:spacesuitId/affect-astronaut")
+  async affectAstronautToSpacesuit(@Param("spacesuitId") spacesuitId: number, @Body() body: AffectAstronautDTO) {
     this.logger.log(`Affect astronaut ${body.id_astronaut} to space-suit ${spacesuitId}`)
     return await this.spacesuitService.affectAstronautToSpacesuit(spacesuitId, body.id_astronaut);
   }
 
-  @Post("/:spacesuitId/remove-astronaut")
-  async removeAstronautFromSpacesuit(@Param("spacesuitId") spacesuitId: number, @Body() body: {id_astronaut: number}) {
-    this.logger.log(`Remove astronaut ${body.id_astronaut} from space-suit ${spacesuitId}`)
-    return await this.spacesuitService.removeAstronautFromSpacesuit(spacesuitId, body.id_astronaut);
-  }
-
-  @Put("/:spacesuitId/start-mission")
-  async startMission(@Param("spacesuitId") spacesuitId: number) {
-    this.logger.log(`Start mission with the spacesuit  ${spacesuitId}`);
-    return await this.spacesuitService.startMission(spacesuitId);
-  }
-
-  @Put("/:spacesuitId/finish-mission")
-  async finishMission(@Param("spacesuitId") spacesuitId: number) {
-    this.logger.log(`Finish mission with the spacesuit  ${spacesuitId}`);
-    return await this.spacesuitService.finishMission(spacesuitId);
+  @Put("/:spacesuitId/remove-astronaut")
+  async removeAstronautFromSpacesuit(@Param("spacesuitId") spacesuitId: number) {
+    this.logger.log(`Remove astronaut from space-suit ${spacesuitId}`)
+    return await this.spacesuitService.removeAstronautFromSpacesuit(spacesuitId);
   }
 
   @Post("/:spacesuitId/update-vitals")

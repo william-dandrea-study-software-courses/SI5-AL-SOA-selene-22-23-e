@@ -1,16 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import {Logger, ValidationPipe} from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { SwaggerUIConfig } from './shared/config/interfaces/swaggerui-config.interface';
 import {ExpressSwaggerCustomOptions} from "@nestjs/swagger/dist/interfaces/legacy-swagger-custom-options.interfaces";
-import {MicroserviceOptions, Transport} from "@nestjs/microservices";
-import {Kafka} from "kafkajs";
-import {AppService} from "./app.service";
+
+
 
 async function bootstrap() {
+
   const app = await NestFactory.create(AppModule);
   app.enableCors();
 
@@ -23,12 +23,12 @@ async function bootstrap() {
   // Swagger UI Definition
   const swaggeruiConfig = configService.get<SwaggerUIConfig>('swaggerui');
   const config = new DocumentBuilder()
-    .setTitle(swaggeruiConfig.title)
-    .setDescription(swaggeruiConfig.description)
-    .setVersion(configService.get('npm_package_version'))
-    .addServer('/', 'Without gateway')
-    .addServer('/survival-control', 'Through gateway')
-    .build();
+      .setTitle(swaggeruiConfig.title)
+      .setDescription(swaggeruiConfig.description)
+      .setVersion(configService.get('npm_package_version'))
+      .addServer('/', 'Without gateway')
+      .addServer('/alert-notification', 'Through gateway')
+      .build();
   const document = SwaggerModule.createDocument(app, config);
   const options : ExpressSwaggerCustomOptions = {customSiteTitle: swaggeruiConfig.title};
   SwaggerModule.setup(swaggeruiConfig.path, app, document, options);

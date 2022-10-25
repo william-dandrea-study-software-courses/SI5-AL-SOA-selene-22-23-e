@@ -1,9 +1,12 @@
-import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {ApiProperty} from "@nestjs/swagger";
+import { Schema, Prop } from "@nestjs/mongoose";
+import { Document } from "mongoose";
+import { ApiProperty } from "@nestjs/swagger";
 
 export type SpacesuitVitalsDocument = SpacesuitVitals & Document;
 
-@Schema({versionKey: false})
+@Schema({
+    versionKey: false,
+})
 export class SpacesuitVitals {
     @ApiProperty()
     @Prop({ required: true, min: 0 })
@@ -25,5 +28,3 @@ export class SpacesuitVitals {
     @Prop({ required: true, min: 0 })
     power: number;
 }
-
-export const SpacesuitVitalsSchema =  SchemaFactory.createForClass(SpacesuitVitals);

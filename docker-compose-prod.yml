@@ -46,6 +46,8 @@ services:
       - SWAGGERUI_DESCRIPTION=Destiné à la surveillance des conditions des systèmes de support des modules habités
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -67,6 +69,8 @@ services:
       - MOON_BASE_SERVICE_URL_WITH_PORT=moon-base-service:4310
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -86,6 +90,8 @@ services:
       - SWAGGERUI_TITLE=Resupply Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à la gestion du réapprovisionnement de la base lunaire
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -106,6 +112,8 @@ services:
         - SWAGGERUI_DESCRIPTION=Destiné au controle des Space Craft
         - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
       depends_on:
+        - kafka-service
+        - zookeeper
         - resupply-service
         - database
       networks:
@@ -126,6 +134,8 @@ services:
       - SWAGGERUI_TITLE=Spacesuit Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à controler les vitals des combinaison
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -145,6 +155,8 @@ services:
       - SWAGGERUI_TITLE=Eva Mission Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à controler les missions Extra Vehiculaire
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -164,6 +176,8 @@ services:
       - SWAGGERUI_TITLE=Meteorite Monitoring Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à contrôler la trajectoire des météorites et à alerter en cas de besoin
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -204,8 +218,9 @@ services:
       - SWAGGERUI_TITLE=Moon Base Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à contrôler à la gestion de la base lunaire
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
-
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -225,6 +240,8 @@ services:
       - SWAGGERUI_TITLE=Spacesuit Monitoring Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à verifier les vitals de chaque spacesuit
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -244,6 +261,30 @@ services:
       - SWAGGERUI_TITLE=News Formalisation Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à formaté les messages avant publication
     depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
+
+
+  news-service:
+    image: news-service
+    restart: always
+    ports:
+      - 4315:4315
+    environment:
+      - APP_PORT=4315
+      - APP_NAME=news-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=news-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=News Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à garder en mémoire les messages envoyés par le système
+    depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -310,3 +351,4 @@ services:
 networks:
   soa-team-e-network:
     driver: bridge
+

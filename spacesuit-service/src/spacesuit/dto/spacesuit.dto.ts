@@ -13,7 +13,21 @@ export class SpacesuitDTO {
   id_astronaut: number;
 
   @ApiProperty()
-  current_vital:SpacesuitVitalsDto;
+  current_vitals:SpacesuitVitalsDto;
 
 
+}
+
+export class SpacesuitCreationDTO {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  id_spacesuit: number;
+}
+
+export class AffectAstronautDTO{
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  id_astronaut: number
 }
