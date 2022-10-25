@@ -9,6 +9,7 @@ import { MongooseConfigService } from './shared/services/mongoose-config.service
 
 import { HealthModule } from './health/health.module';
 import { SpacesuitModule } from './spacesuit/spacesuit.module';
+import {SpacesuitVitals} from "./spacesuit/schemas/spacesuit-vitals.schema";
 
 @Module({
   imports: [

@@ -6,6 +6,8 @@ import {Spacesuit, SpacesuitDocument} from '../schemas/spacesuit.schema';
 
 import { SpacesuitDTO} from "../dto/spacesuit.dto";
 import {SpacesuitAlreadyExistException} from "../exceptions/spacesuit-already-exist.exception";
+import {SpacesuitVitals, SpacesuitVitalsDocument} from "../schemas/spacesuit-vitals.schema";
+import {SpacesuitVitalsDto} from "../dto/spacesuit-vitals.dto";
 
 @Injectable()
 export class SpacesuitService {
@@ -32,12 +34,59 @@ export class SpacesuitService {
     });
   }
 
+  async getSpacesuit(spacesuitId: number): Promise<SpacesuitDTO> {
+    const spacesuit = await this.spacesuitModel.findOne({
+      id_spacecraft: spacesuitId,
+    });
+    if (spacesuit === null) {
+      throw new HttpException("spaceCraft not found", HttpStatus.NOT_FOUND);
+    }
+    return spacesuit;
+  }
+
   async postSpacesuit(spacesuitDTO: SpacesuitDTO): Promise<SpacesuitDTO> {
     const alreadyExists = await this.spacesuitModel.find({ id_spacesuit: spacesuitDTO.id_spacesuit });
     if (alreadyExists.length > 0) {
       throw new SpacesuitAlreadyExistException(spacesuitDTO.id_spacesuit);
     }
     return await this.spacesuitModel.create(spacesuitDTO);
+  }
+
+  async createSpacesuit(spacesuitCreationDTO: SpacesuitCreationDTO): Promise<Spacesuit> {
+    const alreadyExists = await this.spacesuitModel.find({
+      id_spacesuit: spacesuitCreationDTO.id_spacesuit,
+    });
+    if (alreadyExists.length > 0) {
+      throw new SpacesuitAlreadyExistException(spacesuitCreationDTO.id_spacesuit);
+    }
+
+    const newSpaceSuit: Spacesuit = {
+      id_spacesuit: spacesuitCreationDTO.id_spacesuit,
+      id_astronaut: null,
+      current_vitals: null,
+    }
+
+    return await this.spacesuitModel.create(newSpaceSuit);
+  }
+
+  async affectAstronautToSpacesuit(spacesuitId: number, id_astronaut: number) {
+    const spacesuit = await this.spacesuitModel.findOne({id_spacesuit: spacesuitId}).exec();
+    if (spacesuit === null) {
+      throw new HttpException(`Any spacesuit with ID ${spacesuitId} found, please create the spacesuit before`, 400)
+    }
+
+    spacesuit.id_astronaut = id_astronaut;
+    return await spacesuit.save();
+  }
+
+  async removeAstronautFromSpacesuit(spacesuitId: number, id_astronaut: number) {
+    const spacesuit = await this.spacesuitModel.findOne({id_spacesuit: spacesuitId}).exec();
+    if (spacesuit === null) {
+      throw new HttpException(`Any spacesuit with ID ${spacesuitId} found, please create the spacesuit before`, 400)
+    }
+
+    spacesuit.id_astronaut = null;
+    return await spacesuit.save();
   }
 
   async putSpacesuit(spacesuitDTO: SpacesuitDTO, id_spacesuit: number): Promise<Spacesuit>{
@@ -70,8 +119,46 @@ export class SpacesuitService {
     }
     let dto = new SpacesuitDTO();
     dto.id_spacesuit = spacesuit.id_spacesuit;
-    dto.current_vital = spacesuit.current_vital;
+    dto.cardiac_rythm = spacesuit.cardiac_rythm;
+    dto.o2_rate = spacesuit.o2_rate;
+    dto.power = spacesuit.power;
+    dto.pressure = spacesuit.pressure;
+    dto.temperature = spacesuit.temperature;
     return dto;
+  }
+
+  async startMission(spacesuitId: number) {}
+
+  async finishMission(spacesuitId: number) {}
+
+  async updateVitals(spacesuitId: number, vitals: SpacesuitVitals) {
+    const spacesuit = await this.spacesuitModel.findOne({id_spacesuit: spacesuitId}).exec();
+    if (spacesuit === null) {
+      throw new HttpException(`Any spacesuit with ID ${spacesuitId} found, please create the spacesuit before`, 400)
+    }
+
+    spacesuit.current_vitals = await this.spacesuitVitalsModel.create(vitals);
+    const spacesuitResult = await spacesuit.save()
+
+    await this.sendMessageToBus("spacesuits_topic", "spacesuit_metrics", spacesuitResult)
+
+    return spacesuitResult;
+  }
+
+  async sendMessageToBus(topic: string, key: string, message: any) {
+    const producer = await this.kafka.producer();
+
+    await producer.connect();
+    await producer.send({
+      topic: topic,
+      messages: [
+        {
+          key: key,
+          value: JSON.stringify(message),
+        },
+      ],
+    });
+    await producer.disconnect();
   }
 
   async sendSpacesuitVitals(): Promise<void>{
@@ -83,7 +170,7 @@ export class SpacesuitService {
       if(spacesuit.id_astronaut !== -1) {
         message.push({value: '{"cardiac_rythm" :' + spacesuit.current_vital.cardiac_rythm + ',"pressure" :' + spacesuit.current_vital.pressure + ',"o2_rate" :' + spacesuit.current_vital.o2_rate + ',"temperature" :' + spacesuit.current_vital.temperature + ',"power" :' + spacesuit.current_vital.power + ',"astronaut_id" :' + spacesuit.id_astronaut + ',"spacesuit_id":' + spacesuit.id_spacesuit + '}'})
       }
-      })
+    })
     // Producing
     await producer.connect()
     this.logger.log('Sending combinaison vitals')
@@ -95,4 +182,5 @@ export class SpacesuitService {
     });
     await producer.disconnect();
   }
+
 }

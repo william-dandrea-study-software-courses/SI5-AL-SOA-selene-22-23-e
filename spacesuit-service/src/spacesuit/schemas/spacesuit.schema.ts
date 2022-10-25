@@ -1,7 +1,6 @@
 import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import {SpacesuitVitals} from "./spacesuit-vital.schema";
 
 export type SpacesuitDocument = Spacesuit & Document;
 

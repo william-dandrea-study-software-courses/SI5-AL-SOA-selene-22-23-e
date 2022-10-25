@@ -18,4 +18,5 @@ run_install "spacecraft-service"
 run_install "spacesuit-service"
 run_install "survival-control-service"
 run_install "moon-base-service"
+run_install "astronaut-service"
 
