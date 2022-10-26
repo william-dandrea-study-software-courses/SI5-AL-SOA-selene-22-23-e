@@ -17,11 +17,14 @@ export class HealthController {
   private _spacesuitServiceHealthCheckUrl: string;
   private _spacecraftServiceHealthCheckUrl: string;
   private _evaMissionServiceHealthCheckUrl: string;
-  private _meteoriteMonitoringHealthCheckUrl: string;
-  private _alertNotificationHealthCheckUrl: string;
-  private _moonBaseHealthCheckUrl: string;
-  private _astronautHealthCheckUrl: string;
-  private _rotationMissionBaseHealthCheckUrl: string;
+  private _meteoriteMonitoringServiceHealthCheckUrl: string;
+  private _alertNotificationServiceHealthCheckUrl: string;
+  private _moonBaseServiceHealthCheckUrl: string;
+  private _astronautServiceHealthCheckUrl: string;
+  private _rotationMissionServiceHealthCheckUrl: string;
+  private _spacesuitMonitoringServiceHealthCheckUrl: string;
+  private _newsFormalisationServiceHealthCheckUrl: string;
+  private _newsServiceHealthCheckUrl: string;
 
   constructor(
     private configService: ConfigService,
@@ -36,12 +39,14 @@ export class HealthController {
     this._spacesuitServiceHealthCheckUrl = `http://${dependenciesConfig.spacesuit_service_url_with_port}/health`;
     this._spacecraftServiceHealthCheckUrl = `http://${dependenciesConfig.spacecraft_service_url_with_port}/health`;
     this._evaMissionServiceHealthCheckUrl = `http://${dependenciesConfig.eva_mission_service_url_with_port}/health`;
-    this._meteoriteMonitoringHealthCheckUrl = `http://${dependenciesConfig.meteorite_monitoring_service_url_with_port}/health`;
-    this._meteoriteMonitoringHealthCheckUrl = `http://${dependenciesConfig.meteorite_monitoring_service_url_with_port}/health`;
-    this._alertNotificationHealthCheckUrl = `http://${dependenciesConfig.alert_notification_service_url_with_port}/health`;
-    this._moonBaseHealthCheckUrl = `http://${dependenciesConfig.moon_base_service_url_with_port}/health`;
-    this._astronautHealthCheckUrl = `http://${dependenciesConfig.astronaut_service_url_with_port}/health`;
-    this._rotationMissionBaseHealthCheckUrl = `http://${dependenciesConfig.rotation_mission_service_url_with_port}/health`;
+    this._meteoriteMonitoringServiceHealthCheckUrl = `http://${dependenciesConfig.meteorite_monitoring_service_url_with_port}/health`;
+    this._alertNotificationServiceHealthCheckUrl = `http://${dependenciesConfig.alert_notification_service_url_with_port}/health`;
+    this._moonBaseServiceHealthCheckUrl = `http://${dependenciesConfig.moon_base_service_url_with_port}/health`;
+    this._astronautServiceHealthCheckUrl = `http://${dependenciesConfig.astronaut_service_url_with_port}/health`;
+    this._rotationMissionServiceHealthCheckUrl = `http://${dependenciesConfig.rotation_mission_service_url_with_port}/health`;
+    this._spacesuitMonitoringServiceHealthCheckUrl = `http://${dependenciesConfig.spacesuit_monitoring_service_url_with_port}/health`;
+    this._newsFormalisationServiceHealthCheckUrl = `http://${dependenciesConfig.news_formalisation_service_url_with_port}/health`;
+    this._newsServiceHealthCheckUrl = `http://${dependenciesConfig.news_service_url_with_port}/health`;
     console.log(this._survivalControlServiceHealthCheckUrl);
     console.log(this._moduleLifeServiceHealthCheckUrl);
     console.log(this._needsControlServiceHealthCheckUrl);
@@ -49,11 +54,14 @@ export class HealthController {
     console.log(this._spacesuitServiceHealthCheckUrl);
     console.log(this._spacecraftServiceHealthCheckUrl);
     console.log(this._evaMissionServiceHealthCheckUrl);
-    console.log(this._meteoriteMonitoringHealthCheckUrl);
-    console.log(this._alertNotificationHealthCheckUrl);
-    console.log(this._moonBaseHealthCheckUrl);
-    console.log(this._astronautHealthCheckUrl);
-    console.log(this._rotationMissionBaseHealthCheckUrl);
+    console.log(this._meteoriteMonitoringServiceHealthCheckUrl);
+    console.log(this._alertNotificationServiceHealthCheckUrl);
+    console.log(this._moonBaseServiceHealthCheckUrl);
+    console.log(this._astronautServiceHealthCheckUrl);
+    console.log(this._rotationMissionServiceHealthCheckUrl);
+    console.log(this._spacesuitMonitoringServiceHealthCheckUrl);
+    console.log(this._newsFormalisationServiceHealthCheckUrl);
+    console.log(this._newsServiceHealthCheckUrl);
   }
 
   async checkIsHealthy(name, url) {
@@ -110,27 +118,42 @@ export class HealthController {
       async () =>
           this.checkIsHealthy(
               "meteorite-monitoring-service",
-              this._meteoriteMonitoringHealthCheckUrl
+              this._meteoriteMonitoringServiceHealthCheckUrl
           ),
       async () =>
           this.checkIsHealthy(
               "alert-notification-service",
-              this._alertNotificationHealthCheckUrl
+              this._alertNotificationServiceHealthCheckUrl
           ),
       async () =>
           this.checkIsHealthy(
               "moon-base-service",
-              this._moonBaseHealthCheckUrl
+              this._moonBaseServiceHealthCheckUrl
           ),
       async () =>
           this.checkIsHealthy(
               "astronaut-service",
-              this._astronautHealthCheckUrl
+              this._astronautServiceHealthCheckUrl
           ),
       async () =>
           this.checkIsHealthy(
               "rotation-mission-service",
-              this._rotationMissionBaseHealthCheckUrl
+              this._rotationMissionServiceHealthCheckUrl
+          ),
+      async () =>
+          this.checkIsHealthy(
+              "spacesuit-monitoring-service",
+              this._spacesuitMonitoringServiceHealthCheckUrl
+          ),
+      async () =>
+          this.checkIsHealthy(
+              "news-formalisation-service",
+              this._newsFormalisationServiceHealthCheckUrl
+          ),
+      async () =>
+          this.checkIsHealthy(
+              "news-service",
+              this._newsServiceHealthCheckUrl
           )
     ]);
   }

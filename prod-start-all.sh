@@ -23,6 +23,10 @@ compile_dir "resupply-service"
 compile_dir "moon-base-service"
 compile_dir "astronaut-service"
 compile_dir "rotation-mission-service"
+compile_dir "spacesuit-monitoring-service"
+compile_dir "news-formalisation-service"
+compile_dir "news-service"
+
 
 echo -e "\033[0;32m ===> END BUILD \033[0m"
 

@@ -11,4 +11,7 @@ export interface DependenciesConfig {
   moon_base_service_url_with_port: string,
   astronaut_service_url_with_port: string,
   rotation_mission_service_url_with_port: string,
+  spacesuit_monitoring_service_url_with_port: string,
+  news_formalisation_service_url_with_port: string,
+  news_service_url_with_port: string,
 }

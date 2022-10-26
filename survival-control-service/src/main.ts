@@ -1,12 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
+import {Logger, ValidationPipe} from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { SwaggerUIConfig } from './shared/config/interfaces/swaggerui-config.interface';
 import {ExpressSwaggerCustomOptions} from "@nestjs/swagger/dist/interfaces/legacy-swagger-custom-options.interfaces";
 import {MicroserviceOptions, Transport} from "@nestjs/microservices";
+import {Kafka} from "kafkajs";
+import {AppService} from "./app.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,7 +35,6 @@ async function bootstrap() {
 
   // Starts listening for shutdown hooks
   app.enableShutdownHooks();
-
 
   // Run the app
   const appPort = configService.get('app.port');

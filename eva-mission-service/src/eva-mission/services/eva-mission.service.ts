@@ -119,39 +119,19 @@ export class EvaMissionService {
     });
   }
 
-  /* ------------------------------------------- KAFKA ---------------------------------------------------- */
-
-  public async testKafka(): Promise<any> {
-    const producer = await this.kafka.producer();
-
-    // Producing
-    await producer.connect();
-    await producer.send({
-      topic: "test-topic",
-      messages: [{ value: "Hello KafkaJS user!" }],
-    });
-
-    await producer.disconnect();
-
-    return null;
-  }
-
-  public async receiveKafka() {
-    const consumer = await this.kafka.consumer({ groupId: "test-group" });
-    // Consuming
-    await consumer.connect();
-    await consumer.subscribe({ topic: "test-topic", fromBeginning: true });
-
-    await consumer.run({
-      eachMessage: async ({ topic, partition, message }) => {
-        this.logger.log({
-          partition,
-          offset: message.offset,
-          value: message.value.toString(),
-        });
-      },
-    });
-
-    // Tant que lui n'est pas disconnect, il continuera a lire
+  async updateMetric(id_spacesuit: number,cardiac_rythm:number, pressure:number,o2_rate:number,temperature:number,power:number) {
+    let eva_missions = await this.evaMissionModel.find();
+    eva_missions.forEach(eva_mission => {
+      eva_mission.metrics.forEach(metric=>{
+        if(metric.id_spacesuit == id_spacesuit){
+          this.logger.log("Update metrics for eva_mission "+ eva_mission.id_mission)
+          metric.power.push(power);
+          metric.o2_rate.push(o2_rate);
+          metric.pressure.push(pressure);
+          metric.temperature.push(temperature);
+        }
+      })
+      eva_mission.save();
+    })
   }
 }

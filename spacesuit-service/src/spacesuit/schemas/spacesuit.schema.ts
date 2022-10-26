@@ -1,6 +1,7 @@
 import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import {SpacesuitVitals} from "./spacesuit-vitals.schema";
 
 export type SpacesuitDocument = Spacesuit & Document;
 
@@ -13,24 +14,12 @@ export class Spacesuit {
   id_spacesuit: number;
 
   @ApiProperty()
-  @Prop({ required: true, min: 0 })
-  cardiac_rythm: number;
+  @Prop({ required: false})
+  id_astronaut: number;
 
   @ApiProperty()
-  @Prop({ required: true, min: 0 })
-  o2_rate: number;
-
-  @ApiProperty()
-  @Prop({ required: true, min: 0 })
-  temperature: number;
-
-  @ApiProperty()
-  @Prop({ required: true, min: 0 })
-  pressure: number;
-
-  @ApiProperty()
-  @Prop({ required: true, min: 0 })
-  power: number;
+  @Prop({required: false})
+  current_vitals: SpacesuitVitals;
 }
 
 export const SpacesuitSchema =

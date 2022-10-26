@@ -252,7 +252,6 @@ export class SpacecraftService {
         HttpStatus.FORBIDDEN
       );
     }
-
     spaceCrafts.status = StatusSpacecraftEnumSchema.TRAVELING;
     await spaceCrafts.save();
 

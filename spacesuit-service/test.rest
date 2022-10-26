@@ -1,0 +1,44 @@
+### Get all spacesuits
+GET http://localhost:4306/spacesuit
+Accept: application/json
+
+
+### Create new spacesuit
+POST http://localhost:4306/spacesuit
+Content-Type: application/json
+
+{
+  "id_spacesuit": 45
+}
+
+### Get one spacesuits
+GET http://localhost:4306/spacesuit/45
+Accept: application/json
+
+### Affect astronaut to spacesuit
+POST http://localhost:4306/spacesuit/45/affect-astronaut
+Content-Type: application/json
+
+{
+  "id_astronaut": 12
+}
+
+### Remove astronaut from spacesuit
+POST http://localhost:4306/spacesuit/45/remove-astronaut
+Content-Type: application/json
+
+{
+  "id_astronaut": 12
+}
+
+### Update spacesuit vitals
+POST http://localhost:4306/spacesuit/45/update-vitals
+Content-Type: application/json
+
+{
+  "cardiac_rythm": 100,
+  "o2_rate": 91,
+  "temperature": 38,
+  "pressure": 3,
+  "power": 98
+}

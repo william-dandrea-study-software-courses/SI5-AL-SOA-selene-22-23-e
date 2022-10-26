@@ -107,7 +107,7 @@ export class ResupplyService {
       throw new ResupplyMissionNotExist(id_resupply);
     }
     resupplyMission.state = StatusResupplyEnumSchema.PREPARING
-
+    resupplyMission.spacecraft_id = null
     resupplyMission.save()
   }
 }

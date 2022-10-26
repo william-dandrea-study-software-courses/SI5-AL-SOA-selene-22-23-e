@@ -48,6 +48,8 @@ services:
       - SWAGGERUI_DESCRIPTION=Destiné à la surveillance des conditions des systèmes de support des modules habités
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -69,6 +71,8 @@ services:
       - MOON_BASE_SERVICE_URL_WITH_PORT=moon-base-service:4310
       - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -88,6 +92,8 @@ services:
       - SWAGGERUI_TITLE=Resupply Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à la gestion du réapprovisionnement de la base lunaire
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -108,6 +114,8 @@ services:
         - SWAGGERUI_DESCRIPTION=Destiné au controle des Space Craft
         - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
       depends_on:
+        - kafka-service
+        - zookeeper
         - resupply-service
         - database
       networks:
@@ -128,6 +136,8 @@ services:
       - SWAGGERUI_TITLE=Spacesuit Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à controler les vitals des combinaison
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -147,6 +157,8 @@ services:
       - SWAGGERUI_TITLE=Eva Mission Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à controler les missions Extra Vehiculaire
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -166,6 +178,8 @@ services:
       - SWAGGERUI_TITLE=Meteorite Monitoring Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à contrôler la trajectoire des météorites et à alerter en cas de besoin
     depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -249,6 +263,71 @@ services:
       - SWAGGERUI_TITLE=Rotation Mission Micro-Service
       - SWAGGERUI_DESCRIPTION=Destiné à la gestion des missions de roulements entre astronautes
     depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
+
+  spacesuit-monitoring-service:
+    image: spacesuit-monitoring-service
+    restart: always
+    ports:
+      - 4313:4313
+    environment:
+      - APP_PORT=4313
+      - APP_NAME=spacesuit-monitoring-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacesuit-monitoring-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Spacesuit Monitoring Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à verifier les vitals de chaque spacesuit
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
+
+  news-formalisation-service:
+    image: news-formalisation-service
+    restart: always
+    ports:
+      - 4314:4314
+    environment:
+      - APP_PORT=4314
+      - APP_NAME=news-formalisation-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=news-formalisation-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=News Formalisation Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à formaté les messages avant publication
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
+
+  news-service:
+    image: news-service
+    restart: always
+    ports:
+      - 4315:4315
+    environment:
+      - APP_PORT=4315
+      - APP_NAME=news-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=news-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=News Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à garder en mémoire les messages envoyés par le système
+    depends_on:
+      - kafka-service
+      - zookeeper
       - database
     networks:
       - soa-team-e-network
@@ -271,6 +350,9 @@ services:
       - ALERT_NOTIFICATION_SERVICE=alert-notification-service
       - MOON_BASE_SERVICE=moon-base-service
       - ASTRONAUT_SERVICE=astronaut-service
+      - SPACESUIT_MONITORING_SERVICE=spacesuit-monitoring-service
+      - NEWS_FORMALISATION_SERVICE=news-formalisation-service
+      - NEWS_SERVICE=news-service
       - ROTATION_MISSION_SERVICE=rotation-mission-service
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
@@ -284,6 +366,9 @@ services:
       - MOON_BASE_SERVICE_URL_WITH_PORT=moon-base-service:4310
       - ASTRONAUT_SERVICE_URL_WITH_PORT=astronaut-service:4311
       - ROTATION_MISSION_SERVICE_URL_WITH_PORT=rotation-mission-service:4312
+      - SPACESUIT_MONITORING_SERVICE_URL_WITH_PORT=spacesuit-monitoring-service:4313
+      - NEWS_FORMALISATION_SERVICE_URL_WITH_PORT=news-formalisation-service:4314
+      - NEWS_SERVICE_URL_WITH_PORT=news-service:4315
     networks:
       - soa-team-e-network
 
@@ -319,3 +404,4 @@ services:
 networks:
   soa-team-e-network:
     driver: bridge
+

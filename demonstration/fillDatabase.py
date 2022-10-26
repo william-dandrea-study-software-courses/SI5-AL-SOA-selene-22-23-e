@@ -116,5 +116,7 @@ def initializeIntegrationTests() :
     fillModuleServiceDatabase()
     fillSpacesuitDatabase()
     fillSpacecratDatabase()
-    fillMoonBaseDatabase()
     fillMeteoriteMonitoringDatabase()
+    fillMoonBaseDatabase()
+
+fillMoonBaseDatabase()
