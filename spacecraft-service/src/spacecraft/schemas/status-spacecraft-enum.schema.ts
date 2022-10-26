@@ -1,6 +1,7 @@
 export enum StatusSpacecraftEnumSchema {
     PREPARING = 'Au sol',
-    TRAVELING = "Envoyé",
-    DONE = 'Arrivé',
+    TRAVELING = 'Envoyé',
+    ARRIVING_SOON = 'En approche',
+    LANDED = 'Arrivé',
     DAMAGED = 'Endommagé',
 }
