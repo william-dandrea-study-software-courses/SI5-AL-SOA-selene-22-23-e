@@ -48,7 +48,10 @@ export class SurvivalControlController {
 
     return [...this.spacesuit_problems];
   }
-  
+
+  /*
+@MessageListener('problem-spacesuit')
+*/
   async event_spacesuit_problem_listener(){
     const consumer = this.kafka.consumer({ groupId: 'survival-control-consumer' });
     // Consuming

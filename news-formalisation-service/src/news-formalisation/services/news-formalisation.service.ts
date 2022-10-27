@@ -15,7 +15,7 @@ export class NewsFormalisationService {
     brokers: ["kafka-service:9092"],
   });
 
-  async sendNewsToMary(json:JSON) {
+  async sendNewsSpacesuitToMary(json:JSON) {
     const producer = await this.kafka.producer()
     let formatedMessage = "Un problème a été détecté sur la combinaison numero "+json["spacesuit_id"]+" utilisé par l'astronaute "+json['astronaut_id']+" .\n";
     if(json["o2_rate"]!==null &&json["o2_rate"]!==undefined){
@@ -43,6 +43,18 @@ export class NewsFormalisationService {
     });
     await producer.disconnect();
 
+  }
+
+  async sendNewsMeteoriteToMarie(){
+    const producer = await this.kafka.producer()
+
+    await producer.connect()
+
+    await producer.send({
+      topic: 'news',
+      messages: [{value:"Une météorite dangereuse a été détecté, la base est isolée"},]
+    });
+    await producer.disconnect();
   }
 
 }

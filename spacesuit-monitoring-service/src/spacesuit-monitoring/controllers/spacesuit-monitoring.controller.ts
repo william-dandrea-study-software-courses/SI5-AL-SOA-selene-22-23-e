@@ -16,7 +16,10 @@ export class SpacesuitMonitoringController {
   constructor(private spacesuitMonitoringService:SpacesuitMonitoringService) {
     this.event_spacesuit_vitals_listener()
   }
-  
+
+  /*
+@MessageListener('spacesuit-vitals')
+*/
   async event_spacesuit_vitals_listener(){
     const consumer = this.kafka.consumer({ groupId: 'spacesuit-monitoring-consumer' });
     // Consuming

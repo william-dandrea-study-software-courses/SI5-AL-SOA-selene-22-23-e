@@ -80,6 +80,39 @@ export class SpacecraftService {
       });
       await producer.disconnect();
     }
+    if (spacecraftDTO.status === StatusSpacecraftEnumSchema.ARRIVING_SOON || spacecraftDTO.id_resupplyMission !== null) {
+      const producer = await this.kafka.producer();
+
+      // Producing
+      await producer.connect();
+      await producer.send({
+        topic: "spacecraft-arriving",
+        messages: [
+          {
+            value: ""+spacecraftDTO.id_spacecraft,
+          },
+        ],
+      });
+      await producer.disconnect();
+    }
+
+
+    if (spacecraftDTO.status === StatusSpacecraftEnumSchema.LANDED || spacecraftDTO.id_resupplyMission !== null) {
+      const producer = await this.kafka.producer();
+
+      // Producing
+      await producer.connect();
+      await producer.send({
+        topic: "spacecraft-landed",
+        messages: [
+          {
+            value: ""+spacecraftDTO.id_spacecraft,
+          },
+        ],
+      });
+      await producer.disconnect();
+    }
+
     return await this.spaceCraftModel.create(spacecraftDTO);
   }
 
@@ -117,6 +150,39 @@ export class SpacecraftService {
       });
       await producer.disconnect();
     }
+
+    if (spaceCraftDto.status === StatusSpacecraftEnumSchema.ARRIVING_SOON || spaceCraftDto.id_resupplyMission !== null) {
+      const producer = await this.kafka.producer();
+
+      // Producing
+      await producer.connect();
+      await producer.send({
+        topic: "spacecraft-arriving",
+        messages: [
+          {
+            value: ""+spaceCraftDto.id_spacecraft,
+          },
+        ],
+      });
+      await producer.disconnect();
+    }
+
+    if (spaceCraftDto.status === StatusSpacecraftEnumSchema.LANDED || spaceCraftDto.id_resupplyMission !== null) {
+      const producer = await this.kafka.producer();
+
+      // Producing
+      await producer.connect();
+      await producer.send({
+        topic: "spacecraft-landed",
+        messages: [
+          {
+            value: ""+spaceCraftDto.id_spacecraft,
+          },
+        ],
+      });
+      await producer.disconnect();
+    }
+
     await spaceCraft.save();
 
     return spaceCraft;
