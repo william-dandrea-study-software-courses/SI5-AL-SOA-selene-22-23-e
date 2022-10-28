@@ -16,4 +16,5 @@ export default registerAs('dependencies', () => ({
   spacesuit_monitoring_service_url_with_port:process.env.SPACESUIT_MONITORING_SERVICE_URL_WITH_PORT,
   news_formalisation_service_url_with_port:process.env.NEWS_FORMALISATION_SERVICE_URL_WITH_PORT,
   news_service_url_with_port:process.env.NEWS_SERVICE_URL_WITH_PORT,
+  spacecraft_monitoring_service_url_with_port:process.env.SPACECRAFT_MONITORING_SERVICE_URL_WITH_PORT,
 }));

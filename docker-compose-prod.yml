@@ -332,6 +332,27 @@ services:
     networks:
       - soa-team-e-network
 
+  spacecraft-monitoring-service:
+    image: spacecraft-monitoring-service
+    restart: always
+    ports:
+      - 4316:4316
+    environment:
+      - APP_PORT=4316
+      - APP_NAME=spacecraft-monitoring-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacecraft-monitoring-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Spacecraft Monitoring Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à garder en mémoire les différentes fusée par état
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
+
   gateway:
     image: gateway
     restart: always
@@ -354,6 +375,7 @@ services:
       - NEWS_FORMALISATION_SERVICE=news-formalisation-service
       - NEWS_SERVICE=news-service
       - ROTATION_MISSION_SERVICE=rotation-mission-service
+      - SPACECRAFT_MONITORING_SERVICE=spacecraft-monitoring-service
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
@@ -369,6 +391,7 @@ services:
       - SPACESUIT_MONITORING_SERVICE_URL_WITH_PORT=spacesuit-monitoring-service:4313
       - NEWS_FORMALISATION_SERVICE_URL_WITH_PORT=news-formalisation-service:4314
       - NEWS_SERVICE_URL_WITH_PORT=news-service:4315
+      - SPACECRAFT_MONITORING_SERVICE_URL_WITH_PORT=spacecraft-monitoring-service:4316
     networks:
       - soa-team-e-network
 
