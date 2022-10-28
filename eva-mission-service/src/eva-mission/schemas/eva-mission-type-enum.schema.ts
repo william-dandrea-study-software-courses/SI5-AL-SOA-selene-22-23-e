@@ -1,4 +1,4 @@
 export enum EVAMissionTypeEnumSchema {
-  SCIENTIFIC = "Mission scientifique",
+  EXPLORATION = "Mission scientifique",
   HELP = "Secours à un astronaute",
 }
