@@ -1,8 +1,5 @@
-import {Controller, Get, Logger, Param, Post, Put} from "@nestjs/common";
-import {
-  ApiOkResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import {Controller, Get, Logger} from "@nestjs/common";
+import {ApiOkResponse, ApiTags,} from "@nestjs/swagger";
 import { SpacecraftMonitoringService } from "../services/spacecraft-monitoring.service";
 import {Kafka} from "kafkajs";
 

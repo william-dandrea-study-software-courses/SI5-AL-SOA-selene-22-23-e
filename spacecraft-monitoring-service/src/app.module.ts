@@ -8,7 +8,7 @@ import swaggeruiConfig from './shared/config/swaggerui.config';
 import { MongooseConfigService } from './shared/services/mongoose-config.service';
 
 import { HealthModule } from './health/health.module';
-import {NewsModule} from "./spacecraft-monitoring/news.module";
+import {SpacecraftMonitoringModule} from "./spacecraft-monitoring/spacecraft-monitoring.module";
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import {NewsModule} from "./spacecraft-monitoring/news.module";
       useClass: MongooseConfigService,
     }),
     HealthModule,
-    NewsModule,
+    SpacecraftMonitoringModule,
   ],
   providers: [],
 })
