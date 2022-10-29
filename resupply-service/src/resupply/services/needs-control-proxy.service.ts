@@ -21,9 +21,7 @@ export class NeedsControlProxyService {
   }
 
   async superviseResupplyMissions(): Promise<ResupplyMissionDto[]> {
-    const retrieveResupplyStatusResponse: AxiosResponse<
-      ResupplyMissionDto[]
-    > = await firstValueFrom(
+    const retrieveResupplyStatusResponse: AxiosResponse<ResupplyMissionDto[]> = await firstValueFrom(
       this.httpService.get(this._baseUrl + this._needsControlPath),
     );
     const resupplyStatus = retrieveResupplyStatusResponse.data;

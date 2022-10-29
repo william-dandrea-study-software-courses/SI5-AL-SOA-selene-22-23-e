@@ -16,7 +16,7 @@ export class SpacecraftMonitoringController {
     brokers: ['kafka-service:9092']
   })
 
-  constructor(private newsService:SpacecraftMonitoringService) {
+  constructor(private spacecraftMonitoringService:SpacecraftMonitoringService) {
     this.event_spacecraft_arriving_listener()
   }
 
@@ -32,6 +32,7 @@ export class SpacecraftMonitoringController {
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         this.logger.log("Spacecraft " + message.value.toLocaleString()+" arriving")
+        this.spacecraftMonitoringService.spacecraftArriving(message.value.toLocaleString())
       },
     });
   }
@@ -48,6 +49,26 @@ export class SpacecraftMonitoringController {
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         this.logger.log("Spacecraft " + message.value.toLocaleString()+" landed")
+        this.spacecraftMonitoringService.spacecraftLanded(message.value.toLocaleString())
+      },
+    });
+  }
+
+
+  /*
+@MessagePattern("spacecraft-launch")
+ */
+  async event_spacecraft_launch_listener(){
+    const consumer = this.kafka.consumer({ groupId: 'spacecraft-monitoring-launch' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'spacecraft-launch'})
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        let messageJson = JSON.parse(message.value.toLocaleString());
+        this.logger.log("Spacecraft " +messageJson["spacecraft_id"] +" launched")
+        this.spacecraftMonitoringService.spacecraftLaunched(messageJson["spacecraft_id"]);
       },
     });
   }
@@ -55,22 +76,15 @@ export class SpacecraftMonitoringController {
   @Get("/landed")
   @ApiOkResponse()
   async getLandedSpacecraft(): Promise<string[]> {
-    this.logger.log("Récuperation des états des fusées");
-    return this.newsService.get();
+    this.logger.log("Récuperation des fusées atterrie");
+    return this.spacecraftMonitoringService.getLanded();
   }
 
   @Get("/arrriving")
   @ApiOkResponse()
   async getArrivingSpacecraft(): Promise<string[]> {
-    this.logger.log("Récuperation des états des fusées");
-    return this.newsService.get();
-  }
-
-  @Get("")
-  @ApiOkResponse()
-  async getAllState(): Promise<string[]> {
-    this.logger.log("Récuperation des états des fusées");
-    return this.newsService.get();
+    this.logger.log("Récuperation des fusées arrivantes");
+    return this.spacecraftMonitoringService.getArriving();
   }
 
 }

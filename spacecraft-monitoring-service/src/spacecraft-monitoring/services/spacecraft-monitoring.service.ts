@@ -1,8 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import { Model} from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import {News, NewsDocument} from '../schemas/news.schema';
-import {NewsDto} from "../dto/news.dto";
 import {Kafka} from "kafkajs";
 
 
@@ -14,20 +12,34 @@ export class SpacecraftMonitoringService {
     brokers: ['kafka-service:9092']
   })
 
-  constructor(@InjectModel(News.name) private newsModel: Model<NewsDocument>) {}
+  arriving = [];
+  landed = []
 
-  async getNews(): Promise<string[]> {
-    return this.newsModel.find().then(news => {
-      let response : string[]=[];
-      news.forEach(newsActual => {
-        response.push(newsActual.message);
-      })
-      return response;
-    });
+  constructor() {}
+
+  async spacecraftLanded(id_spacecraft:string): Promise<void> {
+    this.arriving = this.arriving.filter(s=>{
+      return s!==id_spacecraft;
+    })
+    this.landed.push(id_spacecraft);
   }
 
-  async addNews(message:string){
-    return await this.newsModel.create({message:message});
+  async spacecraftArriving(id_spacecraft:string): Promise<void> {
+    this.arriving.push(id_spacecraft)
+  }
+
+  async spacecraftLaunched(id_spacecraft:string): Promise<void>{
+    this.landed = this.landed.filter(s=>{
+      return s!==id_spacecraft;
+    })
+  }
+
+  async getArriving():Promise<string[]> {
+    return this.arriving;
+  }
+
+  async getLanded():Promise<string[]> {
+    return this.landed;
   }
 
 }
