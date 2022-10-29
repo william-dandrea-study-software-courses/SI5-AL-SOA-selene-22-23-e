@@ -26,20 +26,12 @@ export class TaskPlanner {
   date_end: string | null;
 
   @ApiProperty()
-  @Prop({ required: false })
-  status: boolean;
-
-  @ApiProperty()
-  @Prop({ required: true })
-  supervisor: string;
-
-  @ApiProperty()
   @Prop({ required: true })
   astronauts: number[];
 
   @ApiProperty()
   @Prop({ required: true })
-  notes: string;
+  description: string;
 }
 
 export const TaskPlannerSchema = SchemaFactory.createForClass(TaskPlanner);

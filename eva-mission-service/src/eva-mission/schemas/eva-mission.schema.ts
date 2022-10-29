@@ -27,10 +27,6 @@ export class EVAMission {
   date_end: string | null;
 
   @ApiProperty()
-  @Prop({ required: false })
-  status: boolean;
-
-  @ApiProperty()
   @Prop({ required: true })
   supervisor: string;
 

@@ -22,17 +22,9 @@ export class TaskPlannerDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  status: boolean;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  supervisor: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
   astronauts: number[];
 
   @ApiProperty()
   @IsNotEmpty()
-  notes: string;
+  description: string;
 }

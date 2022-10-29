@@ -23,10 +23,6 @@ export class EVAMissionDTO {
 
   @ApiProperty()
   @IsNotEmpty()
-  status: boolean;
-
-  @ApiProperty()
-  @IsNotEmpty()
   supervisor: string;
 
   @ApiProperty()

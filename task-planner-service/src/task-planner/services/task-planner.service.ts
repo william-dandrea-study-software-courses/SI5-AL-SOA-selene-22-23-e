@@ -35,9 +35,7 @@ export class TaskPlannerService {
         dto.type = taskPlanned.type;
         dto.date_begin = new Date(taskPlanned.date_begin);
         dto.date_end = new Date(taskPlanned.date_end);
-        dto.status = taskPlanned.status;
-        dto.supervisor = taskPlanned.supervisor;
-        dto.notes = taskPlanned.notes;
+        dto.description = taskPlanned.description;
         dto.astronauts = taskPlanned.astronauts;
         response.push(dto);
       });
@@ -75,10 +73,8 @@ export class TaskPlannerService {
       taskPlannerDto.date_end === null
         ? null
         : new Date(taskPlanner.date_end).toISOString();
-    taskPlanner.status = taskPlannerDto.status;
-    taskPlanner.supervisor = taskPlannerDto.supervisor;
     taskPlanner.astronauts = taskPlannerDto.astronauts;
-    taskPlanner.notes = taskPlannerDto.notes;
+    taskPlanner.description = taskPlannerDto.description;
     return await taskPlanner
       .save()
       .then((result) => {
@@ -102,9 +98,7 @@ export class TaskPlannerService {
           dto.type = taskPlanned.type;
           dto.date_begin = new Date(taskPlanned.date_begin);
           dto.date_end = new Date(taskPlanned.date_end);
-          dto.status = taskPlanned.status;
-          dto.supervisor = taskPlanned.supervisor;
-          dto.notes = taskPlanned.notes;
+          dto.description = taskPlanned.description;
           dto.astronauts = taskPlanned.astronauts;
           response.push(dto);
         }
