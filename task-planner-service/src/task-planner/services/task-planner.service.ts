@@ -52,6 +52,28 @@ export class TaskPlannerService {
     if (alreadyExists.length > 0) {
       throw new TaskAlreadyExistsException(taskPlannerDto.id_task);
     }
+    if (
+      taskPlannerDto.type.valueOf() == "EXPLORATION" ||
+      taskPlannerDto.type.valueOf() === "HELP"
+    ) {
+      const message: { value: any }[] = [];
+      message.push({
+        value:
+          taskPlannerDto.id_task +
+          taskPlannerDto.date_begin.valueOf() +
+          taskPlannerDto.date_end.valueOf() +
+          taskPlannerDto.astronauts.toString() +
+          taskPlannerDto.description,
+      });
+      const producer = await this.kafka.producer();
+      // Producing
+      await producer.connect();
+      await producer.send({
+        topic: "eva-mission",
+        messages: message,
+      });
+      await producer.disconnect();
+    }
     return await this.taskPlannerModel
       .create(TaskPlannerDto)
       .then((value) => value)

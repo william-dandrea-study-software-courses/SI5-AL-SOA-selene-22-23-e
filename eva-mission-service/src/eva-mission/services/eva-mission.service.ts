@@ -34,7 +34,6 @@ export class EvaMissionService {
         dto.type = evaMission.type;
         dto.date_begin = new Date(evaMission.date_begin);
         dto.date_end = new Date(evaMission.date_end);
-        dto.status = evaMission.status;
         dto.supervisor = evaMission.supervisor;
         dto.notes = evaMission.notes;
         dto.metrics = evaMission.metrics;
@@ -72,7 +71,6 @@ export class EvaMissionService {
       evaMissionDTO.date_end === null
         ? null
         : new Date(evaMissionDTO.date_end).toISOString();
-    evaMission.status = evaMissionDTO.status;
     evaMission.supervisor = evaMissionDTO.supervisor;
     evaMission.notes = evaMissionDTO.notes;
     evaMission.metrics = evaMissionDTO.metrics;
@@ -101,9 +99,10 @@ export class EvaMissionService {
         dto.notes = evaMission.notes;
         dto.metrics = evaMission.metrics;
 
-
-
-        if ( dto.date_end !== null && dto.date_end.getDate() < new Date().getDate()) {
+        if (
+          dto.date_end !== null &&
+          dto.date_end.getDate() < new Date().getDate()
+        ) {
           dto.metrics.forEach((spacesuit) => {
             const spacesuitMetrics = new SpacesuitMetricsDTO();
             spacesuitMetrics.id_spacesuit = spacesuit.id_spacesuit;
@@ -119,19 +118,28 @@ export class EvaMissionService {
     });
   }
 
-  async updateMetric(id_spacesuit: number,cardiac_rythm:number, pressure:number,o2_rate:number,temperature:number,power:number) {
-    let eva_missions = await this.evaMissionModel.find();
-    eva_missions.forEach(eva_mission => {
-      eva_mission.metrics.forEach(metric=>{
-        if(metric.id_spacesuit == id_spacesuit){
-          this.logger.log("Update metrics for eva_mission "+ eva_mission.id_mission)
+  async updateMetric(
+    id_spacesuit: number,
+    cardiac_rythm: number,
+    pressure: number,
+    o2_rate: number,
+    temperature: number,
+    power: number
+  ) {
+    const eva_missions = await this.evaMissionModel.find();
+    eva_missions.forEach((eva_mission) => {
+      eva_mission.metrics.forEach((metric) => {
+        if (metric.id_spacesuit == id_spacesuit) {
+          this.logger.log(
+            "Update metrics for eva_mission " + eva_mission.id_mission
+          );
           metric.power.push(power);
           metric.o2_rate.push(o2_rate);
           metric.pressure.push(pressure);
           metric.temperature.push(temperature);
         }
-      })
+      });
       eva_mission.save();
-    })
+    });
   }
 }
