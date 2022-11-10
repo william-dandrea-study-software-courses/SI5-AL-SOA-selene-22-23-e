@@ -211,9 +211,17 @@ services:
       - MODULE_LIFE_SERVICE=module-life-service-dev
       - NEEDS_CONTROL_SERVICE=needs-control-service-dev
       - RESUPPLY_CONTROL_SERVICE=resupply-service-dev
-      - SPACECRAFT_SERVICE_URL=spacecraft-service-dev
-      - SPACESUIT_SERVICE_URL=spacesuit-service-dev
-      - EVA_MISSION_SERVICE_URL=eva-mission-service-dev
+      - SPACECRAFT_SERVICE=spacecraft-service-dev
+      - SPACESUIT_SERVICE=spacesuit-service-dev
+      - EVA_MISSION_SERVICE=eva-mission-service-dev
+      - METEORITE_MONITORING_SERVICE=meteorite-monitoring-dev
+      - ALERT_NOTIFICATION_SERVICE=alert-notification-service-dev
+      - MOON_BASE_SERVICE=moon-base-service-dev
+      - ASTRONAUT_SERVICE=astronaut-service-dev
+      - SPACESUIT_MONITORING_SERVICE=spacesuit-monitoring-service-dev
+      - NEWS_FORMALISATION_SERVICE=news-formalisation-service-dev
+      - NEWS_SERVICE=news-service-dev
+      - ROTATION_MISSION_SERVICE=rotation-mission-service-dev
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service-dev:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service-dev:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service-dev:4302
@@ -221,19 +229,19 @@ services:
       - SPACECRAFT_SERVICE_URL_WITH_PORT=spacecraft-service-dev:4305
       - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service-dev:4306
       - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service-dev:4307
+      - METEORITE_MONITORING_SERVICE_URL_WITH_PORT=meteorite-monitoring-service-dev:4308
+      - ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT=alert-notification-service-dev:4309
+      - MOON_BASE_SERVICE_URL_WITH_PORT=moon-base-service-dev:4310
+      - ASTRONAUT_SERVICE_URL_WITH_PORT=astronaut-service-dev:4311
+      - ROTATION_MISSION_SERVICE_URL_WITH_PORT=rotation-mission-service-dev:4312
+      - SPACESUIT_MONITORING_SERVICE_URL_WITH_PORT=spacesuit-monitoring-service-dev:4313
+      - NEWS_FORMALISATION_SERVICE_URL_WITH_PORT=news-formalisation-service-dev:4314
+      - NEWS_SERVICE_URL_WITH_PORT=news-service-dev:4315
     volumes:
       - ./gateway:/usr/src/app
       - /usr/src/app/node_modules
     networks:
       - soa-team-e-network-dev
-    depends_on:
-      - survival-control-service-dev
-      - module-life-service-dev
-      - needs-control-service-dev
-      - resupply-service-dev
-      - spacesuit-service-dev
-      - eva-mission-service-dev
-      - spacecraft-service-dev
 
   meteorite-monitoring-service-dev:
     build:
@@ -326,9 +334,9 @@ services:
     restart: always
     command: npm run start:dev
     ports:
-      - 43011:43011
+      - 4311:4311
     environment:
-      - APP_PORT=43011
+      - APP_PORT=4311
       - APP_NAME=astronaut-service-dev
       - MONGODB_HOST=database-dev
       - MONGODB_PORT=27017
@@ -345,6 +353,118 @@ services:
       - database-dev
     networks:
       - soa-team-e-network-dev
+
+
+  rotation-mission-service-dev:
+    build:
+      context: ./rotation-mission-service
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    ports:
+      - 4312:4312
+    environment:
+      - APP_PORT=4312
+      - APP_NAME=rotatino-mission-service
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=rotation-mission-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Rotation Mission Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à la gestion des missions de roulements entre astronautes
+    volumes:
+      - ./rotation-mission-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database-dev
+    networks:
+      - soa-team-e-network-dev
+
+  spacesuit-monitoring-service-dev:
+    build:
+      context: ./spacesuit-monitoring-service
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    ports:
+      - 4313:4313
+    environment:
+      - APP_PORT=4313
+      - APP_NAME=spacesuit-monitoring-service
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=spacesuit-monitoring-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Spacesuit Monitoring Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à verifier les vitals de chaque spacesuit
+    volumes:
+      - ./spacesuit-monitoring-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database-dev
+    networks:
+      - soa-team-e-network-dev
+
+  news-formalisation-service-dev:
+    build:
+      context: ./news-formalisation-service
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    ports:
+      - 4314:4314
+    environment:
+      - APP_PORT=4314
+      - APP_NAME=news-formalisation-service
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=news-formalisation-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=News Formalisation Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à formaté les messages avant publication
+    volumes:
+      - ./news-formalisation-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database-dev
+    networks:
+      - soa-team-e-network-dev
+
+  news-service-dev:
+    build:
+      context: ./news-service
+      dockerfile: ./Dockerfile
+      target: docker-development
+    restart: always
+    ports:
+      - 4315:4315
+    environment:
+      - APP_PORT=4315
+      - APP_NAME=news-service
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=news-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=News Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à garder en mémoire les messages envoyés par le système
+    volumes:
+      - ./news-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database-dev
+    networks:
+      - soa-team-e-network-dev
+
+
+
 
 
   zookeeper:
@@ -376,39 +496,7 @@ services:
     networks:
       - soa-team-e-network-dev
 
-  spacesuit-metrics-alert-launcher:
-    build:
-      context: ./alerts-launcher/spacesuit-metrics-alert-launcher
-      dockerfile: ./Dockerfile
-      target: docker-development
-    restart: always
-    command: npm run start:dev
-    ports:
-      - 4350:4350
-    environment:
-      - APP_PORT=4350
-    volumes:
-      - ./alerts-launcher/spacesuit-metrics-alert-launcher:/usr/src/app
-      - /usr/src/app/node_modules
-    networks:
-      - soa-team-e-network-dev
 
-  captors-mock:
-    build:
-      context: ./mocks/captors-mock
-      dockerfile: ./Dockerfile
-      target: docker-development
-    restart: always
-    command: npm run start:dev
-    ports:
-      - 4399:4399
-    environment:
-      - APP_PORT=4399
-    volumes:
-      - ./mocks/captors-mock:/usr/src/app
-      - /usr/src/app/node_modules
-    networks:
-      - soa-team-e-network-dev
 
 
 networks:
