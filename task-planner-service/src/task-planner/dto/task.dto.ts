@@ -1,16 +1,16 @@
 import { IsEnum, IsNotEmpty } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { TaskPlannerTypeEnumSchema } from "../schemas/task-planner-type-enum.schema";
+import { TaskTypeEnumSchema } from "../schemas/task-type-enum.schema";
 
-export class TaskPlannerDto {
+export class TaskDto {
   @ApiProperty()
   @IsNotEmpty()
   id_task: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsEnum(TaskPlannerTypeEnumSchema)
-  type: TaskPlannerTypeEnumSchema;
+  @IsEnum(TaskTypeEnumSchema)
+  type: TaskTypeEnumSchema;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -22,7 +22,7 @@ export class TaskPlannerDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  astronauts: number[];
+  astronauts: number[] = [];
 
   @ApiProperty()
   @IsNotEmpty()

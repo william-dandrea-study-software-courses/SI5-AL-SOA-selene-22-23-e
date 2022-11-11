@@ -1,4 +1,4 @@
-export enum TaskPlannerTypeEnumSchema {
+export enum TaskTypeEnumSchema {
   EXPLORATION = "Mission scientifique",
   HELP = "Secours à un astronaute",
   RESUPPLY = "Gestion des stocks",

@@ -102,9 +102,7 @@ export class ModuleService {
     if (alreadyExists.length > 0) {
       throw new ModuleAlreadyExistsException(moduleDto.id_module);
     }
-    this.logger.log(moduleDto);
     const module = await this.moduleModel.create(moduleDto);
-    this.logger.log(module);
     return module
   }
 

@@ -8,7 +8,8 @@ import swaggeruiConfig from './shared/config/swaggerui.config';
 import { MongooseConfigService } from './shared/services/mongoose-config.service';
 
 import { HealthModule } from './health/health.module';
-import { EvaMissionModule } from './eva-mission/eva-mission.module';
+import {TaskPlannerModule} from "./task-planner/task-planner.module";
+
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { EvaMissionModule } from './eva-mission/eva-mission.module';
       useClass: MongooseConfigService,
     }),
     HealthModule,
-    EvaMissionModule,
+    TaskPlannerModule,
   ],
   providers: [],
 })

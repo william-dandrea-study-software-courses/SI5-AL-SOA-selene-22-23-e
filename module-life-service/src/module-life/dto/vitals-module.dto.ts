@@ -4,9 +4,14 @@ import {VitalsModule} from "../schemas/vitals-module.schema";
 
 export class VitalsModuleDto {
     constructor(x: VitalsModule) {
+        this.pressure = x.pressure;
         this.co2_scrubbers_activated = x.co2_scrubbers_activated;
         this.co2_rate = x.co2_rate;
     }
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    pressure: number;
 
     @ApiProperty()
     @IsNotEmpty()

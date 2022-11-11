@@ -11,6 +11,10 @@ export class VitalsModule {
 
     @ApiProperty()
     @Prop({ required: true })
+    pressure: number;
+
+    @ApiProperty()
+    @Prop({ required: true })
     co2_rate: number;
 
     @ApiProperty()

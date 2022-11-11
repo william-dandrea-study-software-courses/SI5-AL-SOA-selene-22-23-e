@@ -26,6 +26,7 @@ export class HealthController {
   private _newsFormalisationServiceHealthCheckUrl: string;
   private _newsServiceHealthCheckUrl: string;
   private _spacecraftMonitoringServiceHealthCheckUrl:string;
+  private _taskPlannerServiceHealthCheckUrl:string;
 
   constructor(
     private configService: ConfigService,
@@ -49,6 +50,7 @@ export class HealthController {
     this._newsFormalisationServiceHealthCheckUrl = `http://${dependenciesConfig.news_formalisation_service_url_with_port}/health`;
     this._newsServiceHealthCheckUrl = `http://${dependenciesConfig.news_service_url_with_port}/health`;
     this._spacecraftMonitoringServiceHealthCheckUrl=`http://${dependenciesConfig.spacecraft_monitoring_service_url_with_port}/health`;
+    this._taskPlannerServiceHealthCheckUrl=`http://${dependenciesConfig.task_planner_service_url_with_port}/health`;
     console.log(this._survivalControlServiceHealthCheckUrl);
     console.log(this._moduleLifeServiceHealthCheckUrl);
     console.log(this._needsControlServiceHealthCheckUrl);
@@ -65,6 +67,7 @@ export class HealthController {
     console.log(this._newsFormalisationServiceHealthCheckUrl);
     console.log(this._newsServiceHealthCheckUrl);
     console.log(this._spacecraftMonitoringServiceHealthCheckUrl);
+    console.log(this._taskPlannerServiceHealthCheckUrl);
   }
 
   async checkIsHealthy(name, url) {
@@ -162,6 +165,11 @@ export class HealthController {
           this.checkIsHealthy(
               "spacecraft-monitoring-service",
               this._spacecraftMonitoringServiceHealthCheckUrl
+          ),
+      async () =>
+          this.checkIsHealthy(
+              "task-planner-service",
+              this._taskPlannerServiceHealthCheckUrl
           )
     ]);
   }

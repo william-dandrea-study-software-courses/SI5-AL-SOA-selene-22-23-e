@@ -15,4 +15,5 @@ export interface DependenciesConfig {
   news_formalisation_service_url_with_port: string,
   news_service_url_with_port: string,
   spacecraft_monitoring_service_url_with_port: string,
+  task_planner_service_url_with_port: string,
 }

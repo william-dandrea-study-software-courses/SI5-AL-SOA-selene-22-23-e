@@ -1,21 +1,21 @@
 import { SchemaFactory, Schema, Prop } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { ApiProperty } from "@nestjs/swagger";
-import { TaskPlannerTypeEnumSchema } from "./task-planner-type-enum.schema";
+import { TaskTypeEnumSchema } from "./task-type-enum.schema";
 
-export type TaskPlannerDocument = TaskPlanner & Document;
+export type TaskDocument = Task & Document;
 
 @Schema({
   versionKey: false,
 })
-export class TaskPlanner {
+export class Task {
   @ApiProperty()
   @Prop({ required: true, min: 0 })
   id_task: number;
 
   @ApiProperty()
   @Prop({ required: true })
-  type: TaskPlannerTypeEnumSchema;
+  type: TaskTypeEnumSchema;
 
   @ApiProperty()
   @Prop({ required: true })
@@ -34,4 +34,4 @@ export class TaskPlanner {
   description: string;
 }
 
-export const TaskPlannerSchema = SchemaFactory.createForClass(TaskPlanner);
+export const TaskSchema = SchemaFactory.createForClass(Task);

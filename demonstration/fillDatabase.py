@@ -17,6 +17,11 @@ URL_alert_notification = 'http://'+ os.environ.get("ALERT_NOTIFICATION_SERVICE_U
 URL_moon_base = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'localhost:4310')+'/'
 URL_astronaut = 'http://'+ os.environ.get("ASTRONAUT_SERVICE_URL_WITH_PORT", 'localhost:4311')+'/'
 URL_rotation_mission = 'http://'+ os.environ.get("ROTATION_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4312')+'/'
+URL_spacesuit_monitoring = 'http://'+ os.environ.get("SPACESUIT_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4313')+'/'
+URL_news_formalisation = 'http://'+ os.environ.get("ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT", 'localhost:4314')+'/'
+URL_news = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'localhost:4315')+'/'
+URL_spacecraft_monitoring = 'http://'+ os.environ.get("SPACECRAFT_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4316')+'/'
+URL_task_planner = 'http://'+ os.environ.get("TASK_PLANNER_SERVICE_URL_WITH_PORT", 'localhost:4317')+'/'
 
 URL_gateway = "http://" + os.environ.get("GATEWAY_URL_WITH_PORT",'localhost:9500')
 
@@ -24,18 +29,18 @@ def fillModuleServiceDatabase() :
     print("\n=> Peuplement de la base de données Module Life\n")
     print("Ajout de 4 modules")
     print("  - Inventaire de 32 provisions")
-    print("  - Modules isolés : 1 (514) ")
+    print("  - Modules isolés : 1 (515) ")
     print("  - Modules en mauvaise situation : 2")
     print("  - Besoins de 8 provisions\n")
     print("POST http://localhost:4303/module")
     supplies = [{"label": "saucisson","quantity": 2}, {"label": "pates","quantity": 5},{"label": "eau","quantity": 7}]
-    payload = {"id_module": 512, "type": "Module sécurisé", "astronauts": [], "vitals": {"co2_rate": 100,"co2_scrubbers_activated":True}, "supplies":supplies, "isolated": False}
+    payload = {"id_module": 512, "type": "Module sécurisé", "astronauts": [], "vitals": {"pressure": 1,"co2_rate": 100,"co2_scrubbers_activated":True}, "supplies":supplies, "isolated": False}
     print(requests.post(URL_module_life+'module',json=payload).text)
-    payload = {"id_module": 513, "type": "Module de vie", "astronauts": [6,7,9,11], "vitals": {"co2_rate": 80,"co2_scrubbers_activated":True}, "supplies":supplies, "isolated": False}
+    payload = {"id_module": 513, "type": "Module de vie", "astronauts": [6,7,9,11], "vitals": {"pressure": 3,"co2_rate": 80,"co2_scrubbers_activated":True}, "supplies":supplies, "isolated": False}
     print(requests.post(URL_module_life+'module',json=payload).text)
-    payload = {"id_module": 514, "type": "Module d'analyse scientifique", "astronauts": [8,10], "vitals": {"co2_rate": 20,"co2_scrubbers_activated":False}, "supplies":supplies, "isolated": True}
+    payload = {"id_module": 514, "type": "Module d'analyse scientifique", "astronauts": [8,10], "vitals": {"pressure": 3,"co2_rate": 20,"co2_scrubbers_activated":False}, "supplies":supplies, "isolated": False}
     print(requests.post(URL_module_life+'module',json=payload).text)
-    payload = {"id_module": 515, "type": "Entrepot", "astronauts": [], "vitals": {"co2_rate": 75,"co2_scrubbers_activated":True}, "supplies":supplies, "isolated": False}
+    payload = {"id_module": 515, "type": "Entrepot", "astronauts": [], "vitals": {"pressure": 3,"co2_rate": 75,"co2_scrubbers_activated":True}, "supplies":supplies, "isolated": True}
     print(requests.post(URL_module_life+'module',json=payload).text)
 
 def fillSpacesuitDatabase() :
@@ -86,7 +91,7 @@ def fillMeteoriteMonitoringDatabase() :
 
 def fillAstronautDatabase():
     print("\n=> Peuplement de la base de données Astronaut\n")
-    print("Ajout de 10 astronautes")
+    print("Ajout de 11 astronautes")
     print("POST http://localhost:4311/astronaut")
     payload = {"id_astronaut":1,"name":"Megan","isDead":False,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement"}
     print(requests.post(URL_astronaut+'astronaut',json=payload).text)
@@ -104,11 +109,11 @@ def fillAstronautDatabase():
     print(requests.post(URL_astronaut+'astronaut',json=payload).text)
     payload = {"id_astronaut":8,"name":"Jim","isDead":False,"job":"Astronaute","planet":"Lune","location":"Modules d'analyse scientifique"}
     print(requests.post(URL_astronaut+'astronaut',json=payload).text)
-    payload = {"id_astronaut":9,"name":"Kayla","isDead":False,"job":"Astronaute","planet":"Lune","location":"Modules de vie Nord"}
+    payload = {"id_astronaut":9,"name":"Kayla","isDead":False,"job":"Astronaute","planet":"Lune","location":"Modules de vie Sud"}
     print(requests.post(URL_astronaut+'astronaut',json=payload).text)
-    payload = {"id_astronaut":10,"name":"Akihiko","isDead":False,"job":"Astronaute","planet":"Lune","location":"Modules d'analyse scientifique"}
+    payload = {"id_astronaut":10,"name":"Akihiko","isDead":False,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1"}
     print(requests.post(URL_astronaut+'astronaut',json=payload).text)
-    payload = {"id_astronaut":11,"name":"Serguei","isDead":False,"job":"Astronaute","planet":"Lune","location":"Modules de vie Nord"}
+    payload = {"id_astronaut":11,"name":"Serguei","isDead":False,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1"}
     print(requests.post(URL_astronaut+'astronaut',json=payload).text)
 
 def initializeIntegrationTests() :
@@ -118,5 +123,3 @@ def initializeIntegrationTests() :
     fillSpacecratDatabase()
     fillMeteoriteMonitoringDatabase()
     fillMoonBaseDatabase()
-
-fillMoonBaseDatabase()

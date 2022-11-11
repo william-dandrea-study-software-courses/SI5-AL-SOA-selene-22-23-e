@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
-import { TaskPlanner, TaskPlannerSchema } from "./schemas/task-planner.schema";
+import { Task, TaskSchema } from "./schemas/task.schema";
 
 import { TaskPlannerController } from "./controllers/task-planner.controller";
 import { TaskPlannerService } from "./services/task-planner.service";
@@ -9,7 +9,7 @@ import { TaskPlannerService } from "./services/task-planner.service";
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: TaskPlanner.name, schema: TaskPlannerSchema },
+      { name: Task.name, schema: TaskSchema },
     ]),
   ],
   controllers: [TaskPlannerController],

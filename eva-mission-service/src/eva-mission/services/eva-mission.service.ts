@@ -50,10 +50,13 @@ export class EvaMissionService {
     if (alreadyExists.length > 0) {
       throw new EVAMisionAlreadyExistException(evaMissionDTO.id_mission);
     }
-    return await this.evaMissionModel
+    const evaMission : EVAMission = await this.evaMissionModel
       .create(evaMissionDTO)
       .then((value) => value)
       .catch((error) => null);
+
+    await this.sendMessageToBus("eva-mission-created", evaMission);
+    return EVAMissionDTO.evaMissionToDto(evaMission);
   }
 
   async putEVAMission(
@@ -94,7 +97,6 @@ export class EvaMissionService {
         dto.date_begin = new Date(evaMission.date_begin);
         dto.date_end =
           evaMission.date_end === null ? null : new Date(evaMission.date_end);
-        dto.status = evaMission.status;
         dto.supervisor = evaMission.supervisor;
         dto.notes = evaMission.notes;
         dto.metrics = evaMission.metrics;
@@ -141,5 +143,20 @@ export class EvaMissionService {
       });
       eva_mission.save();
     });
+  }
+
+  async sendMessageToBus(topic: string, message: any) {
+    const producer = await this.kafka.producer();
+
+    await producer.connect();
+    await producer.send({
+      topic: topic,
+      messages: [
+        {
+          value: JSON.stringify(message),
+        },
+      ],
+    });
+    await producer.disconnect();
   }
 }

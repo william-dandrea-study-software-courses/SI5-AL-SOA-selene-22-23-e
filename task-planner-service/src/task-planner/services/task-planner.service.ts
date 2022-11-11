@@ -3,11 +3,11 @@ import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 
 import {
-  TaskPlanner,
-  TaskPlannerDocument,
-} from "../schemas/task-planner.schema";
+  Task,
+  TaskDocument,
+} from "../schemas/task.schema";
 
-import { TaskPlannerDto } from "../dto/task-planner.dto";
+import { TaskDto } from "../dto/task.dto";
 import { TaskAlreadyExistsException } from "../exceptions/task-already-exists.exception";
 import { Kafka } from "kafkajs";
 import { TaskPlannerController } from "../controllers/task-planner.controller";
@@ -22,15 +22,15 @@ export class TaskPlannerService {
   });
 
   constructor(
-    @InjectModel(TaskPlanner.name)
-    private taskPlannerModel: Model<TaskPlannerDocument>
+    @InjectModel(Task.name)
+    private taskPlannerModel: Model<TaskDocument>
   ) {}
 
-  async getTasksPlanned(): Promise<TaskPlannerDto[]> {
+  async getTasksPlanned(): Promise<TaskDto[]> {
     return this.taskPlannerModel.find().then((tasksPlanned) => {
-      const response: TaskPlannerDto[] = [];
+      const response: TaskDto[] = [];
       tasksPlanned.forEach((taskPlanned) => {
-        const dto = new TaskPlannerDto();
+        const dto = new TaskDto();
         dto.id_task = taskPlanned.id_task;
         dto.type = taskPlanned.type;
         dto.date_begin = new Date(taskPlanned.date_begin);
@@ -44,8 +44,8 @@ export class TaskPlannerService {
   }
 
   async postTaskPlanned(
-    taskPlannerDto: TaskPlannerDto
-  ): Promise<TaskPlannerDto> {
+    taskPlannerDto: TaskDto
+  ): Promise<TaskDto> {
     const alreadyExists = await this.taskPlannerModel.find({
       id_task: taskPlannerDto.id_task,
     });
@@ -75,15 +75,15 @@ export class TaskPlannerService {
       await producer.disconnect();
     }
     return await this.taskPlannerModel
-      .create(TaskPlannerDto)
+      .create(TaskDto)
       .then((value) => value)
       .catch((error) => null);
   }
 
   async putTaskPlanned(
     taskPlannerId: number,
-    taskPlannerDto: TaskPlannerDto
-  ): Promise<TaskPlannerDto> {
+    taskPlannerDto: TaskDto
+  ): Promise<TaskDto> {
     const taskPlanner = await this.taskPlannerModel.findOne({
       id_task: taskPlannerId,
     });
@@ -107,11 +107,11 @@ export class TaskPlannerService {
       });
   }
 
-  async getCurrentTasksPlanned(): Promise<TaskPlannerDto[]> {
+  async getCurrentTasksPlanned(): Promise<TaskDto[]> {
     return this.taskPlannerModel.find().then((tasksPlanned) => {
-      const response: TaskPlannerDto[] = [];
+      const response: TaskDto[] = [];
       tasksPlanned.forEach((taskPlanned) => {
-        const dto = new TaskPlannerDto();
+        const dto = new TaskDto();
         if (
           dto.date_end == null ||
           dto.date_end.getDate() >= new Date().getDate()

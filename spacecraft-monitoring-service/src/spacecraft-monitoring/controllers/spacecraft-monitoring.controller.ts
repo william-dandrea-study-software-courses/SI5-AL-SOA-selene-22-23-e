@@ -14,7 +14,9 @@ export class SpacecraftMonitoringController {
   })
 
   constructor(private spacecraftMonitoringService:SpacecraftMonitoringService) {
-    this.event_spacecraft_arriving_listener()
+    this.event_spacecraft_arriving_listener();
+    this.event_spacecraft_landed_listener();
+    this.event_spacecraft_launch_listener();
   }
 
   /*
@@ -37,7 +39,7 @@ export class SpacecraftMonitoringController {
   /*
 @MessagePattern("spacecraft-landed")
  */
-  async event_spacecraft_arriving_listener(){
+  async event_spacecraft_landed_listener(){
     const consumer = this.kafka.consumer({ groupId: 'spacecraft-monitoring-landed' });
     // Consuming
     await consumer.connect()

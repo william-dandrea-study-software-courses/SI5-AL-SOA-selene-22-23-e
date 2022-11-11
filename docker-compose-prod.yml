@@ -8,7 +8,6 @@ services:
     networks:
       - soa-team-e-network
 
-
   module-life-service:
     image: module-life-service
     restart: always
@@ -221,6 +220,7 @@ services:
       - SWAGGERUI_DESCRIPTION=Destiné à la gestion de la base lunaire
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
     depends_on:
+      - module-life-service
       - kafka-service
       - zookeeper
       - database
@@ -353,6 +353,27 @@ services:
     networks:
       - soa-team-e-network
 
+  task-planner-service:
+    image: task-planner-service
+    restart: always
+    ports:
+      - 4317:4317
+    environment:
+      - APP_PORT=4317
+      - APP_NAME=task-planner-service
+      - MONGODB_HOST=database
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=task-planner-db
+      - SWAGGERUI_PATH=doc
+      - SWAGGERUI_TITLE=Task Planner Micro-Service
+      - SWAGGERUI_DESCRIPTION=Destiné à la gestion du planning des tâches des astronautes
+    depends_on:
+      - kafka-service
+      - zookeeper
+      - database
+    networks:
+      - soa-team-e-network
+
   gateway:
     image: gateway
     restart: always
@@ -376,6 +397,7 @@ services:
       - NEWS_SERVICE=news-service
       - ROTATION_MISSION_SERVICE=rotation-mission-service
       - SPACECRAFT_MONITORING_SERVICE=spacecraft-monitoring-service
+      - TASK_PLANNER_SERVICE=task-planner-service
       - SURVIVAL_CONTROL_SERVICE_URL_WITH_PORT=survival-control-service:4304
       - MODULE_LIFE_SERVICE_URL_WITH_PORT=module-life-service:4303
       - NEEDS_CONTROL_SERVICE_URL_WITH_PORT=needs-control-service:4302
@@ -392,6 +414,7 @@ services:
       - NEWS_FORMALISATION_SERVICE_URL_WITH_PORT=news-formalisation-service:4314
       - NEWS_SERVICE_URL_WITH_PORT=news-service:4315
       - SPACECRAFT_MONITORING_SERVICE_URL_WITH_PORT=spacecraft-monitoring-service:4316
+      - TASK_PLANNER_SERVICE_URL_WITH_PORT=task-planner-service:4317
     networks:
       - soa-team-e-network
 
@@ -427,4 +450,3 @@ services:
 networks:
   soa-team-e-network:
     driver: bridge
-

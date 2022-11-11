@@ -11,27 +11,30 @@ URL_spacesuit = 'http://'+ os.environ.get("SPACESUIT_SERVICE_URL_WITH_PORT", 'lo
 URL_eva_mission = 'http://'+ os.environ.get("EVA_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4307')+'/'
 URL_meteorite_monitoring = 'http://'+ os.environ.get("METEORITE_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4308')+'/'
 URL_alert_notification = 'http://'+ os.environ.get("ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT", 'localhost:4309')+'/'
-URL_moon_base = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'localhost:43010')+'/'
+URL_moon_base = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'localhost:4310')+'/'
 URL_astronaut = 'http://'+ os.environ.get("ASTRONAUT_SERVICE_URL_WITH_PORT", 'localhost:4311')+'/'
 URL_rotation_mission = 'http://'+ os.environ.get("ROTATION_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4312')+'/'
+URL_spacesuit_monitoring = 'http://'+ os.environ.get("SPACESUIT_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4313')+'/'
+URL_news_formalisation = 'http://'+ os.environ.get("ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT", 'localhost:4314')+'/'
+URL_news = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'localhost:4315')+'/'
+URL_spacecraft_monitoring = 'http://'+ os.environ.get("SPACECRAFT_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4316')+'/'
+URL_task_planner = 'http://'+ os.environ.get("TASK_PLANNER_SERVICE_URL_WITH_PORT", 'localhost:4317')+'/'
 
 URL_gateway = "http://" + os.environ.get("GATEWAY_URL_WITH_PORT",'localhost:9500')
 
 def scenario2():
     print("---------------------- Scenario 2 ----------------------\n")
 
-    print("---------------------- US 5 ----------------------\n")
     print("=> Récupération de l'inventaire de la base lunaire via Module Life Service")
-    print("   En tant que Jim, je veux contrôler l'inventaire de la base lunaire")
-    print("   On s'attend à récupérer un objet avec le champ quantity à 132 car les modules possèdent respectivement 10, 7, 9 et 6 provisions et la base un stock de 100")
+    print("   US 5 : En tant que Jim, je veux contrôler l'inventaire de la base lunaire")
+    print("   On s'attend à récupérer un objet avec plusieurs types de provisions respectivement à ")
     print("GET http://localhost:4303/inventory")
     print("Response : ")
     response = requests.get(URL_moon_base+'moon-base/inventory')
     print(response.text + "\n")
 
-    print("---------------------- US 3 ----------------------\n")
     print("=> Récupérer la liste des besoins des modules via Needs Control Service")
-    print("   En tant que Buzz, je veux récupérer tous les besoins des modules ainsi que les besoins de la base lunaire")
+    print("   US 3 : En tant que Buzz, je veux récupérer tous les besoins des modules ainsi que les besoins de la base lunaire")
     print("   On s'attend à recevoir un objet avec le champ quantity à 8 car il manque respectivement 0, 3, 1 et 4 provisions à chaque module pour atteindre le stock maximal et la base est déjà à son maximum")
     print("GET http://localhost:4302/needs-control/moduleNeeds")
     print("Response : ")
@@ -56,9 +59,8 @@ def scenario2():
     response = requests.post(URL_needs_control+'needs-control/sendOrder',json=body)
     print(response.text + "\n")
 
-    print("---------------------- US 2 ----------------------\n")
     print("=> Récupération des commandes de la base lunaire via Resupply Service")
-    print("   En tant que Dorothy, je veux voir toutes les commandes passées")
+    print("   US 2 :En tant que Dorothy, je veux voir toutes les commandes passées")
     print("   On s'attend à voir les deux commandes de 13 et 26 provisions passées par Buzz précédemment. Elles seront toutes les deux en En cours de traitement ")
     print("GET http://localhost:4301/resupply/supplyOrders")
     print("Response : ")
@@ -67,7 +69,7 @@ def scenario2():
     print(response.text + "\n")
 
     print("=> Récupération des missions de ravitaillement via Resupply Service")
-    print("   En tant que Dorothy, je veux controler les missions de ravitaillement")
+    print("   US 2 :En tant que Dorothy, je veux controler les missions de ravitaillement")
     print("   On s'attend à n'avoir aucune mission de ravitaillement car aucune mission n'a été lancée et aucune commande n'a été validée")
     print("GET http://localhost:4301/resupply/resupplyMission")
     print("Response : ")
@@ -75,7 +77,7 @@ def scenario2():
     print(response.text + "\n")
 
     print("=> Validation d'une commande via Resupply Service")
-    print("   En tant que Dorothy, je veux valider une commande passée par la base lunaire")
+    print("   US 2 :En tant que Dorothy, je veux valider une commande passée par la base lunaire")
     print("   On valide la première commande de Buzz, celle avec 13 provisions demandées et on s'attend à récupérer un Commande validée")
     print("PUT http://localhost:4301/resupply/:idCommande/validate")
     print("Response : ")
@@ -83,7 +85,7 @@ def scenario2():
     print(response.text + "\n")
 
     print("=> Récupération de la commande via Resupply Service")
-    print("   En tant que Dorothy, je veux m'assurer que la commande a été bien été validée")
+    print("   US 2 :En tant que Dorothy, je veux m'assurer que la commande a été bien été validée")
     print("   Cette fois, on s'attend toujours à récupérer les deux commandes de Buzz mais la première sera passée en Validé")
     print("GET http://localhost:4301/resupply/supplyOrders")
     print("Response : ")
@@ -91,7 +93,7 @@ def scenario2():
     print(response.text + "\n")
 
     print("=> Récupération des missions de ravitaillement via Resupply Service")
-    print("   En tant que Dorothy, je veux controler les missions de ravitaillement")
+    print("   US 2 :En tant que Dorothy, je veux controler les missions de ravitaillement")
     print("   On s'attend cette fois à retrouver une seule mission de ravitaillement qui contient la commande de 13 provisions. Cette commande sera En cours de traitement")
     print("GET http://localhost:4301/resupply/resupplyMission")
     print("Response : ")
