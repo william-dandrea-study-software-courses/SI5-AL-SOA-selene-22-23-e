@@ -16,6 +16,7 @@ export class NewsFormalisationController {
   constructor(private spacesuitMonitoringService:NewsFormalisationService) {
     this.event_spacesuit_problem_listener();
     this.event_dangerous_meteorite();
+    this.event_astronaut_dead_listener();
   }
 
   /*
@@ -50,6 +51,25 @@ export class NewsFormalisationController {
       eachMessage: async ({ topic, partition, message }) => {
         this.logger.log("A dangerous meteorite has been detected");
         await this.spacesuitMonitoringService.sendNewsMeteoriteToMarie();
+      },
+    });
+  }
+
+  /*
+@MessageListener('astronaut-dead')
+*/
+  async event_astronaut_dead_listener(){
+    const consumer = this.kafka.consumer({ groupId: 'astronaut-dead-consumer' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'astronaut-dead'})
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+
+        this.logger.log("Astronaut dead detected, value: " + message.value.toLocaleString())
+        this.logger.log("Astronaut id : " + JSON.parse(message.value.toLocaleString())["astronaut_id"])
+        await this.spacesuitMonitoringService.sendNewsAstronautToMary(JSON.parse(message.value.toLocaleString()));
       },
     });
   }

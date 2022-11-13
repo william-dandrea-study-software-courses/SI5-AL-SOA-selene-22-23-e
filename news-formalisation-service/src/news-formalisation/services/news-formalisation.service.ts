@@ -42,7 +42,6 @@ export class NewsFormalisationService {
       messages: [{value:formatedMessage},]
     });
     await producer.disconnect();
-
   }
 
   async sendNewsMeteoriteToMarie(){
@@ -53,6 +52,21 @@ export class NewsFormalisationService {
     await producer.send({
       topic: 'news',
       messages: [{value:"Une météorite dangereuse a été détecté, la base est isolée"},]
+    });
+    await producer.disconnect();
+  }
+
+  async sendNewsAstronautToMary(json:JSON){
+    const producer = await this.kafka.producer()
+    let formatedMessage = "L'astronaut immatriculé "+json["id_astronaut"]+" du nom de "+json['name']+" est mort.\n";
+
+    await producer.connect()
+
+    this.logger.log(formatedMessage)
+
+    await producer.send({
+      topic: 'news',
+      messages: [{value:formatedMessage},]
     });
     await producer.disconnect();
   }

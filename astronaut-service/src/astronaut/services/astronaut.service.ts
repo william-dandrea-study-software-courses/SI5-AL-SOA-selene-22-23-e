@@ -99,7 +99,7 @@ export class AstronautService {
       await producer.send({
         topic: "astronaut-dead",
         messages: [
-          { key: "astronaut_id", value: astronaut.id_astronaut.toString() },
+          { key: "astronaut_id", value: JSON.stringify(astronaut) },
         ],
       });
       await producer.disconnect();
@@ -135,11 +135,23 @@ export class AstronautService {
   }
 
   async rotationMissionHasFailed(astronauts: number[]) {
+    //TODO Add astronaut Dead and get them from News Formalization and news service
     for (const astronautId in astronauts) {
       const astronaut = await this.astronautModel.findOne({id_astronaut : astronautId});
       if(astronaut !== null) {
         astronaut.isDead = true;
         await astronaut.save();
+        const producer = await this.kafka.producer();
+
+        // Producing
+        await producer.connect();
+        await producer.send({
+          topic: "astronaut-dead",
+          messages: [
+            { key: "astronaut", value: JSON.stringify(astronaut)},
+          ],
+        });
+        await producer.disconnect();
       }
     }
   }
