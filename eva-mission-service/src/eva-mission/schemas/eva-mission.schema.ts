@@ -2,7 +2,7 @@ import { SchemaFactory, Schema, Prop } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { ApiProperty } from "@nestjs/swagger";
 import {EVAMissionTypeEnumSchema} from "./eva-mission-type-enum.schema";
-import {SpacesuitMetrics} from "./spacesuit-metrics.schema";
+import {SpacesuitMetrics, SpacesuitMetricsSchema} from "./spacesuit-metrics.schema";
 
 export type EVAMissionDocument = EVAMission & Document;
 
@@ -35,8 +35,8 @@ export class EVAMission {
   notes: string;
 
   @ApiProperty()
-  @Prop({ required: true })
-  metrics: SpacesuitMetrics[];
+  @Prop({ required: true, type: [SpacesuitMetricsSchema] })
+  metrics: SpacesuitMetrics[] = [];
 }
 
 export const EvaMissionSchema = SchemaFactory.createForClass(EVAMission);

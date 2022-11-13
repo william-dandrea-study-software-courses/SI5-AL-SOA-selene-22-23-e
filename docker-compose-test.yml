@@ -13,10 +13,15 @@ services:
       - SPACESUIT_SERVICE_URL_WITH_PORT=spacesuit-service:4306
       - EVA_MISSION_SERVICE_URL_WITH_PORT=eva-mission-service:4307
       - METEORITE_MONITORING_SERVICE_URL_WITH_PORT=meteorite-monitoring-service:4308
-      - ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT=alert_notification-service:4309
+      - ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT=alert-notification-service:4309
       - MOON_BASE_SERVICE_URL_WITH_PORT=moon-base-service:4310
       - ASTRONAUT_SERVICE_URL_WITH_PORT=astronaut-service:4311
       - ROTATION_MISSION_SERVICE_URL_WITH_PORT=rotation-mission-service:4312
+      - SPACESUIT_MONITORING_SERVICE_URL_WITH_PORT=spacesuit-monitoring-service:4313
+      - NEWS_FORMALISATION_SERVICE_URL_WITH_PORT=news-formalisation-service:4314
+      - NEWS_SERVICE_URL_WITH_PORT=news-service:4315
+      - SPACECRAFT_MONITORING_SERVICE_URL_WITH_PORT=spacecraft-monitoring-service:4316
+      - TASK_PLANNER_SERVICE_URL_WITH_PORT=task-planner-service:4317
       - GATEWAY_URL_WITH_PORT=gateway:9500
     networks:
       - soa-team-e-network

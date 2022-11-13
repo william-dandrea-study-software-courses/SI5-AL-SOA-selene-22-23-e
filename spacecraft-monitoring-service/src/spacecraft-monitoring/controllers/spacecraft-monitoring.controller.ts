@@ -17,6 +17,7 @@ export class SpacecraftMonitoringController {
     this.event_spacecraft_arriving_listener();
     this.event_spacecraft_landed_listener();
     this.event_spacecraft_launch_listener();
+    this.event_spacecraft_damaged_listener();
   }
 
   /*
@@ -72,6 +73,24 @@ export class SpacecraftMonitoringController {
     });
   }
 
+  /*
+@MessagePattern("spacecraft-launch")
+*/
+  async event_spacecraft_damaged_listener(){
+    const consumer = this.kafka.consumer({ groupId: 'spacecraft-monitoring-damaged' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'spacecraft-damaged'})
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        let messageJson = JSON.parse(message.value.toLocaleString());
+        this.logger.log("Spacecraft " +messageJson["spacecraft_id"] +" damaged")
+        this.spacecraftMonitoringService.spacecraftDamaged(messageJson["spacecraft_id"]);
+      },
+    });
+  }
+
   @Get("/landed")
   @ApiOkResponse()
   async getLandedSpacecraft(): Promise<string[]> {
@@ -79,11 +98,25 @@ export class SpacecraftMonitoringController {
     return this.spacecraftMonitoringService.getLanded();
   }
 
-  @Get("/arrriving")
+  @Get("/arriving")
   @ApiOkResponse()
   async getArrivingSpacecraft(): Promise<string[]> {
     this.logger.log("Récuperation des fusées arrivantes");
     return this.spacecraftMonitoringService.getArriving();
+  }
+
+  @Get("/launched")
+  @ApiOkResponse()
+  async getLaunchedSpacecraft(): Promise<string[]> {
+    this.logger.log("Récuperation des fusées ayant décollé");
+    return this.spacecraftMonitoringService.getLaunched();
+  }
+
+  @Get("/crashed")
+  @ApiOkResponse()
+  async getCrashedSpacecraft(): Promise<string[]> {
+    this.logger.log("Récuperation des fusées endommagées");
+    return this.spacecraftMonitoringService.getDamaged();
   }
 
 }

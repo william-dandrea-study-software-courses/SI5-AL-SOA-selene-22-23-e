@@ -18,8 +18,8 @@ URL_moon_base = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'lo
 URL_astronaut = 'http://'+ os.environ.get("ASTRONAUT_SERVICE_URL_WITH_PORT", 'localhost:4311')+'/'
 URL_rotation_mission = 'http://'+ os.environ.get("ROTATION_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4312')+'/'
 URL_spacesuit_monitoring = 'http://'+ os.environ.get("SPACESUIT_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4313')+'/'
-URL_news_formalisation = 'http://'+ os.environ.get("ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT", 'localhost:4314')+'/'
-URL_news = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'localhost:4315')+'/'
+URL_news_formalisation = 'http://'+ os.environ.get("NEWS_FORMALISATION_SERVICE_URL_WITH_PORT", 'localhost:4314')+'/'
+URL_news = 'http://'+ os.environ.get("NEWS_SERVICE_URL_WITH_PORT", 'localhost:4315')+'/'
 URL_spacecraft_monitoring = 'http://'+ os.environ.get("SPACECRAFT_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4316')+'/'
 URL_task_planner = 'http://'+ os.environ.get("TASK_PLANNER_SERVICE_URL_WITH_PORT", 'localhost:4317')+'/'
 
@@ -116,6 +116,19 @@ def fillAstronautDatabase():
     payload = {"id_astronaut":11,"name":"Serguei","isDead":False,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1"}
     print(requests.post(URL_astronaut+'astronaut',json=payload).text)
 
+def fillTaskPlannerDatabase():
+    print("\n=> Peuplement de la base de données TaskPlanner\n")
+    print("Ajout de 3 tâches")
+    print("POST http://localhost:4317/task-planner")
+    payload = {"id_task": 1, "type": "Laboratoire de recherches", "date_begin": "2022-11-11T19:33:02.536Z", "date_end": "2022-11-11T19:33:02.536Z", "astronauts": [8], "description": "Analyse des roches"}
+    print(requests.post(URL_task_planner+'task-planner',json=payload).text)
+    payload = {"id_task": 2, "type": "Maintenance des équipements et modules", "date_begin": "2022-11-11T19:33:02.536Z", "date_end": "2022-11-11T19:33:02.536Z", "astronauts": [7], "description": "Nettoyage des filtres à oxygène"}
+    print(requests.post(URL_task_planner+'task-planner',json=payload).text)
+    payload = {"id_task": 3, "type": "Maintenance des équipements et modules", "date_begin": "2022-11-11T19:33:02.536Z", "date_end": "2022-11-11T19:33:02.536Z", "astronauts": [9], "description": "Réparation du sas"}
+    print(requests.post(URL_task_planner+'task-planner',json=payload).text)
+    payload = {"id_task": 4, "type": "Gestion des stocks", "date_begin": "2022-11-11T19:33:02.536Z", "date_end": "2022-11-11T19:33:02.536Z", "astronauts": [10,11], "description": "Exploration de la zone 3"}
+    print(requests.post(URL_task_planner+'task-planner',json=payload).text)
+
 def initializeIntegrationTests() :
     fillAstronautDatabase()
     fillModuleServiceDatabase()
@@ -123,3 +136,4 @@ def initializeIntegrationTests() :
     fillSpacecratDatabase()
     fillMeteoriteMonitoringDatabase()
     fillMoonBaseDatabase()
+    fillTaskPlannerDatabase()

@@ -7,13 +7,12 @@ import { EVAMission, EVAMissionDocument } from "../schemas/eva-mission.schema";
 import { EVAMissionDTO } from "../dto/eva-mission.dto";
 import { EVAMisionAlreadyExistException } from "../exceptions/eva-mission-already-exist.exception";
 import { Kafka } from "kafkajs";
-import { EvaMissionController } from "../controllers/eva-mission.controller";
 import { SpacesuitMetrics } from "../schemas/spacesuit-metrics.schema";
 import { SpacesuitMetricsDTO } from "../dto/spacesuit-metrics.dto";
 
 @Injectable()
 export class EvaMissionService {
-  private readonly logger = new Logger(EvaMissionController.name);
+  private readonly logger = new Logger(EvaMissionService.name);
 
   private kafka = new Kafka({
     clientId: "eva-mission",
@@ -96,14 +95,14 @@ export class EvaMissionService {
         dto.type = evaMission.type;
         dto.date_begin = new Date(evaMission.date_begin);
         dto.date_end =
-          evaMission.date_end === null ? null : new Date(evaMission.date_end);
+            evaMission.date_end === null ? null : new Date(evaMission.date_end);
         dto.supervisor = evaMission.supervisor;
         dto.notes = evaMission.notes;
         dto.metrics = evaMission.metrics;
 
         if (
-          dto.date_end !== null &&
-          dto.date_end.getDate() < new Date().getDate()
+            dto.date_end !== null &&
+            dto.date_end.getDate() < new Date().getDate()
         ) {
           dto.metrics.forEach((spacesuit) => {
             const spacesuitMetrics = new SpacesuitMetricsDTO();
@@ -120,6 +119,14 @@ export class EvaMissionService {
     });
   }
 
+  async getEVAMissionMetrics(evaId: number): Promise<SpacesuitMetrics[]> {
+    const evaMission = await this.evaMissionModel.findOne({id_mission: evaId});
+    if (evaMission) {
+      return evaMission.metrics;
+    }
+    return []
+  }
+
   async updateMetric(
     id_spacesuit: number,
     cardiac_rythm: number,
@@ -128,10 +135,13 @@ export class EvaMissionService {
     temperature: number,
     power: number
   ) {
+    this.logger.log(id_spacesuit);
+    this.logger.log(cardiac_rythm);
     const eva_missions = await this.evaMissionModel.find();
-    eva_missions.forEach((eva_mission) => {
-      eva_mission.metrics.forEach((metric) => {
-        if (metric.id_spacesuit == id_spacesuit) {
+    for (const eva_mission of eva_missions) {
+      const newValues : SpacesuitMetrics[] = [];
+      for (const metric of eva_mission.metrics) {
+        if (metric.id_spacesuit === id_spacesuit) {
           this.logger.log(
             "Update metrics for eva_mission " + eva_mission.id_mission
           );
@@ -140,9 +150,11 @@ export class EvaMissionService {
           metric.pressure.push(pressure);
           metric.temperature.push(temperature);
         }
-      });
-      eva_mission.save();
-    });
+        newValues.push(metric);
+      }
+      eva_mission.metrics = newValues;
+      await eva_mission.save();
+    };
   }
 
   async sendMessageToBus(topic: string, message: any) {

@@ -1,5 +1,4 @@
-import { Schema, Prop } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import {Schema, Prop, SchemaFactory} from "@nestjs/mongoose";
 import { ApiProperty } from "@nestjs/swagger";
 
 export type SpacesuitMetricsDocument = SpacesuitMetrics & Document;
@@ -14,17 +13,20 @@ export class SpacesuitMetrics {
 
   @ApiProperty()
   @Prop({ required: true })
-  o2_rate: number[];
+  o2_rate: number[] = [];
 
   @ApiProperty()
   @Prop({ required: false })
-  temperature: number[];
+  temperature: number[] = [];
 
   @ApiProperty()
   @Prop({ required: false })
-  pressure: number[];
+  pressure: number[] = [];
 
   @ApiProperty()
   @Prop({ required: true })
-  power: number[];
+  power: number[] = [];
 }
+
+export const SpacesuitMetricsSchema = SchemaFactory.createForClass(SpacesuitMetrics);
+

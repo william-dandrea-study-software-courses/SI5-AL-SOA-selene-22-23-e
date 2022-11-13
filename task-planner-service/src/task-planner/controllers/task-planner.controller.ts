@@ -12,8 +12,11 @@ import {TaskTypeEnumSchema} from "../schemas/task-type-enum.schema";
 @Controller("task-planner")
 export class TaskPlannerController {
   private readonly logger = new Logger(TaskPlannerController.name);
+  private taskCounter : number = 0;
 
-  constructor(private readonly taskPlannerService: TaskPlannerService) {}
+  constructor(private readonly taskPlannerService: TaskPlannerService) {
+    this.eva_mission_created_listener();
+  }
 
   private kafka = new Kafka({
     clientId: "task-planner",
@@ -38,6 +41,7 @@ export class TaskPlannerController {
   })
   async postTaskPlanned(@Body() taskPlannedDTO: TaskDto) {
     this.logger.log("Création d'une nouvelle tâche");
+    this.taskCounter+=1;
     return this.taskPlannerService.postTaskPlanned(taskPlannedDTO);
   }
 
@@ -72,20 +76,16 @@ export class TaskPlannerController {
         this.logger.log("Eva Mission has been created");
         let json = JSON.parse(message.value.toLocaleString());
         this.logger.log(json)
-        const taskDto : TaskDto = this.getTaskFromJson(json);
+        const taskDto : TaskDto = new TaskDto();
+        taskDto.id_task = this.taskCounter+1;
+        taskDto.type = json["type"] === "Mission scientifique" ? TaskTypeEnumSchema.EXPLORATION : TaskTypeEnumSchema.HELP;
+        taskDto.date_begin = json["date_begin"];
+        taskDto.date_end = json["date_end"];
+        taskDto.astronauts.push(json["supervisor"]);
+        taskDto.description = json["_id"];
+        this.logger.log(taskDto);
         await this.taskPlannerService.postTaskPlanned(taskDto);
       },
     });
   }
-
-  private getTaskFromJson(json: string) : TaskDto {
-    const task = new TaskDto();
-    task.id_task = json["id_mission"];
-    task.type = TaskTypeEnumSchema.EXPLORATION;
-    task.date_begin = json["date_begin"];
-    task.date_end = json["date_end"];
-    task.astronauts.push(json["supervisor"]);
-    return task;
-  }
-
 }

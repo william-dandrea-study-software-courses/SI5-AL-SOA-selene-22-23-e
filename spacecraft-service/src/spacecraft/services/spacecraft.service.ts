@@ -46,6 +46,7 @@ export class SpacecraftService {
         if (spaceCraft.id_resupplyMission) {
           dto.id_resupplyMission = spaceCraft.id_resupplyMission;
         }
+        dto.id_resupplyMission = spaceCraft.id_resupplyMission;
         response.push(dto);
       });
       return response;
@@ -65,8 +66,10 @@ export class SpacecraftService {
     ) {
       spacecraftDTO.vitals = false;
       spacecraftDTO.status = StatusSpacecraftEnumSchema.DAMAGED;
+      const rotationMissionId :string = spacecraftDTO.id_rotationMissions.length>0 ? spacecraftDTO.id_rotationMissions[0] : null;
       const producer = await this.kafka.producer();
-
+      const message = "{spacecraft_id:" + spacecraftDTO.id_spacecraft + ",resupplyMission_id:" + spacecraftDTO.id_resupplyMission + ",rotationMission_id:" + rotationMissionId + "}";
+      this.logger.log(message);
       // Producing
       await producer.connect();
       await producer.send({
@@ -74,7 +77,7 @@ export class SpacecraftService {
         messages: [
           {
             key: "resupply_mission_id",
-            value: spacecraftDTO.id_resupplyMission,
+            value: message
           },
         ],
       });
@@ -130,28 +133,30 @@ export class SpacecraftService {
     spaceCraft.status = spaceCraftDto.status;
     if (spaceCraftDto.id_resupplyMission) {
       spaceCraft.id_resupplyMission = spaceCraftDto.id_resupplyMission;
+      await spaceCraft.save();
     }
 
-    if (
-      spaceCraftDto.vitals == false ||
-      spaceCraftDto.status === StatusSpacecraftEnumSchema.DAMAGED
-    ) {
+    if ( spaceCraftDto.vitals === false ||  spaceCraftDto.status === StatusSpacecraftEnumSchema.DAMAGED ) {
       spaceCraft.vitals = false;
       spaceCraft.status = StatusSpacecraftEnumSchema.DAMAGED;
-
+      const rotationMissionId :string = spaceCraft.id_rotationMissions.length>0 ? spaceCraft.id_rotationMissions[0] : null;
+      const message = '{"spacecraft_id":"' + spaceCraft.id_spacecraft + '","resupplyMission_id":"' + spaceCraft.id_resupplyMission + '","rotationMission_id":"' + rotationMissionId + '"}';
+      this.logger.log(message);
       const producer = await this.kafka.producer();
       // Producing
       await producer.connect();
       await producer.send({
         topic: "spacecraft-damaged",
         messages: [
-          { key: "resupply_mission_id", value: spaceCraft.id_resupplyMission },
+          { key: "resupply_mission_id", value: message },
         ],
       });
       await producer.disconnect();
+      await spaceCraft.save();
+      return spaceCraft;
     }
 
-    if (spaceCraftDto.status === StatusSpacecraftEnumSchema.ARRIVING_SOON || spaceCraftDto.id_resupplyMission !== null) {
+    if (spaceCraftDto.status === StatusSpacecraftEnumSchema.ARRIVING_SOON) {
       const producer = await this.kafka.producer();
 
       // Producing
@@ -165,9 +170,11 @@ export class SpacecraftService {
         ],
       });
       await producer.disconnect();
+      await spaceCraft.save();
+      return spaceCraft;
     }
 
-    if (spaceCraftDto.status === StatusSpacecraftEnumSchema.LANDED || spaceCraftDto.id_resupplyMission !== null) {
+    if (spaceCraftDto.status === StatusSpacecraftEnumSchema.LANDED) {
       const producer = await this.kafka.producer();
 
       // Producing
@@ -181,11 +188,9 @@ export class SpacecraftService {
         ],
       });
       await producer.disconnect();
+      await spaceCraft.save();
+      return spaceCraft;
     }
-
-    await spaceCraft.save();
-
-    return spaceCraft;
   }
 
   async getAvailableSpaceCrafts(): Promise<SpacecraftDto[]> {
@@ -260,13 +265,7 @@ export class SpacecraftService {
     }
 
     try {
-      this.logger.log(
-          "Send resupply mission at adress : " +
-          this._baseUrlRotation +
-          "/rotation-mission/" +
-          rotationMissionId +
-          "/affectSpacecraft"
-      );
+      this.logger.log( "Send rotation mission at adress : " + this._baseUrlRotation + "/rotation-mission/" + rotationMissionId + "/affectSpacecraft" );
       const retrieveModuleStatusResponse: AxiosResponse<any> =
           await firstValueFrom(
               this.httpService.put(
@@ -279,6 +278,7 @@ export class SpacecraftService {
           );
     } catch (exception) {
       this.logger.log("Request failed");
+      this.logger.log(exception);
       if (exception instanceof AxiosError) {
         if (exception.response.status === 403) {
           throw new resupplyMissionConnotBeAssignedException(rotationMissionId);
@@ -324,11 +324,14 @@ export class SpacecraftService {
     const producer = await this.kafka.producer()
     // Producing
     await producer.connect()
-    this.logger.log("Send spacecraft-launch event")
+    this.logger.log("Send spacecraft-launch event");
+    const rotationMissionId :string = spaceCrafts.id_rotationMissions.length>0 ? spaceCrafts.id_rotationMissions[0] : null;
+    const message = '{"spacecraft_id":"' + spaceCrafts.id_spacecraft + '","resupplyMission_id":"' + spaceCrafts.id_resupplyMission + '","rotationMission_id":"' + rotationMissionId + '"}';
+    this.logger.log(message)
     await producer.send({
       topic: 'spacecraft-launch',
       messages: [
-        { value:'{ "spacecraft_id":'+spaceCrafts.id_spacecraft+', "resupply_mission_id": "'+ spaceCrafts.id_resupplyMission +'" }'},
+        { value: message},
       ],
     });
     await producer.disconnect();

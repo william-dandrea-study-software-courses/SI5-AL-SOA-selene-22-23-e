@@ -49,7 +49,7 @@ export class SpacesuitController {
 
 
   @Post("")
-  @ApiCreatedResponse({description: "The module has been successfully added.", type: SpacesuitDTO,})
+  @ApiCreatedResponse({description: "The spacesuit has been successfully added.", type: SpacesuitDTO,})
   @ApiConflictResponse({type: SpacesuitAlreadyExistException, description: "Spacesuit already exists",})
   async createSpaceSuit(@Body() spacesuitDTO: SpacesuitCreationDTO) {
     this.logger.log("Création d'une nouvelle combinaison");
@@ -85,7 +85,7 @@ export class SpacesuitController {
 
   async testBoucle(){
     while(1){
-      await this.sleep(1000);
+      await this.sleep(200);
       await this.spacesuitService.sendSpacesuitVitals();
     }
   }

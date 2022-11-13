@@ -15,8 +15,8 @@ URL_moon_base = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'lo
 URL_astronaut = 'http://'+ os.environ.get("ASTRONAUT_SERVICE_URL_WITH_PORT", 'localhost:4311')+'/'
 URL_rotation_mission = 'http://'+ os.environ.get("ROTATION_MISSION_SERVICE_URL_WITH_PORT", 'localhost:4312')+'/'
 URL_spacesuit_monitoring = 'http://'+ os.environ.get("SPACESUIT_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4313')+'/'
-URL_news_formalisation = 'http://'+ os.environ.get("ALERT_NOTIFICATION_SERVICE_URL_WITH_PORT", 'localhost:4314')+'/'
-URL_news = 'http://'+ os.environ.get("MOON_BASE_SERVICE_URL_WITH_PORT", 'localhost:4315')+'/'
+URL_news_formalisation = 'http://'+ os.environ.get("NEWS_FORMALISATION_SERVICE_URL_WITH_PORT", 'localhost:4314')+'/'
+URL_news = 'http://'+ os.environ.get("NEWS_SERVICE_URL_WITH_PORT", 'localhost:4315')+'/'
 URL_spacecraft_monitoring = 'http://'+ os.environ.get("SPACECRAFT_MONITORING_SERVICE_URL_WITH_PORT", 'localhost:4316')+'/'
 URL_task_planner = 'http://'+ os.environ.get("TASK_PLANNER_SERVICE_URL_WITH_PORT", 'localhost:4317')+'/'
 
@@ -31,6 +31,8 @@ def scenario1():
     response = requests.get(URL_astronaut+'onMoonAstronauts')
     print(response.text + "\n")
 
+    time.sleep(2)
+
     print("=> Récupérer les conditions de vie des modules via Survival Control Service ")
     print("   US 1 : En tant que Deke, je veux surveiller les conditions de vie de chaque module")
     print("   On s'attend à recevoir les vitals des 4 modules dont le 512 avec une pression insuffisante")
@@ -39,12 +41,16 @@ def scenario1():
     response = requests.get(URL_survival_control+'survival-control/supervision')
     print(response.text + "\n")
 
+    time.sleep(2)
+
     print("=> Isolement d'un module lunaire via Survival Control Service")
     print("   US 4 : En tant que Deke, je veux isoler le module 512 après avoir constaté une pression insuffisante")
     print("PUT http://localhost:4303/module/512/isolate")
     print("Response : ")
     response = requests.put(URL_survival_control+'survival-control/512/isolate')
     print(response.text + "\n")
+
+    time.sleep(2)
 
     print("=> Récupération des données d'un module lunaire via Module Life Service")
     print("   On veut s'assurer que le module 512 a bien été isolé ")
@@ -54,14 +60,7 @@ def scenario1():
     response = requests.get(URL_module_life+'module/512')
     print(response.text + "\n")
 
-    print("=> Récupération des données d'un module lunaire via Vitals Module")
-    print("   US 9 : En tant que Jim, je veux que les épurateurs de CO2 s'activent et se désactivent en fonction des niveaux de CO2 dans les modules de la base, afin de garantir un air respirable sans risque pour l'équipage. Par exemple le 514")
-    print("   On s'attend à ce que le champ co2_rate du module 514 soit à 20 ")
-    print("   On s'attend à ce que le champ co2_scrubbers_activated du module 514 soit à false car le taux de co2 est normal")
-    print("GET http://localhost:4303/module/514")
-    print("Response : ")
-    response = requests.get(URL_module_life+'module/514')
-    print(response.text + "\n")
+    time.sleep(2)
 
     print("=> Changement du taux de co2 à 100 dans le module 514")
     print("PUT http://localhost:4303/module/514")
@@ -72,6 +71,8 @@ def scenario1():
     response = requests.put(URL_module_life+'module/514',json=payload)
     print(response.text + "\n")
 
+    time.sleep(2)
+
     print("=> Récupération des conditions de vie du module 514 via Module Life Service")
     print("   US 9 : En tant que Jim, je veux que les épurateurs de CO2 s'activent et se désactivent en fonction des niveaux de CO2 dans les modules de la base, afin de garantir un air respirable sans risque pour l'équipage. Par exemple le 514")
     print("   On veut s'assurer que l'épurateur d'air du module 514 s'est bien mis en marche")
@@ -81,6 +82,8 @@ def scenario1():
     response = requests.get(URL_module_life+'module/514')
     print(response.text + "\n")
 
+    time.sleep(2)
+
     print("=> Récupération de l'analyse du danger en provenance de météorites via Meteorite Monitoring Service")
     print("   US 13 : En tant que Deke, je veux suivre les météorites autour de la Lune")
     print("   On s'attend à ce que réponse soit false en effet aucune météorite n'est classée comme dangereuse")
@@ -88,6 +91,8 @@ def scenario1():
     print("Response : ")
     response = requests.get(URL_meteorite_monitoring+'meteorite/danger')
     print(response.text + "\n")
+
+    time.sleep(2)
 
     print("=> Ajout d'une nouvelle météorite dans Meteorite Monitoring Service")
     print("   Un scientifique à détecter une nouvelle météorite qu'il considère comme dangereuse")
@@ -99,8 +104,8 @@ def scenario1():
     response = requests.post(URL_meteorite_monitoring+'meteorite',json=payload)
     print(response.text + "\n")
 
-    print("=> Petite attente pour récupérer l'event\n")
-    time.sleep(1)
+    time.sleep(2)
+
     print("=> Isolement de la base lunaire en cas de nuage de météorite")
     print("   US 14 : En tant que Deke, je veux faire sonner l'alarme de la base lunaire et isoler tous les modules en cas de détection d'un danger")
     print("   On s'attend à ce que le champ alarm_on de la base soit à true")
@@ -109,6 +114,8 @@ def scenario1():
     response = requests.get(URL_moon_base+'moon-base/1')
     print(response.text + "\n")
 
+    time.sleep(2)
+
     print("=> Vérification de l'isolement de tous les modules de la Lune")
     print("   On s'attend à ce que tous les modules soient isolés et que la position de tous les astronautes de la lune soient dans le module sécurisé")
     print("GET http://localhost:4303/module")
@@ -116,9 +123,18 @@ def scenario1():
     response = requests.get(URL_module_life+'module')
     print(response.text + "\n")
 
+    time.sleep(2)
+
     print("=> Vérification de la position des astronautes sur la Lune")
     print("   On s'attend à ce que la position de tous les astronautes de la Lune soient dans le module sécurisé")
     print("GET http://localhost:4311/onMoonAstronauts")
     print("Response : ")
     response = requests.get(URL_astronaut+'onMoonAstronauts')
+    print(response.text + "\n")
+
+    print("=> Collecte des derniers évènements s'étant produits sur la Lune")
+    print("   US 15 : En tant que Marie, je veux être informée et notifiée des événements qui se déroulent dans la base lunaire")
+    print("GET http://localhost:4315/news")
+    print("Response : ")
+    response = requests.get(URL_news+'news')
     print(response.text + "\n")

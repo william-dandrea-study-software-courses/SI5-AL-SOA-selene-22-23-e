@@ -106,7 +106,8 @@ export class ResupplyController {
       eachMessage: async ({ topic, partition, message }) => {
         this.logger.log("Spacecraft has been destroyed")
         if(message.key.toLocaleString() == "resupply_mission_id") {
-          let id = message.value.toLocaleString()
+          let json = JSON.parse(message.value.toLocaleString());
+          let id = json["resupplyMission_id"];
           await this.resupplyService.spacecraft_has_been_destroyed(id)
         }
         else{
@@ -128,8 +129,8 @@ export class ResupplyController {
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         let messageJson = JSON.parse(message.value.toLocaleString());
-        this.logger.log("Spacecraft "+messageJson["spacecraft_id"]+" has been launched with mission "+messageJson["resupply_mission_id"])
-        await this.resupplyService.send(messageJson["resupply_mission_id"])
+        this.logger.log("Spacecraft "+messageJson["spacecraft_id"]+" has been launched with mission "+messageJson["resupplyMission_id"])
+        await this.resupplyService.send(messageJson["resupplyMission_id"])
       },
     });
   }

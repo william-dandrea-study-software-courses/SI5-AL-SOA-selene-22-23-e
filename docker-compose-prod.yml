@@ -112,6 +112,7 @@ services:
         - SWAGGERUI_TITLE=Spacecraft Micro-Service
         - SWAGGERUI_DESCRIPTION=Destiné au controle des Space Craft
         - RESUPPLY_CONTROL_SERVICE_URL_WITH_PORT=resupply-service:4301
+        - ROTATION_MISSION_SERVICE_URL_WITH_PORT=rotation-mission-service:4312
       depends_on:
         - kafka-service
         - zookeeper

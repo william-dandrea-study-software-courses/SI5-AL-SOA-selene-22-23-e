@@ -1,164 +1,426 @@
 ===> Awaiting all services ready
 gateway service is up and running at http://localhost:9500
 ===> Launch docker container running python integration script
-------------------------------------------------------------------------------------------
+Attaching to soa-integration-team-e
+ ------------------------------------------------------------------------------------------
 
-=> Peuplement de la base de données Astronaut
+ => Peuplement de la base de données Astronaut
 
-Ajout de 11 astronautes
-POST http://localhost:4311/astronaut
-{"id_astronaut":1,"name":"Megan","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"635d997131de379a18cd31a3"}
-{"id_astronaut":2,"name":"Thomas","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"635d997131de379a18cd31a6"}
-{"id_astronaut":3,"name":"Samantha","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"635d997131de379a18cd31a9"}
-{"id_astronaut":4,"name":"Oleg","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"635d997131de379a18cd31ac"}
-{"id_astronaut":5,"name":"Peggy","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"635d997131de379a18cd31af"}
-{"id_astronaut":6,"name":"Buzz","isDead":false,"job":"Commandant de Moon Base","planet":"Lune","location":"Module de commandement de la base","_id":"635d997131de379a18cd31b2"}
-{"id_astronaut":7,"name":"Ellen","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules de vie Nord","_id":"635d997131de379a18cd31b5"}
-{"id_astronaut":8,"name":"Jim","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules d'analyse scientifique","_id":"635d997131de379a18cd31b8"}
-{"id_astronaut":9,"name":"Kayla","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules de vie Sud","_id":"635d997131de379a18cd31bb"}
-{"id_astronaut":10,"name":"Akihiko","isDead":false,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1","_id":"635d997131de379a18cd31be"}
-{"id_astronaut":11,"name":"Serguei","isDead":false,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1","_id":"635d997131de379a18cd31c1"}
+ Ajout de 11 astronautes
+ POST http://localhost:4311/astronaut
+ {"id_astronaut":1,"name":"Megan","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"6370cbe60fefec5a0fe10b3d"}
+ {"id_astronaut":2,"name":"Thomas","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"6370cbe60fefec5a0fe10b40"}
+ {"id_astronaut":3,"name":"Samantha","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"6370cbe60fefec5a0fe10b43"}
+ {"id_astronaut":4,"name":"Oleg","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"6370cbe60fefec5a0fe10b46"}
+ {"id_astronaut":5,"name":"Peggy","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","_id":"6370cbe60fefec5a0fe10b49"}
+ {"id_astronaut":6,"name":"Buzz","isDead":false,"job":"Commandant de Moon Base","planet":"Lune","location":"Module de commandement de la base","_id":"6370cbe60fefec5a0fe10b4c"}
+ {"id_astronaut":7,"name":"Ellen","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules de vie Nord","_id":"6370cbe60fefec5a0fe10b4f"}
+ {"id_astronaut":8,"name":"Jim","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules d'analyse scientifique","_id":"6370cbe60fefec5a0fe10b52"}
+ {"id_astronaut":9,"name":"Kayla","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules de vie Sud","_id":"6370cbe60fefec5a0fe10b55"}
+ {"id_astronaut":10,"name":"Akihiko","isDead":false,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1","_id":"6370cbe60fefec5a0fe10b58"}
+ {"id_astronaut":11,"name":"Serguei","isDead":false,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1","_id":"6370cbe60fefec5a0fe10b5b"}
 
-=> Peuplement de la base de données Module Life
+ => Peuplement de la base de données Module Life
 
-Ajout de 4 modules
-  - Inventaire de 32 provisions
-  - Modules isolés : 1 (515) 
-  - Modules en mauvaise situation : 2
-  - Besoins de 8 provisions
+ Ajout de 4 modules
+   - Inventaire de 32 provisions
+   - Modules isolés : 1 (515)
+   - Modules en mauvaise situation : 2
+   - Besoins de 8 provisions
 
-POST http://localhost:4303/module
-{"id_module":512,"type":"Module sécurisé","vitals":[{"pressure":1,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbdf2"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbdf3"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbdf4"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbdf5"}],"astronauts":[],"isolated":false,"_id":"635d99714988744b580cbdf1"}
-{"id_module":513,"type":"Module de vie","vitals":[{"pressure":3,"co2_rate":80,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbdf9"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbdfa"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbdfb"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbdfc"}],"astronauts":[6,7,9,11],"isolated":false,"_id":"635d99714988744b580cbdf8"}
-{"id_module":514,"type":"Module d'analyse scientifique","vitals":[{"pressure":3,"co2_rate":20,"co2_scrubbers_activated":false,"_id":"635d99714988744b580cbe00"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbe01"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbe02"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbe03"}],"astronauts":[8,10],"isolated":false,"_id":"635d99714988744b580cbdff"}
-{"id_module":515,"type":"Entrepot","vitals":[{"pressure":3,"co2_rate":75,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbe07"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbe08"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbe09"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbe0a"}],"astronauts":[],"isolated":true,"_id":"635d99714988744b580cbe06"}
+ POST http://localhost:4303/module
+ {"id_module":512,"type":"Module sécurisé","vitals":[{"pressure":1,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737ef0"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbe6567f27563e737ef1"},{"label":"pates","quantity":5,"_id":"6370cbe6567f27563e737ef2"},{"label":"eau","quantity":7,"_id":"6370cbe6567f27563e737ef3"}],"astronauts":[],"isolated":false,"_id":"6370cbe6567f27563e737eef"}
+ {"id_module":513,"type":"Module de vie","vitals":[{"pressure":3,"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737ef7"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbe6567f27563e737ef8"},{"label":"pates","quantity":5,"_id":"6370cbe6567f27563e737ef9"},{"label":"eau","quantity":7,"_id":"6370cbe6567f27563e737efa"}],"astronauts":[6,7,9,11],"isolated":false,"_id":"6370cbe6567f27563e737ef6"}
+ {"id_module":514,"type":"Module d'analyse scientifique","vitals":[{"pressure":3,"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6370cbe6567f27563e737efe"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbe6567f27563e737eff"},{"label":"pates","quantity":5,"_id":"6370cbe6567f27563e737f00"},{"label":"eau","quantity":7,"_id":"6370cbe6567f27563e737f01"}],"astronauts":[8,10],"isolated":false,"_id":"6370cbe6567f27563e737efd"}
+ {"id_module":515,"type":"Entrepot","vitals":[{"pressure":3,"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737f05"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbe6567f27563e737f06"},{"label":"pates","quantity":5,"_id":"6370cbe6567f27563e737f07"},{"label":"eau","quantity":7,"_id":"6370cbe6567f27563e737f08"}],"astronauts":[],"isolated":true,"_id":"6370cbe6567f27563e737f04"}
 
-=> Peuplement de la base de données Spacesuit
+ => Peuplement de la base de données Spacesuit
 
-Ajout d'une combinaison numéro 1 avec:
-  - 20 de temperature
-  - 3 de pression 
-  - 80 de taux d'oxygene
-  - 60 de rythme cardiaque
+ Ajout d'une combinaison numéro 1 avec:
+   - 20 de temperature
+   - 3 de pression
+   - 80 de taux d'oxygene
+   - 60 de rythme cardiaque
 
-POST http://localhost:4306/module
-{"id_spacesuit":1,"id_astronaut":null,"current_vitals":null,"_id":"635d99715cb8ae343a863cd4"}
+ POST http://localhost:4306/module
+ {"id_spacesuit":1,"id_astronaut":null,"current_vitals":null,"_id":"6370cbe613bba66b3dd89df4"}
 
-=> Peuplement de la base de données Spacecraft
+ => Peuplement de la base de données Spacecraft
 
-Ajout de 2 vaisseaux 2 avec:
-  - des bonnes conditions matérielles 
-  - status à PREPARING
-  - aucune mission de ravitaillement lié
+ Ajout de 2 vaisseaux 2 avec:
+   - des bonnes conditions matérielles
+   - status à PREPARING
+   - aucune mission de ravitaillement lié
 
-POST http://localhost:4305/spacecraft
-{"id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"None","id_rotationMissions":[],"_id":"635d9971b8525cb0bedb3bf6"}
-{"id_spacecraft":2,"vitals":true,"status":"Au sol","id_resupplyMission":"None","id_rotationMissions":[],"_id":"635d9971b8525cb0bedb3bf9"}
+ POST http://localhost:4305/spacecraft
+ {"id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"None","id_rotationMissions":[],"_id":"6370cbe6fe08ae1032431b6f"}
+ {"id_spacecraft":2,"vitals":true,"status":"Au sol","id_resupplyMission":"None","id_rotationMissions":[],"_id":"6370cbe6fe08ae1032431b72"}
 
-=> Peuplement de la base de données Meteorite Monitoring
+ => Peuplement de la base de données Meteorite Monitoring
 
-Ajout de 5 meteorites inoffensives
-POST http://localhost:4308/meteorite
-{"id_meteorite":1,"dangerous":false,"_id":"635d99715960d119ae0a9d5c"}
-{"id_meteorite":2,"dangerous":false,"_id":"635d99715960d119ae0a9d5e"}
-{"id_meteorite":3,"dangerous":false,"_id":"635d99715960d119ae0a9d60"}
-{"id_meteorite":4,"dangerous":false,"_id":"635d99715960d119ae0a9d62"}
-{"id_meteorite":5,"dangerous":false,"_id":"635d99715960d119ae0a9d64"}
+ Ajout de 5 meteorites inoffensives
+ POST http://localhost:4308/meteorite
+ {"id_meteorite":1,"dangerous":false,"_id":"6370cbe6c42dbe8d57810ff3"}
+ {"id_meteorite":2,"dangerous":false,"_id":"6370cbe6c42dbe8d57810ff5"}
+ {"id_meteorite":3,"dangerous":false,"_id":"6370cbe6c42dbe8d57810ff7"}
+ {"id_meteorite":4,"dangerous":false,"_id":"6370cbe6c42dbe8d57810ff9"}
+ {"id_meteorite":5,"dangerous":false,"_id":"6370cbe6c42dbe8d57810ffb"}
 
-=> Peuplement de la base de données Moon Base
+ => Peuplement de la base de données Moon Base
 
-Ajout d'une base lunaire 1 
-POST http://localhost:4310/moon-base
-{"id_base":1,"stock":[{"label":"saucisson","quantity":30,"_id":"635d99719e25dd76d6a70be9"},{"label":"pates","quantity":80,"_id":"635d99719e25dd76d6a70bea"},{"label":"eau","quantity":100,"_id":"635d99719e25dd76d6a70beb"}],"alarm_on":false,"modules":[512,513,514,515]}
+ Ajout d'une base lunaire 1
+ POST http://localhost:4310/moon-base
+ {"id_base":1,"stock":[{"label":"saucisson","quantity":30,"_id":"6370cbe602c8c6cf017099fb"},{"label":"pates","quantity":80,"_id":"6370cbe602c8c6cf017099fc"},{"label":"eau","quantity":100,"_id":"6370cbe602c8c6cf017099fd"}],"alarm_on":false,"modules":[512,513,514,515]}
 
---------------------------------- Start Integration Tests --------------------------------
+ => Peuplement de la base de données TaskPlanner
+
+ Ajout de 3 tâches
+ POST http://localhost:4317/task-planner
+ {"id_task":1,"type":"Laboratoire de recherches","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","astronauts":[8],"description":"Analyse des roches","_id":"6370cbe68bcaf2a36bb78e76"}
+ {"id_task":2,"type":"Maintenance des équipements et modules","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","astronauts":[7],"description":"Nettoyage des filtres à oxygène","_id":"6370cbe68bcaf2a36bb78e79"}
+ {"id_task":3,"type":"Maintenance des équipements et modules","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","astronauts":[9],"description":"Réparation du sas","_id":"6370cbe68bcaf2a36bb78e7c"}
+ {"id_task":4,"type":"Gestion des stocks","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","astronauts":[10,11],"description":"Exploration de la zone 3","_id":"6370cbe68bcaf2a36bb78e7f"}
+
+ --------------------------------- Start Integration Tests --------------------------------
 
 
----------------------- Scenario 1 ----------------------
+ ---------------------- Scenario 1 ----------------------
 
-=> Récupération des positions des astronautes sur la Lune via Astronaut Service
-   US 17 : En tant que Deke, je veux connaitre la position de chaque astronaute sur la Lune
-   On s'attend à trouver Buzz dans le module de commandement, Ellen et Kayla dans les modules de vie Nord et Sud, Jim dans le module d'analyse scientifique et Akihiko et Serguei en exploration dans la zone1
-GET http://localhost:4311/onMoonAstronauts
-Response : 
-[{"_id":"635d997131de379a18cd31b2","id_astronaut":6,"name":"Buzz","isDead":false,"job":"Commandant de Moon Base","planet":"Lune","location":"Module de commandement de la base"},{"_id":"635d997131de379a18cd31b5","id_astronaut":7,"name":"Ellen","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules de vie Nord"},{"_id":"635d997131de379a18cd31b8","id_astronaut":8,"name":"Jim","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules d'analyse scientifique"},{"_id":"635d997131de379a18cd31bb","id_astronaut":9,"name":"Kayla","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules de vie Sud"},{"_id":"635d997131de379a18cd31be","id_astronaut":10,"name":"Akihiko","isDead":false,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1"},{"_id":"635d997131de379a18cd31c1","id_astronaut":11,"name":"Serguei","isDead":false,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1"}]
+ => Récupération des positions des astronautes sur la Lune via Astronaut Service
+    US 17 : En tant que Deke, je veux connaitre la position de chaque astronaute sur la Lune
+    On s'attend à trouver Buzz dans le module de commandement, Ellen et Kayla dans les modules de vie Nord et Sud, Jim dans le module d'analyse scientifique et Akihiko et Serguei en exploration dans la zone1
+ GET http://localhost:4311/onMoonAstronauts
+ Response :
+ [{"_id":"6370cbe60fefec5a0fe10b4c","id_astronaut":6,"name":"Buzz","isDead":false,"job":"Commandant de Moon Base","planet":"Lune","location":"Module de commandement de la base"},{"_id":"6370cbe60fefec5a0fe10b4f","id_astronaut":7,"name":"Ellen","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules de vie Nord"},{"_id":"6370cbe60fefec5a0fe10b52","id_astronaut":8,"name":"Jim","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules d'analyse scientifique"},{"_id":"6370cbe60fefec5a0fe10b55","id_astronaut":9,"name":"Kayla","isDead":false,"job":"Astronaute","planet":"Lune","location":"Modules de vie Sud"},{"_id":"6370cbe60fefec5a0fe10b58","id_astronaut":10,"name":"Akihiko","isDead":false,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1"},{"_id":"6370cbe60fefec5a0fe10b5b","id_astronaut":11,"name":"Serguei","isDead":false,"job":"Astronaute","planet":"Lune","location":"Zone d'exploration 1"}]
 
-=> Récupérer les conditions de vie des modules via Survival Control Service 
-   US 1 : En tant que Deke, je veux surveiller les conditions de vie de chaque module
-   On s'attend à recevoir les vitals des 4 modules dont le 512 avec une pression insuffisante
-GET http://localhost:4304/survival-control/supervision
-Response : 
-[{"id_module":512,"vitals":[{"pressure":1,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbdf2"}]},{"id_module":513,"vitals":[{"pressure":3,"co2_rate":80,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbdf9"}]},{"id_module":514,"vitals":[{"pressure":3,"co2_rate":20,"co2_scrubbers_activated":false,"_id":"635d99714988744b580cbe00"}]},{"id_module":515,"vitals":[{"pressure":3,"co2_rate":75,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbe07"}]}]
+ => Récupérer les conditions de vie des modules via Survival Control Service
+    US 1 : En tant que Deke, je veux surveiller les conditions de vie de chaque module
+    On s'attend à recevoir les vitals des 4 modules dont le 512 avec une pression insuffisante
+ GET http://localhost:4304/survival-control/supervision
+ Response :
+ [{"id_module":512,"vitals":[{"pressure":1,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737ef0"}]},{"id_module":513,"vitals":[{"pressure":3,"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737ef7"}]},{"id_module":514,"vitals":[{"pressure":3,"co2_rate":20,"co2_scrubbers_activated":false,"_id":"6370cbe6567f27563e737efe"}]},{"id_module":515,"vitals":[{"pressure":3,"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737f05"}]}]
 
-=> Isolement d'un module lunaire via Survival Control Service
-   US 4 : En tant que Deke, je veux isoler le module 512 après avoir constaté une pression insuffisante
-PUT http://localhost:4303/module/512/isolate
-Response : 
-Module isolé
+ => Isolement d'un module lunaire via Survival Control Service
+    US 4 : En tant que Deke, je veux isoler le module 512 après avoir constaté une pression insuffisante
+ PUT http://localhost:4303/module/512/isolate
+ Response :
+ Module isolé
 
-=> Récupération des données d'un module lunaire via Module Life Service
-   On veut s'assurer que le module 512 a bien été isolé 
-   On s'attend à ce que le champ isolated du module 512 soit à true et qu'aucun astronaute ne se trouve à l'intérieur
-GET http://localhost:4303/module/512
-Response : 
-{"_id":"635d99714988744b580cbdf1","id_module":512,"type":"Module sécurisé","vitals":[{"pressure":1,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbdf2"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbdf3"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbdf4"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbdf5"}],"astronauts":[],"isolated":true}
+ => Récupération des données d'un module lunaire via Module Life Service
+    On veut s'assurer que le module 512 a bien été isolé
+    On s'attend à ce que le champ isolated du module 512 soit à true et qu'aucun astronaute ne se trouve à l'intérieur
+ GET http://localhost:4303/module/512
+ Response :
+ {"_id":"6370cbe6567f27563e737eef","id_module":512,"type":"Module sécurisé","vitals":[{"pressure":1,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737ef0"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbe6567f27563e737ef1"},{"label":"pates","quantity":5,"_id":"6370cbe6567f27563e737ef2"},{"label":"eau","quantity":7,"_id":"6370cbe6567f27563e737ef3"}],"astronauts":[],"isolated":true}
 
-=> Récupération des données d'un module lunaire via Vitals Module
-   US 9 : En tant que Jim, je veux que les épurateurs de CO2 s'activent et se désactivent en fonction des niveaux de CO2 dans les modules de la base, afin de garantir un air respirable sans risque pour l'équipage. Par exemple le 514
-   On s'attend à ce que le champ co2_rate du module 514 soit à 20 
-   On s'attend à ce que le champ co2_scrubbers_activated du module 514 soit à false car le taux de co2 est normal
-GET http://localhost:4303/module/514
-Response : 
-{"_id":"635d99714988744b580cbdff","id_module":514,"type":"Module d'analyse scientifique","vitals":[{"pressure":3,"co2_rate":20,"co2_scrubbers_activated":false,"_id":"635d99714988744b580cbe00"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbe01"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbe02"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbe03"}],"astronauts":[8,10],"isolated":false}
+ => Changement du taux de co2 à 100 dans le module 514
+ PUT http://localhost:4303/module/514
+ {'id_module': 514, 'type': "Module d'analyse scientifique", 'astronauts': [8, 10], 'vitals': {'pressure': 3, 'co2_rate': 100, 'co2_scrubbers_activated': False}, 'supplies': [{'label': 'saucisson', 'quantity': 2}, {'label': 'pates', 'quantity': 5}, {'label': 'eau', 'quantity': 7}], 'isolated': True}
+ Response :
+ {"_id":"6370cbe6567f27563e737efd","id_module":514,"type":"Module d'analyse scientifique","vitals":[{"pressure":3,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6370cbee567f27563e737f3f"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbee567f27563e737f40"},{"label":"pates","quantity":5,"_id":"6370cbee567f27563e737f41"},{"label":"eau","quantity":7,"_id":"6370cbee567f27563e737f42"}],"astronauts":[8,10],"isolated":true}
 
-=> Changement du taux de co2 à 100 dans le module 514
-PUT http://localhost:4303/module/514
-{'id_module': 514, 'type': "Module d'analyse scientifique", 'astronauts': [8, 10], 'vitals': {'pressure': 3, 'co2_rate': 100, 'co2_scrubbers_activated': False}, 'supplies': [{'label': 'saucisson', 'quantity': 2}, {'label': 'pates', 'quantity': 5}, {'label': 'eau', 'quantity': 7}], 'isolated': True}
-Response : 
-{"_id":"635d99714988744b580cbdff","id_module":514,"type":"Module d'analyse scientifique","vitals":[{"pressure":3,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbe46"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbe47"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbe48"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbe49"}],"astronauts":[8,10],"isolated":true}
+ => Récupération des conditions de vie du module 514 via Module Life Service
+    US 9 : En tant que Jim, je veux que les épurateurs de CO2 s'activent et se désactivent en fonction des niveaux de CO2 dans les modules de la base, afin de garantir un air respirable sans risque pour l'équipage. Par exemple le 514
+    On veut s'assurer que l'épurateur d'air du module 514 s'est bien mis en marche
+    On s'attend à ce que le champ co2_scrubbers_activated du module 514 soit à true car le taux de co2 a subitement augmenté et nécessite que les épurateurs fonctionnent
+ GET http://localhost:4303/module/514
+ Response :
+ {"_id":"6370cbe6567f27563e737efd","id_module":514,"type":"Module d'analyse scientifique","vitals":[{"pressure":3,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6370cbee567f27563e737f3f"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbee567f27563e737f40"},{"label":"pates","quantity":5,"_id":"6370cbee567f27563e737f41"},{"label":"eau","quantity":7,"_id":"6370cbee567f27563e737f42"}],"astronauts":[8,10],"isolated":true}
 
-=> Récupération des conditions de vie du module 514 via Module Life Service
-   US 9 : En tant que Jim, je veux que les épurateurs de CO2 s'activent et se désactivent en fonction des niveaux de CO2 dans les modules de la base, afin de garantir un air respirable sans risque pour l'équipage. Par exemple le 514
-   On veut s'assurer que l'épurateur d'air du module 514 s'est bien mis en marche
-   On s'attend à ce que le champ co2_scrubbers_activated du module 514 soit à true car le taux de co2 a subitement augmenté et nécessite que les épurateurs fonctionnent
-GET http://localhost:4303/module/514
-Response : 
-{"_id":"635d99714988744b580cbdff","id_module":514,"type":"Module d'analyse scientifique","vitals":[{"pressure":3,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbe46"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbe47"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbe48"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbe49"}],"astronauts":[8,10],"isolated":true}
+ => Récupération de l'analyse du danger en provenance de météorites via Meteorite Monitoring Service
+    US 13 : En tant que Deke, je veux suivre les météorites autour de la Lune
+    On s'attend à ce que réponse soit false en effet aucune météorite n'est classée comme dangereuse
+ GET http://localhost:4308/meteorite/danger
+ Response :
+ false
 
-=> Récupération de l'analyse du danger en provenance de météorites via Meteorite Monitoring Service
-   US 13 : En tant que Deke, je veux suivre les météorites autour de la Lune
-   On s'attend à ce que réponse soit false en effet aucune météorite n'est classée comme dangereuse
-GET http://localhost:4308/meteorite/danger
-Response : 
-false
+ => Ajout d'une nouvelle météorite dans Meteorite Monitoring Service
+    Un scientifique à détecter une nouvelle météorite qu'il considère comme dangereuse
+    On s'attend à ce que la base lunaire s'isole
+ POST http://localhost:4308/meteorite
+ {'id_meteorite': 6, 'dangerous': True}
+ Response :
+ {"id_meteorite":6,"dangerous":true,"_id":"6370cbf4c42dbe8d57810ffe"}
 
-=> Ajout d'une nouvelle météorite dans Meteorite Monitoring Service
-   Un scientifique à détecter une nouvelle météorite qu'il considère comme dangereuse
-   On s'attend à ce que la base lunaire s'isole
-POST http://localhost:4308/meteorite
-{'id_meteorite': 6, 'dangerous': True}
-Response : 
-{"id_meteorite":6,"dangerous":true,"_id":"635d99715960d119ae0a9d67"}
+ => Isolement de la base lunaire en cas de nuage de météorite
+    US 14 : En tant que Deke, je veux faire sonner l'alarme de la base lunaire et isoler tous les modules en cas de détection d'un danger
+    On s'attend à ce que le champ alarm_on de la base soit à true
+ GET http://localhost:4310/moon-base/1
+ Response :
+ {"id_base":1,"stock":[{"label":"saucisson","quantity":30,"_id":"6370cbe602c8c6cf017099fb"},{"label":"pates","quantity":80,"_id":"6370cbe602c8c6cf017099fc"},{"label":"eau","quantity":100,"_id":"6370cbe602c8c6cf017099fd"}],"alarm_on":true,"modules":[512,513,514,515]}
 
-=> Petite attente pour récupérer l'event
+ => Vérification de l'isolement de tous les modules de la Lune
+    On s'attend à ce que tous les modules soient isolés et que la position de tous les astronautes de la lune soient dans le module sécurisé
+ GET http://localhost:4303/module
+ Response :
+ [{"astronauts":[6,7,9,11,8,10],"id_module":512,"type":"Module sécurisé","vitals":[{"pressure":1,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737ef0"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbe6567f27563e737ef1"},{"label":"pates","quantity":5,"_id":"6370cbe6567f27563e737ef2"},{"label":"eau","quantity":7,"_id":"6370cbe6567f27563e737ef3"}],"isolated":true},{"astronauts":[],"id_module":513,"type":"Module de vie","vitals":[{"pressure":3,"co2_rate":80,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737ef7"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbe6567f27563e737ef8"},{"label":"pates","quantity":5,"_id":"6370cbe6567f27563e737ef9"},{"label":"eau","quantity":7,"_id":"6370cbe6567f27563e737efa"}],"isolated":true},{"astronauts":[],"id_module":514,"type":"Module d'analyse scientifique","vitals":[{"pressure":3,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"6370cbee567f27563e737f3f"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbee567f27563e737f40"},{"label":"pates","quantity":5,"_id":"6370cbee567f27563e737f41"},{"label":"eau","quantity":7,"_id":"6370cbee567f27563e737f42"}],"isolated":true},{"astronauts":[],"id_module":515,"type":"Entrepot","vitals":[{"pressure":3,"co2_rate":75,"co2_scrubbers_activated":true,"_id":"6370cbe6567f27563e737f05"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"6370cbe6567f27563e737f06"},{"label":"pates","quantity":5,"_id":"6370cbe6567f27563e737f07"},{"label":"eau","quantity":7,"_id":"6370cbe6567f27563e737f08"}],"isolated":true}]
 
-=> Isolement de la base lunaire en cas de nuage de météorite
-   US 14 : En tant que Deke, je veux faire sonner l'alarme de la base lunaire et isoler tous les modules en cas de détection d'un danger
-   On s'attend à ce que le champ alarm_on de la base soit à true
-GET http://localhost:4310/moon-base/1
-Response : 
-{"id_base":1,"stock":[{"label":"saucisson","quantity":30,"_id":"635d99719e25dd76d6a70be9"},{"label":"pates","quantity":80,"_id":"635d99719e25dd76d6a70bea"},{"label":"eau","quantity":100,"_id":"635d99719e25dd76d6a70beb"}],"alarm_on":true,"modules":[512,513,514,515]}
+ => Vérification de la position des astronautes sur la Lune
+    On s'attend à ce que la position de tous les astronautes de la Lune soient dans le module sécurisé
+ GET http://localhost:4311/onMoonAstronauts
+ Response :
+ [{"_id":"6370cbe60fefec5a0fe10b4c","id_astronaut":6,"name":"Buzz","isDead":false,"job":"Commandant de Moon Base","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b4f","id_astronaut":7,"name":"Ellen","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b52","id_astronaut":8,"name":"Jim","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b55","id_astronaut":9,"name":"Kayla","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b58","id_astronaut":10,"name":"Akihiko","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b5b","id_astronaut":11,"name":"Serguei","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"}]
 
-=> Vérification de l'isolement de tous les modules de la Lune
-   On s'attend à ce que tous les modules soient isolés et que la position de tous les astronautes de la lune soient dans le module sécurisé
-GET http://localhost:4303/module
-Response : 
-[{"astronauts":[6,7,9,11,8,10],"id_module":512,"type":"Module sécurisé","vitals":[{"pressure":1,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbdf2"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbdf3"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbdf4"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbdf5"}],"isolated":true},{"astronauts":[],"id_module":513,"type":"Module de vie","vitals":[{"pressure":3,"co2_rate":80,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbdf9"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbdfa"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbdfb"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbdfc"}],"isolated":true},{"astronauts":[],"id_module":514,"type":"Module d'analyse scientifique","vitals":[{"pressure":3,"co2_rate":100,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbe46"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbe47"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbe48"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbe49"}],"isolated":true},{"astronauts":[],"id_module":515,"type":"Entrepot","vitals":[{"pressure":3,"co2_rate":75,"co2_scrubbers_activated":true,"_id":"635d99714988744b580cbe07"}],"supplies":[{"label":"saucisson","quantity":2,"_id":"635d99714988744b580cbe08"},{"label":"pates","quantity":5,"_id":"635d99714988744b580cbe09"},{"label":"eau","quantity":7,"_id":"635d99714988744b580cbe0a"}],"isolated":true}]
+ => Collecte des derniers évènements s'étant produits sur la Lune
+    US 15 : En tant que Marie, je veux être informée et notifiée des événements qui se déroulent dans la base lunaire
+ GET http://localhost:4315/news
+ Response :
+ ["Une météorite dangereuse a été détecté, la base est isolée"]
 
-=> Vérification de la position des astronautes sur la Lune
-   On s'attend à ce que la position de tous les astronautes de la Lune soient dans le module sécurisé
-GET http://localhost:4311/onMoonAstronauts
-Response : 
-[{"_id":"635d997131de379a18cd31b2","id_astronaut":6,"name":"Buzz","isDead":false,"job":"Commandant de Moon Base","planet":"Lune","location":"Module sécurisé"},{"_id":"635d997131de379a18cd31b5","id_astronaut":7,"name":"Ellen","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"635d997131de379a18cd31b8","id_astronaut":8,"name":"Jim","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"635d997131de379a18cd31bb","id_astronaut":9,"name":"Kayla","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"635d997131de379a18cd31be","id_astronaut":10,"name":"Akihiko","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"635d997131de379a18cd31c1","id_astronaut":11,"name":"Serguei","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"}]
+ ---------------------- Scenario 2 ----------------------
 
----------------------------------- End Integration Tests ---------------------------------
+ => Récupération de l'inventaire de la base lunaire via Module Life Service
+    US 5 : En tant que Jim, je veux contrôler l'inventaire de la base lunaire
+    On s'attend à récupérer un objet avec plusieurs types de provisions
+ GET http://localhost:4310/moon-base/inventory
+ Response :
+ [{"label":"saucisson","quantity":38},{"label":"pates","quantity":100},{"label":"eau","quantity":128}]
+
+ => Récupérer la liste des besoins des modules via Needs Control Service
+    US 3 : En tant que Buzz, je veux récupérer tous les besoins des modules ainsi que les besoins de la base lunaire
+    On s'attend à recevoir un objet demandant 102 saucissons, 40 pâtes et 12 d'eau
+ GET http://localhost:4302/needs-control/moduleNeeds
+ Response :
+ [{"label":"saucisson","quantity":102},{"label":"pates","quantity":40},{"label":"eau","quantity":12}]
+
+ => Envoyer une commande à la terre via needs control service
+    En tant que Buzz, je veux envoyer 1 commande au Resupply Service, de 10 saucissons, 150 pâtes et 200 d'eau
+ POST http://localhost:4302/needs-control/sendOrder
+ {'supplies': [{'label': 'saucisson', 'quantity': 10}, {'label': 'pates', 'quantity': 150}, {'label': 'eau', 'quantity': 200}]}
+ Response :
+ Commande passée
+
+ => Récupération des commandes de la base lunaire via Resupply Service
+    US 2 :En tant que Dorothy, je veux voir toutes les commandes passées
+    On s'attend à voir la commande passée par Buzz précédemment. Elle sera en statut En attente de validation
+ GET http://localhost:4301/resupply/supplyOrders
+ Response :
+ [{"_id":"6370cc04e04f9d6925304c00","supplies":[{"label":"saucisson","quantity":10,"_id":"6370cc04e04f9d6925304c01"},{"label":"pates","quantity":150,"_id":"6370cc04e04f9d6925304c02"},{"label":"eau","quantity":200,"_id":"6370cc04e04f9d6925304c03"}],"status":"En attente de validation"}]
+
+ => Récupération des missions de ravitaillement via Resupply Service
+    US 2 :En tant que Dorothy, je veux controler les missions de ravitaillement
+    On s'attend à n'avoir aucune mission de ravitaillement car aucune mission n'a été lancée et aucune commande n'a été validée
+ GET http://localhost:4301/resupply/resupplyMission
+ Response :
+ []
+
+ => Validation d'une commande via Resupply Service
+    US 2 :En tant que Dorothy, je veux valider une commande passée par la base lunaire
+    On valide la première commande de Buzz, celle avec 13 provisions demandées et on s'attend à récupérer un Commande validée
+ PUT http://localhost:4301/resupply/:idCommande/validate
+ Response :
+ Commande validée
+
+ => Récupération de la commande via Resupply Service
+    US 2 :En tant que Dorothy, je veux m'assurer que la commande a été bien été validée
+    Cette fois, on s'attend toujours à récupérer la commande mais son statut sera passée en Validé
+ GET http://localhost:4301/resupply/supplyOrders
+ Response :
+ [{"_id":"6370cc04e04f9d6925304c00","supplies":[{"label":"saucisson","quantity":10,"_id":"6370cc04e04f9d6925304c01"},{"label":"pates","quantity":150,"_id":"6370cc04e04f9d6925304c02"},{"label":"eau","quantity":200,"_id":"6370cc04e04f9d6925304c03"}],"status":"Validé"}]
+
+ => Récupération des missions de ravitaillement via Resupply Service
+    US 2 :En tant que Dorothy, je veux controler les missions de ravitaillement
+    On s'attend cette fois à retrouver une seule mission de ravitaillement qui contient la commande de 13 provisions. Cette commande sera En cours de traitement
+ GET http://localhost:4301/resupply/resupplyMission
+ Response :
+ [{"_id":"6370cc0ae04f9d6925304c10","orders":[{"supplies":[{"label":"saucisson","quantity":10,"_id":"6370cc04e04f9d6925304c01"},{"label":"pates","quantity":150,"_id":"6370cc04e04f9d6925304c02"},{"label":"eau","quantity":200,"_id":"6370cc04e04f9d6925304c03"}],"status":"Validé","_id":"6370cc04e04f9d6925304c00"}],"state":"En cours de traitement"}]
+
+ => Récupération des astronautes sur la Terre
+    On s'attend à trouver les astronautes 1 à 5
+ GET http://localhost:4311/astronaut/onEarthAstronauts
+ Response :
+ [{"_id":"6370cbe60fefec5a0fe10b3d","id_astronaut":1,"name":"Megan","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement"},{"_id":"6370cbe60fefec5a0fe10b40","id_astronaut":2,"name":"Thomas","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement"},{"_id":"6370cbe60fefec5a0fe10b43","id_astronaut":3,"name":"Samantha","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement"},{"_id":"6370cbe60fefec5a0fe10b46","id_astronaut":4,"name":"Oleg","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement"},{"_id":"6370cbe60fefec5a0fe10b49","id_astronaut":5,"name":"Peggy","isDead":false,"job":"Astronaute","planet":"Terre","location":"Zone d'embarquement"}]
+
+ => Récupération des astronautes sur la Lune
+    On s'attend à trouver les astronautes 6 à 11
+ GET http://localhost:4311/astronaut/onMoonAstronauts
+ Response :
+ [{"_id":"6370cbe60fefec5a0fe10b4c","id_astronaut":6,"name":"Buzz","isDead":false,"job":"Commandant de Moon Base","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b4f","id_astronaut":7,"name":"Ellen","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b52","id_astronaut":8,"name":"Jim","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b55","id_astronaut":9,"name":"Kayla","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b58","id_astronaut":10,"name":"Akihiko","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"},{"_id":"6370cbe60fefec5a0fe10b5b","id_astronaut":11,"name":"Serguei","isDead":false,"job":"Astronaute","planet":"Lune","location":"Module sécurisé"}]
+
+ => Affectation de nouvelles missions de roulement des astronautes
+    US 16 : En tant que Gene, je veux faire voler des astronautes de la Terre à la Lune et inversement
+    On créé une première mission Terre-Lune avec les astronautes terriens et une deuxième mission Lune-Terre avec les astronautes lunaires excepté Buzz
+ POST http://localhost:4312/rotation-mission
+ {'date': '2022-10-23T10:50:05.739Z', 'astronauts': [1, 2, 3, 4, 5]}
+ Response :
+ {"date":"2022-10-23T10:50:05.739Z","astronauts":[1,2,3,4,5],"_id":"6370cc14da064a9d947e0d0f"}
+ {"date":"2022-10-23T10:50:05.739Z","astronauts":[7,8,9,10,11],"_id":"6370cc14da064a9d947e0d11"}
+
+ => Récupération des vaisseaux disponibles pour une mission de ravitaillement et des missions de roulements via Spacecraft Service
+    US 8 : En tant que Gene, je veux regarder tous les vaisseaux disponibles
+    On s'attend à trouver des vaisseaux disponibles qui n'ont aucune mission de ravitaillement et qui sont au sol.
+ GET http://localhost:4305/spacecraft
+ Response :
+ [{"id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"None"},{"id_spacecraft":2,"vitals":true,"status":"Au sol","id_resupplyMission":"None"}]
+
+ => Attribution d'une mission de ravitaillement à un vaisseau via Spacecraft Service
+    US 18 : En tant que Gene, je veux entretenir la base lunaire avec un nombre limité de vaisseaux spatiaux réutilisables
+    On s'attend à trouver l'id de la mission changé et l'id du vaisseau de la mission changé
+ PUT http://localhost:4305/spacecraft/:idSpacecraft/affectSpaceCraftToResupplyMission
+ {'id_Mission': '6370cc0ae04f9d6925304c10'}
+ Response :
+ {"_id":"6370cbe6fe08ae1032431b6f","id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"6370cc0ae04f9d6925304c10","id_rotationMissions":[]}
+ GET http://localhost:4301/resupply/resupplyMission
+ Response :
+ [{"_id":"6370cc0ae04f9d6925304c10","orders":[{"supplies":[{"label":"saucisson","quantity":10,"_id":"6370cc04e04f9d6925304c01"},{"label":"pates","quantity":150,"_id":"6370cc04e04f9d6925304c02"},{"label":"eau","quantity":200,"_id":"6370cc04e04f9d6925304c03"}],"status":"Validé","_id":"6370cc04e04f9d6925304c00"}],"state":"En cours de traitement","spacecraft_id":"1"}]
+
+ => Affectation d'un vaisseau aux missions de roulements
+    US 18 : En tant que Gene, je veux entretenir la base lunaire avec un nombre limité de vaisseaux spatiaux réutilisables
+    On affecte d'abord la première mission et ensuite la deuxième, on s'attend à trouver les missions dans l'ordre
+ PUT http://localhost:4305/spacecraft/:idSpacecraft/affectSpaceCraftToRotationMission
+ Response :
+ {"_id":"6370cbe6fe08ae1032431b6f","id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"6370cc0ae04f9d6925304c10","id_rotationMissions":["6370cc14da064a9d947e0d0f"]}
+ {"_id":"6370cbe6fe08ae1032431b6f","id_spacecraft":1,"vitals":true,"status":"Au sol","id_resupplyMission":"6370cc0ae04f9d6925304c10","id_rotationMissions":["6370cc14da064a9d947e0d0f","6370cc14da064a9d947e0d11"]}
+ GET http://localhost:4312/rotation-mission
+ Response :
+ [{"_id":"6370cc14da064a9d947e0d0f","date":"2022-10-23T10:50:05.739Z","astronauts":[1,2,3,4,5],"spacecraft_id":"1"},{"_id":"6370cc14da064a9d947e0d11","date":"2022-10-23T10:50:05.739Z","astronauts":[7,8,9,10,11],"spacecraft_id":"1"}]
+
+ => Envoi d'un vaisseau via Spacecraft Service
+    US 8 : En tant que Gene, je veux controler le lancement des vaisseaux
+    On s'attend à trouver le status du vaisseau à envoyé, le statut de la mission à en cours d'acheminement et le statut des astronautes à ON_TRANSIT
+ PUT http://localhost:4305/spacecraft/:idSpacecraf/launch
+ Response :
+ {"_id":"6370cbe6fe08ae1032431b6f","id_spacecraft":1,"vitals":true,"status":"Envoyé","id_resupplyMission":"6370cc0ae04f9d6925304c10","id_rotationMissions":["6370cc14da064a9d947e0d0f","6370cc14da064a9d947e0d11"]}
+ [{"_id":"6370cc0ae04f9d6925304c10","orders":[{"supplies":[{"label":"saucisson","quantity":10,"_id":"6370cc04e04f9d6925304c01"},{"label":"pates","quantity":150,"_id":"6370cc04e04f9d6925304c02"},{"label":"eau","quantity":200,"_id":"6370cc04e04f9d6925304c03"}],"status":"Validé","_id":"6370cc04e04f9d6925304c00"}],"state":"En cours d'acheminement","spacecraft_id":"1"}]
+ [{"id_astronaut":1,"name":"Megan","job":"Astronaute","planet":"En transit","location":"Zone d'embarquement","isDead":false},{"id_astronaut":2,"name":"Thomas","job":"Astronaute","planet":"En transit","location":"Zone d'embarquement","isDead":false},{"id_astronaut":3,"name":"Samantha","job":"Astronaute","planet":"En transit","location":"Zone d'embarquement","isDead":false},{"id_astronaut":4,"name":"Oleg","job":"Astronaute","planet":"En transit","location":"Zone d'embarquement","isDead":false},{"id_astronaut":5,"name":"Peggy","job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","isDead":false},{"id_astronaut":6,"name":"Buzz","job":"Commandant de Moon Base","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":7,"name":"Ellen","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":8,"name":"Jim","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":9,"name":"Kayla","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":10,"name":"Akihiko","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":11,"name":"Serguei","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false}]
+
+ => Explosion du vaisseau en plein vol
+    On s'attend à trouver le status du vaisseau à Damaged, le statut de la mission à en cours de traitement et les astronautes sont décédés
+ PUT http://localhost:4305/spacecraft/:idSpacecraf
+ Response :
+ {"_id":"6370cbe6fe08ae1032431b6f","id_spacecraft":1,"vitals":false,"status":"Endommagé","id_resupplyMission":"6370cc0ae04f9d6925304c10","id_rotationMissions":["6370cc14da064a9d947e0d0f","6370cc14da064a9d947e0d11"]}
+ [{"_id":"6370cc0ae04f9d6925304c10","orders":[{"supplies":[{"label":"saucisson","quantity":10,"_id":"6370cc04e04f9d6925304c01"},{"label":"pates","quantity":150,"_id":"6370cc04e04f9d6925304c02"},{"label":"eau","quantity":200,"_id":"6370cc04e04f9d6925304c03"}],"status":"Validé","_id":"6370cc04e04f9d6925304c00"}],"state":"En cours de traitement","spacecraft_id":null}]
+ [{"id_astronaut":1,"name":"Megan","job":"Astronaute","planet":"En transit","location":"Zone d'embarquement","isDead":true},{"id_astronaut":2,"name":"Thomas","job":"Astronaute","planet":"En transit","location":"Zone d'embarquement","isDead":true},{"id_astronaut":3,"name":"Samantha","job":"Astronaute","planet":"En transit","location":"Zone d'embarquement","isDead":true},{"id_astronaut":4,"name":"Oleg","job":"Astronaute","planet":"En transit","location":"Zone d'embarquement","isDead":true},{"id_astronaut":5,"name":"Peggy","job":"Astronaute","planet":"Terre","location":"Zone d'embarquement","isDead":false},{"id_astronaut":6,"name":"Buzz","job":"Commandant de Moon Base","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":7,"name":"Ellen","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":8,"name":"Jim","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":9,"name":"Kayla","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":10,"name":"Akihiko","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false},{"id_astronaut":11,"name":"Serguei","job":"Astronaute","planet":"Lune","location":"Module sécurisé","isDead":false}]
+
+ => Suivi des fusées en vol
+    US 20 : En tant que Jim, je veux être informé chaque fois qu'une mission de réapprovisionnement est retardée ou échouée
+    On s'attend à trouver le vaisseau 1 dans les vaisseaux endommagés
+ GET http://localhost:4316/spacecraft/crashed
+ Response :
+ ["1"]
+
+ => Reattribution d'une mission de ravitaillement à un vaisseau via Spacecraft Service
+    US 14 : En tant que Gene, je veux pouvoir attribuer un nouveau vaisseau pour lancer la mission de réapprovisionnement lorsque la précédente échoue
+    On s'attend à trouver l'id de la mission inchangé et l'id du vaisseau de la mission changé
+ PUT http://localhost:4305/spacecraft/:idSpacecraft
+ Response :
+ {"_id":"6370cbe6fe08ae1032431b72","id_spacecraft":2,"vitals":true,"status":"Au sol","id_resupplyMission":"6370cc0ae04f9d6925304c10","id_rotationMissions":[]}
+ [{"_id":"6370cc0ae04f9d6925304c10","orders":[{"supplies":[{"label":"saucisson","quantity":10,"_id":"6370cc04e04f9d6925304c01"},{"label":"pates","quantity":150,"_id":"6370cc04e04f9d6925304c02"},{"label":"eau","quantity":200,"_id":"6370cc04e04f9d6925304c03"}],"status":"Validé","_id":"6370cc04e04f9d6925304c00"}],"state":"En cours de traitement","spacecraft_id":"2"}]
+
+ => Envoi d'un vaisseau via Spacecraft Service
+    En tant que Gene, je veux envoyer un nouveau vaisseau
+    On s'attend à trouver le status du vaisseau 2 à envoyé et le statut de la mission à en cours d'acheminement
+ PUT http://localhost:4305/spacecraft/:idSpacecraf/launch
+ Response :
+ {"_id":"6370cbe6fe08ae1032431b72","id_spacecraft":2,"vitals":true,"status":"Envoyé","id_resupplyMission":"6370cc0ae04f9d6925304c10","id_rotationMissions":[]}
+ [{"_id":"6370cc0ae04f9d6925304c10","orders":[{"supplies":[{"label":"saucisson","quantity":10,"_id":"6370cc04e04f9d6925304c01"},{"label":"pates","quantity":150,"_id":"6370cc04e04f9d6925304c02"},{"label":"eau","quantity":200,"_id":"6370cc04e04f9d6925304c03"}],"status":"Validé","_id":"6370cc04e04f9d6925304c00"}],"state":"En cours d'acheminement","spacecraft_id":"2"}]
+
+ PUT http://localhost:4305/spacecraft/:idSpacecraf
+ Response :
+ {"_id":"6370cbe6fe08ae1032431b72","id_spacecraft":2,"vitals":true,"status":"En approche","id_resupplyMission":"6370cc0ae04f9d6925304c10","id_rotationMissions":[]}
+
+ => Suivi des fusées en vol
+    US 25 : En tant que Jim, je veux être informé lorsqu'un vaisseau spatial de ravitaillement est sur le point d'atterrir
+    On s'attend à voir le vaisseau numéro 2 sur le point d'arriver
+ GET http://localhost:4316/spacecraft/arriving
+ Response :
+ ["2"]
+
+ PUT http://localhost:4305/spacecraft/:idSpacecraf
+ Response :
+ {"_id":"6370cbe6fe08ae1032431b72","id_spacecraft":2,"vitals":true,"status":"Arrivé","id_resupplyMission":"6370cc0ae04f9d6925304c10","id_rotationMissions":[]}
+
+ => Suivi des fusées en vol
+    Gene s'informe de l'arrivée du vaisseau
+    On s'attend à voir le vaisseau numéro 2 ayant aluni et ayant disparu de la liste des vaisseaux en train d'arriver, l'état du vaisseau change également
+ GET http://localhost:4316/spacecraft/landed
+ Response :
+ ["2"]
+ GET http://localhost:4316/spacecraft/arriving
+ Response :
+ []
+ GET http://localhost:4305/spacecraft
+ Response :
+ [{"id_spacecraft":1,"vitals":false,"status":"Endommagé","id_resupplyMission":"6370cc0ae04f9d6925304c10"},{"id_spacecraft":2,"vitals":true,"status":"Arrivé","id_resupplyMission":"6370cc0ae04f9d6925304c10"}]
+ GET http://localhost:4301/resupply/resupplyMission
+ Response :
+ [{"_id":"6370cc0ae04f9d6925304c10","orders":[{"supplies":[{"label":"saucisson","quantity":10,"_id":"6370cc04e04f9d6925304c01"},{"label":"pates","quantity":150,"_id":"6370cc04e04f9d6925304c02"},{"label":"eau","quantity":200,"_id":"6370cc04e04f9d6925304c03"}],"status":"Validé","_id":"6370cc04e04f9d6925304c00"}],"state":"En cours d'acheminement","spacecraft_id":"2"}]
+
+ => Réapprovisionnement de la base lunaire par Jim
+    On s'attend à voir le vaisseau numéro 2 ayant aluni et ayant disparu de la liste des vaisseaux en train d'arriver, l'état du vaisseau change également
+ POST http://localhost:4310/moon-base/1/supply
+ [{'label': 'saucisson', 'quantity': 10}, {'label': 'pates', 'quantity': 150}, {'label': 'eau', 'quantity': 200}]
+ {"id_base":1,"stock":[{"label":"saucisson","quantity":40,"_id":"6370cbe602c8c6cf017099fb"},{"label":"pates","quantity":230,"_id":"6370cbe602c8c6cf017099fc"},{"label":"eau","quantity":300,"_id":"6370cbe602c8c6cf017099fd"}],"alarm_on":true,"modules":[512,513,514,515]}
+
+ => Récupération de l'inventaire de la base lunaire via Module Life Service
+    US 5 : En tant que Jim, je veux contrôler l'inventaire de la base lunaire
+    On s'attend à récupérer un objet avec plusieurs types de provisions toutes entières remplies
+ GET http://localhost:4310/moon-base/inventory
+ Response :
+ [{"label":"saucisson","quantity":48},{"label":"pates","quantity":250},{"label":"eau","quantity":328}]
+
+ ---------------------- Scenario 3 ----------------------
+
+ => Récupérer les EVA Missions
+    US 6 : En tant que Buzz, je veux verifier les EVA Missions des prochains jours
+    On s'attend à recevoir 0 eva mission
+ GET http://localhost:4307/eva-mission
+ Response :
+ []
+
+ => Récupérer les tâches planifiées des astronautes
+    US 19 : En tant que Buzz, je veux garder un enregistrement de chaque tâche/mission à laquelle chaque personnel de la base a été affecté
+    On s'attend à recevoir 4 tâches
+ GET http://localhost:4317/tasks
+ Response :
+ [{"astronauts":[8],"id_task":1,"type":"Laboratoire de recherches","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","description":"Analyse des roches"},{"astronauts":[7],"id_task":2,"type":"Maintenance des équipements et modules","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","description":"Nettoyage des filtres à oxygène"},{"astronauts":[9],"id_task":3,"type":"Maintenance des équipements et modules","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","description":"Réparation du sas"},{"astronauts":[10,11],"id_task":4,"type":"Gestion des stocks","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","description":"Exploration de la zone 3"}]
+
+ => Création d'une EVA Mission
+    On constate qu'aucune EVA Mission existe et Buzz veut en programmer une pour le 20 janvier et y affecter Jim
+    On s'attend à ce qu'une nouvelle tâche soit également créée
+ POST http://localhost:4307/eva-mission
+ {'id_mission': 1, 'type': 'Mission scientifique', 'date_begin': '2022-01-20', 'date_end': '2022-01-20', 'status': True, 'supervisor': '8', 'notes': 'Aucune', 'spacesuits': [1]}
+ Response :
+ {"metrics":[{"id_spacesuit":1,"o2_rate":[],"temperature":[],"pressure":[],"power":[],"_id":"6370cc432d9691405ab68a5b"}],"id_mission":1,"type":"Mission scientifique","date_begin":"2022-01-20T00:00:00.000Z","date_end":"2022-01-20T00:00:00.000Z","supervisor":"8","notes":"Aucune"}
+ GET http://localhost:4317/task-planner
+ Response :
+ [{"astronauts":[8],"id_task":1,"type":"Laboratoire de recherches","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","description":"Analyse des roches"},{"astronauts":[7],"id_task":2,"type":"Maintenance des équipements et modules","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","description":"Nettoyage des filtres à oxygène"},{"astronauts":[9],"id_task":3,"type":"Maintenance des équipements et modules","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","description":"Réparation du sas"},{"astronauts":[10,11],"id_task":4,"type":"Gestion des stocks","date_begin":"2022-11-11T19:33:02.536Z","date_end":"2022-11-11T19:33:02.536Z","description":"Exploration de la zone 3"},{"astronauts":["8"],"id_task":5,"type":"Mission scientifique","date_begin":"2022-01-20T00:00:00.000Z","date_end":"2022-01-20T00:00:00.000Z","description":"6370cc432d9691405ab68a5a"}]
+
+ => Récupérer les prochaines EVA Missions
+    US 22 : En tant que Marie, je veux avoir accès aux calendriers des missions EVA
+    On s'attend à recevoir 1 eva mission avec une date de début au 20 janvier
+ GET http://localhost:4307/eva-mission
+ Response :
+ [{"metrics":[{"id_spacesuit":1,"o2_rate":[],"temperature":[],"pressure":[],"power":[],"_id":"6370cc432d9691405ab68a5b"}],"id_mission":1,"type":"Mission scientifique","date_begin":"2022-01-20T00:00:00.000Z","date_end":"2022-01-20T00:00:00.000Z","supervisor":"8","notes":"Aucune"}]
+
+ => Préparation de Jim à une sortie
+    Jim enfile sa combinaison(combinaison 1)
+ POST http://localhost:4306/spacesuit/1/affect-astronaut
+ Response :
+ {"_id":"6370cbe613bba66b3dd89df4","id_spacesuit":1,"id_astronaut":8,"current_vitals":{"cardiac_rythm":60,"o2_rate":100,"temperature":25,"pressure":1,"power":100,"_id":"6370cc4913bba66b3dd89fdc"}}
+
+ => Récupération des données d'une combinaison lunaire via SpaceSuit Service
+    US 7 : Jim veut s'assurer de l'état de sa combinaison (la combinaison 1) pour comprendre son état instable
+    On s'attend à ce que la combinaison ait une pression de 3 et 80 d'oxygène et qu'une alerte soit receptionnée par Survival Control Service
+ GET http://localhost:4307/spacesuit/1
+ Response :
+ {"id_spacesuit":1,"current_vitals":{"cardiac_rythm":60,"o2_rate":80,"temperature":25,"pressure":3,"power":90,"_id":"6370cc4913bba66b3dd89fdf"}}
+ GET http://localhost:4304/survival-control/spacesuit-with-problem
+ Response :
+ [1]
+
+ => Création d'une seconde EVA Mission pour aider Jim
+    Après avoir consulté les alertes de Survival Control Service, Buzz créé une mission EVA de secours pour Jim
+ POST http://localhost:4307/eva-mission
+ {'id_mission': 2, 'type': 'Secours à un astronaute', 'date_begin': '2022-01-2', 'date_end': '2022-01-20', 'status': True, 'supervisor': '9', 'notes': 'Aucune', 'spacesuits': []}
+ Response :
+ {"metrics":[],"id_mission":2,"type":"Secours à un astronaute","date_begin":"2022-01-02T00:00:00.000Z","date_end":"2022-01-20T00:00:00.000Z","supervisor":"9","notes":"Aucune"}
+
+ => Récupérer les métriques des EVA Missions précédentes
+    US 11 : En tant que Deke, je veux consulter les métriques de l'EVA mission de Jim afin de comprendre l'origine du problème
+    On s'attend à recevoir les métriques de l'EVA mission de Jim, la 1
+ GET http://localhost:4307/eva-mission/1/metrics
+ Response :
+ [{"id_spacesuit":1,"o2_rate":[80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80],"temperature":[25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25],"pressure":[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"power":[90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90],"_id":"6370cc432d9691405ab68a5b"}]
+
+ ---------------------------------- End Integration Tests ---------------------------------

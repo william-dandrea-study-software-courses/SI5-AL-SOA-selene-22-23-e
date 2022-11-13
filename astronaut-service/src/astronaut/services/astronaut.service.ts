@@ -40,6 +40,7 @@ export class AstronautService {
         dto.job = astronaut.job;
         dto.planet = astronaut.planet;
         dto.location = astronaut.location;
+        dto.isDead = astronaut.isDead;
         response.push(dto);
       });
       return response;
@@ -138,6 +139,16 @@ export class AstronautService {
       const astronaut = await this.astronautModel.findOne({id_astronaut : astronautId});
       if(astronaut !== null) {
         astronaut.isDead = true;
+        await astronaut.save();
+      }
+    }
+  }
+
+  async rotationMissionLaunched(astronauts: number[]) {
+    for (const astronautId in astronauts) {
+      const astronaut = await this.astronautModel.findOne({id_astronaut : astronautId});
+      if(astronaut !== null) {
+        astronaut.planet = AstronautPlanetEnumSchema.ON_TRANSIT;
         await astronaut.save();
       }
     }

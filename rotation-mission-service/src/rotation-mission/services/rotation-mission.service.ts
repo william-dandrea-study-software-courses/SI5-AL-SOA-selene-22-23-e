@@ -54,19 +54,26 @@ export class RotationMissionService {
   }
 
 
-  async spacecraft_has_been_destroyed(spacecraftDestroyedEvent: SpacecraftDestroyed){
-    let rotationMission = await this.rotationMissionModel.findOne({_id: spacecraftDestroyedEvent.rotationMission_id});
+  async spacecraft_has_been_destroyed(rotationMissionId: string){
+    let rotationMission = await this.rotationMissionModel.findOne({_id: rotationMissionId});
     if(rotationMission === null){
-      throw new RotationMissionNotExistException(spacecraftDestroyedEvent.rotationMission_id);
+      throw new RotationMissionNotExistException(rotationMissionId);
     }
-    const message = "{\"astronauts\":" + rotationMission.astronauts.toString() +"}";
+    rotationMission.spacecraft_id = null;
+    rotationMission.save();
+    const message = "{\"astronauts\":[" + rotationMission.astronauts.toString() +"]}";
     this.logger.log(message);
     this.emitKafkaEvent("rotation_failed", message);
-    const impactedMissions = await this.rotationMissionModel.find({spacecraft_id: spacecraftDestroyedEvent.spacecraft_id});
-    for(const mission of impactedMissions) {
-      mission.spacecraft_id = null;
-      mission.save();
+  }
+
+  async spacecraft_has_been_launched(rotationMissionId: string){
+    let rotationMission = await this.rotationMissionModel.findOne({_id: rotationMissionId});
+    if(rotationMission === null){
+      throw new RotationMissionNotExistException(rotationMissionId);
     }
+    const message = "{\"astronauts\":[" + rotationMission.astronauts.toString() +"]}";
+    this.logger.log(message);
+    this.emitKafkaEvent("rotation-launched", message);
   }
 
   private async emitKafkaEvent(topic: string, message: string) {
@@ -74,7 +81,7 @@ export class RotationMissionService {
 
     // Producing
     await producer.connect();
-    this.logger.log("Send failed rotation Missino");
+    this.logger.log("Send failed rotation Mission");
     await producer.send({
       topic: topic,
       messages: [

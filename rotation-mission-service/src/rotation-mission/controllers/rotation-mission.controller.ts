@@ -16,7 +16,6 @@ import {
 } from "../exceptions/rotation-mission-not-exist.exception";
 import { Kafka } from "kafkajs"
 import {SpacecraftIdDto} from "../dto/spacecraft-id.dto";
-import {SpacecraftDestroyed} from "../dto/event/spacecraft-destroyed";
 
 @ApiTags("/rotation-mission")
 @Controller("/rotation-mission")
@@ -31,7 +30,8 @@ export class RotationMissionController {
   constructor(
     private readonly rotationMissionService: RotationMissionService
   ) {
-    this.event_destroyed_listener()
+    this.event_destroyed_listener();
+    this.event_launch_listener();
   }
 
   @ApiOkResponse({ type: Boolean })
@@ -74,9 +74,32 @@ export class RotationMissionController {
 
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
-        this.logger.log("Spacecraft has been destroyed")
-        // let content : SpacecraftDestroyed = message.value.toJSON();
-        // await this.rotationMissionService.spacecraft_has_been_destroyed(content)
+        this.logger.log("Spacecraft has been destroyed");
+        let content = JSON.parse(message.value.toLocaleString());
+        this.logger.log(content);
+        await this.rotationMissionService.spacecraft_has_been_destroyed(content["rotationMission_id"]);
+      }
+    });
+  }
+
+  /*
+  @MessageListener('spacecraft-launch')
+ */
+  async event_launch_listener(){
+    const consumer = this.kafka.consumer({ groupId: 'rotation-mission-consumer-spacecraft-launch' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'spacecraft-launch'})
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        this.logger.log("Spacecraft has been launched");
+        let content = JSON.parse(message.value.toLocaleString());
+        this.logger.log(content);
+        const rotationMissionId = content["rotationMission_id"];
+        if (rotationMissionId !== null) {
+          await this.rotationMissionService.spacecraft_has_been_launched(rotationMissionId);
+        }
       }
     });
   }

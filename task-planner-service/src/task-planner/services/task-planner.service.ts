@@ -44,40 +44,18 @@ export class TaskPlannerService {
   }
 
   async postTaskPlanned(
-    taskPlannerDto: TaskDto
-  ): Promise<TaskDto> {
+    taskDto: TaskDto
+  ): Promise<Task> {
     const alreadyExists = await this.taskPlannerModel.find({
-      id_task: taskPlannerDto.id_task,
+      id_task: taskDto.id_task,
     });
     if (alreadyExists.length > 0) {
-      throw new TaskAlreadyExistsException(taskPlannerDto.id_task);
+      throw new TaskAlreadyExistsException(taskDto.id_task);
     }
-    if (
-      taskPlannerDto.type.valueOf() == "EXPLORATION" ||
-      taskPlannerDto.type.valueOf() === "HELP"
-    ) {
-      const message: { value: any }[] = [];
-      message.push({
-        value:
-          taskPlannerDto.id_task +
-          taskPlannerDto.date_begin.valueOf() +
-          taskPlannerDto.date_end.valueOf() +
-          taskPlannerDto.astronauts.toString() +
-          taskPlannerDto.description,
-      });
-      const producer = await this.kafka.producer();
-      // Producing
-      await producer.connect();
-      await producer.send({
-        topic: "eva-mission",
-        messages: message,
-      });
-      await producer.disconnect();
-    }
-    return await this.taskPlannerModel
-      .create(TaskDto)
-      .then((value) => value)
-      .catch((error) => null);
+    this.logger.log("hello");
+    const task =  await this.taskPlannerModel.create(taskDto);
+    this.logger.log(task);
+    return task;
   }
 
   async putTaskPlanned(
@@ -127,5 +105,20 @@ export class TaskPlannerService {
       });
       return response;
     });
+  }
+
+  async sendMessageToBus(topic: string, message: any) {
+    const producer = await this.kafka.producer();
+
+    await producer.connect();
+    await producer.send({
+      topic: topic,
+      messages: [
+        {
+          value: JSON.stringify(message),
+        },
+      ],
+    });
+    await producer.disconnect();
   }
 }

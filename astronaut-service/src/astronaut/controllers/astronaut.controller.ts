@@ -10,7 +10,6 @@ import { AstronautService } from "../services/astronaut.service";
 import {AstronautDto} from "../dto/astronaut.dto";
 import {AstronautAlreadyExistsException} from "../exceptions/astronaut-already-exists.exception";
 import {Kafka} from "kafkajs";
-import {runInThisContext} from "vm";
 
 @ApiTags("astronaut")
 @Controller("")
@@ -22,7 +21,10 @@ export class AstronautController {
     brokers: ['kafka-service:9092']
   })
 
-  constructor(private readonly astronautService: AstronautService) {}
+  constructor(private readonly astronautService: AstronautService) {
+    this.event_rotation_failed_listener();
+    this.event_rotation_launched_listener();
+  }
 
   @Get("/astronaut")
   @ApiOkResponse()
@@ -79,7 +81,7 @@ export class AstronautController {
   @MessageListener('rotation-failed-damaged')
  */
   async event_rotation_failed_listener(){
-    const consumer = this.kafka.consumer({ groupId: 'rotation-mission-consumer-spacecraft-destroyed' });
+    const consumer = this.kafka.consumer({ groupId: 'astronaut-consumer-mission-failed' });
     // Consuming
     await consumer.connect()
     await consumer.subscribe({ topic: 'rotation_failed'})
@@ -88,9 +90,31 @@ export class AstronautController {
       eachMessage: async ({ topic, partition, message }) => {
         this.logger.log("Rotation Mission has failed")
         this.logger.log(message.value.toJSON())
-        let astronauts = message.value.toJSON()['astronauts'];
+        let json = JSON.parse(message.value.toLocaleString());
+        let astronauts = json['astronauts'];
         this.logger.log(astronauts);
         await this.astronautService.rotationMissionHasFailed(astronauts);
+      },
+    });
+  }
+
+  /*
+  @MessageListener('rotation-launched')
+ */
+  async event_rotation_launched_listener(){
+    const consumer = this.kafka.consumer({ groupId: 'astronaut-consumer-mission-launched' });
+    // Consuming
+    await consumer.connect()
+    await consumer.subscribe({ topic: 'rotation-launched'})
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        this.logger.log("Rotation Mission has been launched")
+        this.logger.log(message.value.toJSON())
+        let json = JSON.parse(message.value.toLocaleString());
+        let astronauts = json['astronauts'];
+        this.logger.log(astronauts);
+        await this.astronautService.rotationMissionLaunched(astronauts);
       },
     });
   }
