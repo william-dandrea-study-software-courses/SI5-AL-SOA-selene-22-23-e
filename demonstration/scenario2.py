@@ -296,10 +296,6 @@ def scenario2():
     print("GET http://localhost:4305/spacecraft")
     print("Response : ")
     response = requests.get(URL_spacecraft+'spacecraft')
-    print(response.text)
-    print("GET http://localhost:4301/resupply/resupplyMission")
-    print("Response : ")
-    response = requests.get(URL_resupply+'resupply/resupplyMission')
     print(response.text + "\n")
 
     time.sleep(2)
