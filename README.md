@@ -7,7 +7,7 @@
 - William D'Andrea
 
 ## Documentation
-You can find our first delivery report in the documentation directory.
+You can find our first and our final delivery reports in the documentation directory.
 
 ## How to create a new module in a microservice
 *You need to execute this commands in the source root of the microservice (exemple : in the repository survival-control-service*
